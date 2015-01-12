@@ -1,7 +1,7 @@
-Kafka-HUE: Apache Kafka HUE Application
+Storm-HUE: Apache Storm HUE Application
 =======================================
 
-Kafka-HUE is a [HUE](http://www.gethue.com) application to admin and manage a pool of [Apache Storm](http://storm.apache.org/) topologies. 
+Storm-HUE is a [HUE](http://www.gethue.com) application to admin and manage a pool of [Apache Storm](http://storm.apache.org/) topologies. 
 
 Requirements
 ------------
