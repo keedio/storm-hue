@@ -13,6 +13,7 @@
 ## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
+
 <%!
    from desktop.views import commonheader, commonfooter
    from django.utils.translation import ugettext as _
@@ -215,6 +216,24 @@ ${ JavaScript.import_js() }
    function changeDisplay(id1, id2) {
       document.getElementById(id1).style.display = "";
       document.getElementById(id2).style.display = "none";            
+   };
+   
+   function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
+      if (confirm('Are you sure you want too '  + psAction +  ' this Topology?')) {
+         // Accept.
+         $.post("/storm/changeTopologyStatus/", { sId: psId,
+                                                  sAction: psAction,
+   	                                          bWait: pbWait,
+	                                          iWait: piWait
+                                                }, function(data){                                                    
+                                                    if (data = 200) {
+                                                       window.location.reload();
+                                                    }
+                                               }, "text");
+      } 
+      else {
+         // Cancel.
+      }         
    };               
 </script>
 

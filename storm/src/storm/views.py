@@ -140,11 +140,7 @@ def detail_dashboard(request, topology_id, system_id):
   iFailed = 0    
   iSystem = int(system_id) if system_id is not None else 0
   
-  rTopology = requests.get(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id)  
-  
-  jsonTopology = rTopology.json()       
-  
-  #jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id)      
+  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)      
   
   iSystem = 1 if (iSystem == 0) else 0
   
@@ -285,10 +281,14 @@ def components_dashboard(request, topology_id, component_id, system_id):
   iBolt = -1
   iSystem = int(system_id) if system_id is not None else 0     
     
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id)
+  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
+  #rTopology = requests.get(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id)
+  #jsonTopology = rTopology.json()
   iSystem = 1 if (iSystem == 0) else 0
   
   jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
+  
+  print "TOPOLOGY:  ",jsonTopology 
   
   if (len(jsonTopology) > 0):
      aTopology = get_topology(topology_id)
@@ -526,7 +526,7 @@ def components(request, topology_id, component_id, system_id):
   iBolt = -1    
   iSystem = int(system_id) if system_id is not None else 0       
   
-  jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id + '/component/' + component_id)
+  jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
   
   iSystem = 1 if (iSystem == 0) else 0
   
@@ -592,11 +592,8 @@ def components(request, topology_id, component_id, system_id):
 def failed(request, topology_id, component_id, system_id):    
   aComponent = []  
   
-  iSystem = int(system_id) if system_id is not None else 0
-  
-  rTopology = requests.get(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id)  
-  
-  jsonTopology = rTopology.json()  
+  iSystem = int(system_id) if system_id is not None else 0  
+  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
   
   #STATS.
   if (int(component_id) == 1):
@@ -610,11 +607,9 @@ def failed(request, topology_id, component_id, system_id):
   if (int(component_id) == 3):
      aComponent = jsonTopology["bolts"]    
   
-  print aComponent
-  
   return render('failed.mako', request, {'Component': aComponent,
-					 'idTopology': topology_id,
-					 'idComponent': int(component_id)
+					                     'idTopology': topology_id,
+					                     'idComponent': int(component_id)
                                         })  
 #
 # failed ******************************************************************************************************************

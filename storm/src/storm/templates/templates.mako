@@ -65,6 +65,8 @@
                % else:
                   <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="Show System Stats"><i class="fa fa-square-o"></i> Show System Stats </a>                   
                % endif
+            
+               <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> Tables </button>
             % endif                                                                      
             
             % if (sURL == "components"):
@@ -75,7 +77,6 @@
                % endif
             % endif
             
-            <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> Tables </button>
             <div class="btn-toolbar" style="display: inline; vertical-align: middle">
                <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
                   <a href="#" class="btn upload-link dropdown-toggle" title="Dashboard" data-toggle="dropdown">

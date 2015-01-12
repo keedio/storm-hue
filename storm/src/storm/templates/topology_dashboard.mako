@@ -14,13 +14,17 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
-
-<%! import requests %>
-
-<%namespace name="storm" file="navigation_bar.mako" />
+<%!
+   from desktop.views import commonheader, commonfooter
+   from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Topology Stats Detail", app_name, user) | n,unicode}
+
+<%namespace name="storm" file="navigation_bar.mako" />
+<%namespace name="Templates" file="templates.mako" />
+<%namespace name="JavaScript" file="js.mako" />
+<%namespace name="graphsHUE" file="common_dashboard.mako" />
 
 ## Use double hashes for a mako template comment
 ## Main body
@@ -41,13 +45,6 @@ ${commonheader("Topology Stats Detail", app_name, user) | n,unicode}
       vertical-align:top;
    }   
 </style>
-
-<script src="/static/ext/js/datatables-paging-0.1.js" type="text/javascript" charset="utf-8"></script>
-<script src="/storm/static/js/storm.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/knockout-min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/knockout.mapping-2.3.2.js" type="text/javascript" charset="utf-8"></script>
-
-<%namespace name="graphsHUE" file="common_dashboard.mako" />
 
 ${ graphsHUE.import_charts() }
 
@@ -326,6 +323,24 @@ ${ graphsHUE.import_charts() }
 
                                   return graphbarBolts2;   
    });
+   
+   function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
+      if (confirm('Are you sure you want too '  + psAction +  ' this Topology?')) {
+         // Accept.
+         $.post("/storm/changeTopologyStatus/", { sId: psId,
+                                                  sAction: psAction,
+   	                                          bWait: pbWait,
+	                                          iWait: piWait
+                                                }, function(data){                                                    
+                                                    if (data = 200) {
+                                                       window.location.reload();
+                                                    }
+                                               }, "text");
+      } 
+      else {
+         // Cancel.
+      }         
+   };
 </script>
 
 <%
@@ -343,7 +358,8 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
-       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                                          
+       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+          ${Templates.ControlPanelTopology("topology_dashboard")}                                         
           <tr>
              <td colspan="3">
                 <div class="col-lg-4">

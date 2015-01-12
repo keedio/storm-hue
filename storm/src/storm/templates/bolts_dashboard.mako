@@ -116,6 +116,24 @@ ${ JavaScript.import_js() }
 
                                   return graphBolts1;
    });
+   
+   function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
+      if (confirm('Are you sure you want too '  + psAction +  ' this Topology?')) {
+         // Accept.
+         $.post("/storm/changeTopologyStatus/", { sId: psId,
+                                                  sAction: psAction,
+   	                                          bWait: pbWait,
+	                                          iWait: piWait
+                                                }, function(data){                                                    
+                                                    if (data = 200) {
+                                                       window.location.reload();
+                                                    }
+                                               }, "text");
+      } 
+      else {
+         // Cancel.
+      }         
+   };
 </script>
 
 <%
@@ -133,39 +151,8 @@ ${ storm.menubar(section = 'Bolts Detail')}
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
-       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                              
-          <tr>                          
-             <td align="left">                
-                <span class="btn-group">
-                   % if Topology[2] == "INACTIVE":
-                      <button id="btnActivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'activate', false, 0)" ><i class="fa fa-play"></i> Activate </button>                                            
-                   % else:
-                      <button id="btnDeactivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'deactivate', false, 0)"><i class="fa fa-stop"></i> Deactivate</button>
-                   % endif
-                   <button id="btnRebalance" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'rebalance', true, 5)"><i class="fa fa-refresh"></i> Rebalance </button>
-                   <button id="btnKill" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'kill', true, 5)"><i class="fa fa-trash-o"></i> Kill </button>                                      
-                </span>  
-             </td>
-             <td align="right">
-                <span class="btn-group">
-                   <button id="btnConfiguration" class="btn" onclick=""><i class="fa fa-cog"></i> Configuration </button>
-                   <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> Tables </button>
-                   <div class="btn-toolbar" style="display: inline; vertical-align: middle">
-                      <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
-                         <a href="#" class="btn upload-link dropdown-toggle" title="Dashboard" data-toggle="dropdown">
-                            <i class="fa fa-tachometer"></i> Dashboard
-                            <span class="caret"></span>
-                         </a>
-                         <ul class="dropdown-menu">
-                            <li><a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)}" class="btn" title="Detail"><i class="fa fa-tachometer"></i>  Detail </a></li>
-                            <li><a href="${url('storm:spouts_dashboard', topology_id = Topology[0])}" class="btn" title="Spouts"><i class="fa fa-tachometer"></i> Spouts </a></li>
-                            <li><a href="${url('storm:bolts_dashboard', topology_id = Topology[0])}" class="btn" title="Bolts"><i class="fa fa-tachometer"></i> Bolts </a></li>
-                         </ul>
-                      </div>
-                   </div>          
-                </span>          
-             </td>
-          </tr>
+       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+          ${Templates.ControlPanelTopology("bolts_dashboard")}
           <tr valign="top">
              <td width="60%">
                 <div class="col-lg-4">

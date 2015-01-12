@@ -14,11 +14,17 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+   from desktop.views import commonheader, commonfooter
+   from django.utils.translation import ugettext as _
+%>
 
+${commonheader("Components Dashboard", app_name, user) | n,unicode}
+
+<%namespace name="storm" file="navigation_bar.mako" />
 <%namespace name="Templates" file="templates.mako" />
-
-${commonheader("Components Detail", app_name, user) | n,unicode}
+<%namespace name="JavaScript" file="js.mako" />
+<%namespace name="graphsHUE" file="common_dashboard.mako" />
 
 ## Use double hashes for a mako template comment
 ## Main body
@@ -39,13 +45,6 @@ ${commonheader("Components Detail", app_name, user) | n,unicode}
       vertical-align:top;
    }   
 </style>
-
-<script src="/static/ext/js/knockout-min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/knockout.mapping-2.3.2.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/datatables-paging-0.1.js" type="text/javascript" charset="utf-8"></script>    
-<script src="/storm/static/js/storm.js" type="text/javascript" charset="utf-8"></script>
-
-<%namespace name="graphsHUE" file="common_dashboard.mako" />
 
 ${ graphsHUE.import_charts() }
 
@@ -305,6 +304,24 @@ ${ graphsHUE.import_charts() }
 
                                   return graphExecutorsTimes;
    });
+   
+   function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
+      if (confirm('Are you sure you want too '  + psAction +  ' this Topology?')) {
+         // Accept.
+         $.post("/storm/changeTopologyStatus/", { sId: psId,
+                                                  sAction: psAction,
+   	                                          bWait: pbWait,
+	                                          iWait: piWait
+                                                }, function(data){                                                    
+                                                    if (data = 200) {
+                                                       window.location.reload();
+                                                    }
+                                               }, "text");
+      } 
+      else {
+         // Cancel.
+      }         
+   };
 </script>
 
 <%
@@ -317,13 +334,13 @@ ${ graphsHUE.import_charts() }
 
 ${ storm.header(_breadcrumbs) }
 
-${ storm.menubar(section = 'Components Detail')}
+${ storm.menubar(section = 'Components Dashboard')}
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                              
-          ${Templates.ControlPanelTopology()}
+          ${Templates.ControlPanelTopology("components_dashboard")}
           <tr>                          
              <td colspan="2">                
                 <div class="col-lg-4">
@@ -335,7 +352,7 @@ ${ storm.menubar(section = 'Components Detail')}
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyComponent" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Id. </th>
+                                  <th> Id </th>
                                   <th> Topology </th>
                                   <th> Executors </th>
                                   <th> Tasks </th>                         
@@ -363,7 +380,13 @@ ${ storm.menubar(section = 'Components Detail')}
                          <i class="fa fa-bar-chart fa-fw"></i> Stats
                       </div>
                       <div class="panel-body">
-                         <div id="barComponentsStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+                            <tr>
+                               <td>
+                                  <div id="barComponentsStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                               </td>
+                            </tr>
+                         </table>         
                       </div>                        
                    </div>
                 </div>
@@ -440,7 +463,13 @@ ${ storm.menubar(section = 'Components Detail')}
                          <i class="fa fa-bar-chart fa-fw"></i> Output
                       </div>
                       <div class="panel-body">
-                         <div id="barOutputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+                            <tr>
+                               <td>
+                                  <div id="barOutputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                               </td>
+                            </tr>
+                         </table>         
                       </div>                        
                    </div>
                 </div>
