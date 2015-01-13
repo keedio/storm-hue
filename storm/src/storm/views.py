@@ -82,8 +82,11 @@ def storm_dashboard(request):
     
   if (len(jsonTopology) > 0):
   
-     aData = jsonTopology["topologies"]        
-  
+     try:
+        aData = jsonTopology["topologies"]        
+     except:
+        aData = []
+     
      if (len(aData) > 0):                           
        for row in aData:       
           row.update({'seconds': get_seconds_from_strdate(row["uptime"]) })
@@ -149,15 +152,26 @@ def detail_dashboard(request, topology_id, system_id):
   
   if (len(jsonTopology) > 0):     
      aTopology = get_topology(topology_id)
-     aStats = jsonTopology["topologyStats"]
      
-     if (len(aStats) == 1):        
-        if (aStats[0]["failed"] is None):
-	  aStats = []
+     try:
+        aStats = jsonTopology["topologyStats"]
         
-     aSpouts = jsonTopology["spouts"]
-     aBolts = jsonTopology["bolts"]          
-          
+        if (len(aStats) == 1):        
+           if (aStats[0]["failed"] is None):
+              aStats = []        
+     except:
+        aStats = []
+     
+     try:   
+        aSpouts = jsonTopology["spouts"]
+     except:
+        aSpouts = []
+        
+     try:
+        aBolts = jsonTopology["bolts"]          
+     except:
+        aBolts = []
+             
      for p in aStats:       
        iEmitted+=p["emitted"] if p["emitted"] is not None else 0
        iTransferred+=p["transferred"] if p["transferred"] is not None else 0
@@ -202,20 +216,20 @@ def detail_dashboard(request, topology_id, system_id):
      aFailed.append(iFailed)                
     
   return render('detail_dashboard.mako', request, {'user':request.user,
-					           'Topology': aTopology,
-					           'Visualization': jsonVisualization,
-					           'Stats': aStats,
-					           'Spouts': aSpouts,
-					           'Bolts': aBolts,
-					           'jStats': get_dumps(aStats),
-					           'jSpouts': get_dumps(aSpouts),
-					           'jBolts': get_dumps(aBolts),
-					           'Emitted': aEmitted,
-					           'Transferred': aTransferred,
-					           'Acked': aAcked,
-					           'Failed': aFailed,
-					           'ShowSystem': iSystem
-					          })
+					                               'Topology': aTopology,
+					                               'Visualization': jsonVisualization,
+					                               'Stats': aStats,
+					                               'Spouts': aSpouts,
+					                               'Bolts': aBolts,
+					                               'jStats': get_dumps(aStats),
+					                               'jSpouts': get_dumps(aSpouts),
+					                               'jBolts': get_dumps(aBolts),
+					                               'Emitted': aEmitted,
+					                               'Transferred': aTransferred,
+					                               'Acked': aAcked,
+					                               'Failed': aFailed,
+					                               'ShowSystem': iSystem
+					                              })
 #
 # detail_dashboard ********************************************************************************************************
 
@@ -246,11 +260,11 @@ def topology_dashboard(request, topology_id, window_id):
      aTopology = get_topology(topology_id)                             
   
   return render('topology_dashboard.mako', request, {'Stats': jsonDumpsStats,
-						     'Spouts': jsonDumpsSpouts,
-						     'Bolts': jsonDumpsBolts,
-						     'windowId': window_id,
-						     'Topology': aTopology
-						    })
+						                             'Spouts': jsonDumpsSpouts,
+						                             'Bolts': jsonDumpsBolts,
+						                             'windowId': window_id,
+						                             'Topology': aTopology
+						                            })
 #
 # topology_dashboard ******************************************************************************************************
 
@@ -288,18 +302,16 @@ def components_dashboard(request, topology_id, component_id, system_id):
   
   jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
   
-  print "TOPOLOGY:  ",jsonTopology 
-  
   if (len(jsonTopology) > 0):
      aTopology = get_topology(topology_id)
   
   if (len(jsonComponents) > 0):
-     aComponent = [component_id, 
-		   jsonComponents["name"], 
-		   jsonComponents["executors"], 
-		   jsonComponents["tasks"],
-		   jsonComponents["componentType"].upper()
-		  ]
+     aComponent = [ component_id, 
+		            jsonComponents["name"], 
+		            jsonComponents["executors"], 
+		            jsonComponents["tasks"],
+		            jsonComponents["componentType"].upper()
+		          ]
      
      if (aComponent[4] == "BOLT"):     
         aComponentStats = jsonComponents["boltStats"]        
@@ -322,16 +334,16 @@ def components_dashboard(request, topology_id, component_id, system_id):
         jsonDumpsErrors = get_dumps(jsonComponents["componentErrors"])
      
   return render('components_dashboard.mako', request, {'componentId': component_id,
-						       'ShowSystem': iSystem,
-					               'Topology': aTopology,
-					               'Component': aComponent,
-					               'Components': jsonDumpsComponentStats,
-					               'Output': jsonDumpsOutput,
-					               'Input': jsonDumpsInput,
-					               'Executors': jsonDumpsExecutors,
-					               'Errors': jsonDumpsErrors,
-					               'isBolt': iBolt
-					              })
+						                               'ShowSystem': iSystem,
+					                                   'Topology': aTopology,
+					                                   'Component': aComponent,
+					                                   'Components': jsonDumpsComponentStats,
+					                                   'Output': jsonDumpsOutput,
+					                                   'Input': jsonDumpsInput,
+					                                   'Executors': jsonDumpsExecutors,
+					                                   'Errors': jsonDumpsErrors,
+					                                   'isBolt': iBolt
+					                                  })
 #
 # components_dashboard ****************************************************************************************************
 
@@ -361,8 +373,8 @@ def spouts_dashboard(request, topology_id):
      aSpouts = jsonTopology["spouts"]
   
   return render('spouts_dashboard.mako', request, {'Topology': aTopology,
-					           'Spouts': jsonDumpsSpouts,
-					           'aSpouts': aSpouts,
+					                               'Spouts': jsonDumpsSpouts,
+					                               'aSpouts': aSpouts,
 					          })
 #
 # spouts_dashboard ********************************************************************************************************
@@ -393,9 +405,9 @@ def bolts_dashboard(request, topology_id):
      aBolts = jsonTopology["bolts"]
      
   return render('bolts_dashboard.mako', request, {'Topology': aTopology,
-				                  'Bolts': jsonDumpsBolts,
-					          'aBolts': aBolts,
-					         })
+				                                  'Bolts': jsonDumpsBolts,
+					                              'aBolts': aBolts,
+					                              })
 #
 # bolts_dashboard *********************************************************************************************************
 
@@ -422,8 +434,8 @@ def cluster_summary(request):
     aSupervisor = jsonSupervisor["supervisors"]
     
   return render('cluster_summary.mako', request, {'Cluster': jsonCluster,
-						  'Supervisor': aSupervisor
-						 })  
+						                          'Supervisor': aSupervisor
+						                         })  
 #
 # cluster_summary *********************************************************************************************************
 
@@ -451,8 +463,7 @@ def nimbus_configuration(request):
                      'value': jsonConf[prop]
       });             
     
-  return render('nimbus_configuration.mako', request, {'Conf': aConf
-						      })  
+  return render('nimbus_configuration.mako', request, {'Conf': aConf})  
 #
 # nimbus_configuration ****************************************************************************************************
 
@@ -492,11 +503,11 @@ def topology(request, topology_id, window_id):
      aBolts = jsonStats["bolts"]                    
      
   return render('topology.mako', request, {'Topology': aTopology,
-					   'Stats': aStat,
-					   'Spouts': aSpouts,
-					   'Bolts': aBolts,
-					   'ShowSystem': 0
-					  })
+					                       'Stats': aStat,
+					                       'Spouts': aSpouts,
+					                       'Bolts': aBolts,
+					                       'ShowSystem': 0
+					                      })
 #
 # topology ****************************************************************************************************************
 
@@ -559,17 +570,17 @@ def components(request, topology_id, component_id, system_id):
         aErrors = jsonComponents["componentErrors"]                 
   
   return render('components.mako', request, {'Server_Log': LOG_URL,
-					     'ShowSystem': iSystem,
-					     'idComponent': component_id,
-					     'Topology': aTopology,
-					     'Component': aComponent,
-					     'Stats': aStats,
-					     'Output': aOutput,
-					     'Input': aInput,
-					     'Executors': aExecutors,
-					     'Errors': aErrors,
-					     'iBolt': iBolt
-					    })
+					                         'ShowSystem': iSystem,
+					                         'idComponent': component_id,
+					                         'Topology': aTopology,
+					                         'Component': aComponent,
+					                         'Stats': aStats,
+					                         'Output': aOutput,
+					                         'Input': aInput,
+					                         'Executors': aExecutors,
+					                         'Errors': aErrors,
+					                         'iBolt': iBolt
+					                        })
 #
 # components **************************************************************************************************************
 
