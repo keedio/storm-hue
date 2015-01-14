@@ -49,13 +49,9 @@ ${commonheader("Topology Detail", app_name, user) | n,unicode}
 ${ graphsHUE.import_charts() }
 ${ JavaScript.import_js() }
 
-<script type="text/javascript" charset="utf-8"> 
-   
+<script type="text/javascript"> 
    $(document).ready(function() {
       //ko.applyBindings(new StormViewModel());
-      
-      //viewModel = new StormViewModel();
-      //ko.applyBindings(viewModel, $("#divPrincipal")[0]);
       var StormModel = new StormViewModel();
       ko.applyBindings(StormModel);
 

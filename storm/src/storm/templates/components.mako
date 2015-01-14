@@ -99,10 +99,7 @@ ${ storm.menubar(section = 'Components Explain')}
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
-       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">       
-          ${Templates.ControlPanelTopology("components")}
-          ${Templates.tblRebalanceTopology(Topology[1])}  
-          ${Templates.tblSubmitTopology()}
+       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
           <tr>
              <td colspan="2">
                 <div class="col-lg-4">

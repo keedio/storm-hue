@@ -19,15 +19,6 @@
    from django.utils.translation import ugettext as _
 %>
 
-<%!
-import datetime
-import md5
-from django.template.defaultfilters import urlencode, stringformat, filesizeformat, date, time, escape
-from desktop.lib.django_util import reverse_with_get, extract_field_data
-from django.utils.encoding import smart_str
-from django.utils.translation import ugettext as _
-%>
-
 ${commonheader("Storm Dashboard", app_name, user) | n,unicode}
 
 <%namespace name="storm" file="navigation_bar.mako" />
