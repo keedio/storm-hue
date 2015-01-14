@@ -403,7 +403,6 @@ function show_visualization(sys, topology_id, jsonVisualization) {
         if (should_rechoose)
            $(".stream-box").each(function () {
              rechoose(topology_data, sys, this);
-	     console.log(this);
            });
 	
 	/*
