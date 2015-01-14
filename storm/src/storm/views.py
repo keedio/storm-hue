@@ -371,10 +371,12 @@ def spouts_dashboard(request, topology_id):
      aTopology = get_topology(topology_id)
      jsonDumpsSpouts = get_dumps(jsonTopology["spouts"])
      aSpouts = jsonTopology["spouts"]
+     aBolts = jsonTopology["bolts"]
   
   return render('spouts_dashboard.mako', request, {'Topology': aTopology,
-					                               'Spouts': jsonDumpsSpouts,
-					                               'aSpouts': aSpouts,
+					                               'jSpouts': jsonDumpsSpouts,
+					                               'Spouts': aSpouts,
+                                                   'Bolts': aBolts
 					          })
 #
 # spouts_dashboard ********************************************************************************************************
@@ -403,10 +405,12 @@ def bolts_dashboard(request, topology_id):
      aTopology = get_topology(topology_id)    
      jsonDumpsBolts = get_dumps(jsonTopology["bolts"])
      aBolts = jsonTopology["bolts"]
+     aSpouts = jsonTopology["spouts"]
      
   return render('bolts_dashboard.mako', request, {'Topology': aTopology,
-				                                  'Bolts': jsonDumpsBolts,
-					                              'aBolts': aBolts,
+				                                  'jBolts': jsonDumpsBolts,
+					                              'Bolts': aBolts,
+                                                  'Spouts': aSpouts
 					                              })
 #
 # bolts_dashboard *********************************************************************************************************

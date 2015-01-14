@@ -48,6 +48,9 @@ ${ graphsHUE.import_charts() }
 
 <script type="text/javascript" charset="utf-8"> 
    $(document).ready(function() {
+      var StormModel = new StormViewModel();
+      ko.applyBindings(StormModel);
+      
       $('#tblTopologySpouts').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
@@ -61,7 +64,7 @@ ${ graphsHUE.import_charts() }
    var iTasks = 0;
    var iExecutors = 0;
    
-   var sData = "${Spouts}";   
+   var sData = "${jSpouts}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonSpouts = JSON.parse(swData);
    
@@ -152,6 +155,11 @@ ${ storm.menubar(section = 'Topology Detail')}
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">   
           ${Templates.ControlPanelTopology("spouts_dashboard")}
+          <tr>
+             <td colspan="2">                
+                ${Templates.tblRebalanceTopology(Topology[1])}
+             </td>
+          </tr>  
           <tr valign="top">
              <td>
                 <div class="col-lg-4">
@@ -201,7 +209,7 @@ ${ storm.menubar(section = 'Topology Detail')}
                                </tr>
                             </thead>
                             <tbody>
-                               % for row in aSpouts:
+                               % for row in Spouts:
                                   <tr>                                     
                                      <td>
                                         <a class="fa fa-tachometer" href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = row["spoutId"], system_id = 0)}"></a>                                                 

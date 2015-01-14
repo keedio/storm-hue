@@ -48,6 +48,9 @@ ${ JavaScript.import_js() }
 
 <script type="text/javascript" charset="utf-8"> 
    $(document).ready(function() {
+      var StormModel = new StormViewModel();
+      ko.applyBindings(StormModel);
+      
       $('#tblTopologyBolts').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
@@ -61,7 +64,7 @@ ${ JavaScript.import_js() }
    var iTasks = 0;
    var iExecutors = 0;
    
-   var sData = "${Bolts}";   
+   var sData = "${jBolts}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonBolts = JSON.parse(swData);
    
@@ -153,6 +156,11 @@ ${ storm.menubar(section = 'Bolts Detail')}
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
           ${Templates.ControlPanelTopology("bolts_dashboard")}
+          <tr>
+             <td colspan="2">                
+                ${Templates.tblRebalanceTopology(Topology[1])}
+             </td>
+          </tr>
           <tr valign="top">
              <td width="60%">
                 <div class="col-lg-4">
@@ -205,7 +213,7 @@ ${ storm.menubar(section = 'Bolts Detail')}
                                </tr>
                             </thead>
                             <tbody>
-                               % for row in aBolts:
+                               % for row in Bolts:
                                   <tr>                                     
                                      <td>
                                         <a class="fa fa-tachometer" href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = row["boltId"], system_id = 0)}"></a>
