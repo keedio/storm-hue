@@ -59,7 +59,7 @@ ${ graphsHUE.import_charts() }
    var dataPieStatsFailed = []
    var dataBarStats = []
    
-   var sData = "${Stats}";   
+   var sData = "${jStats}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonStats = JSON.parse(swData);            
       
@@ -81,7 +81,7 @@ ${ graphsHUE.import_charts() }
    var iTasks = 0;
    var iExecutors = 0;
    
-   var sData = "${Spouts}";   
+   var sData = "${jSpouts}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonSpouts = JSON.parse(swData);
    
@@ -105,7 +105,7 @@ ${ graphsHUE.import_charts() }
    iTasks = 0;
    iExecutors = 0;
    
-   var sData = "${Bolts}";   
+   var sData = "${jBolts}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonBolts = JSON.parse(swData);
    
@@ -359,7 +359,12 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
-          ${Templates.ControlPanelTopology("topology_dashboard")}                                         
+          ${Templates.ControlPanelTopology("topology_dashboard")} 
+          <tr>
+             <td colspan="3">                
+                ${Templates.tblRebalanceTopology(Topology[1])}
+             </td>
+          </tr>                                        
           <tr>
              <td colspan="3">
                 <div class="col-lg-4">

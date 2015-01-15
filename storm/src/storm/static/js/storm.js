@@ -31,31 +31,30 @@ function StormViewModel() {
       var checks = document.getElementsByTagName("input");      
       
       for(var i = 0; i < checks.length; i++) {  
-	 if ((checks[i].type == 'checkbox') && (checks[i].name.substring(0, 3) == 'cp_') && (checks[i].checked)) {
+	     if ((checks[i].type == 'checkbox') && (checks[i].name.substring(0, 3) == 'cp_') && (checks[i].checked)) {
             sName = checks[i].name;
-	    iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
-	    //aComponents.push({key: sName, value: iExecutors});
+	        iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
             aComponents.push(sName.substring(3),iExecutors);
-	}
+	     }
       }            
       
       if (confirm('Are you sure you want to '  + sAction +  ' this Topology?')) {
          // Accept.
          $.post("/storm/set_topology_status/", { psAction: sAction,
-	                                         psNameTopology: sNameTopology,
-		 	                         piNumWorkers: iNumWorkers,
-		                                 piWaitSecs: iWaitSecs,
-		                                 paComponents: aComponents
+	                                             psNameTopology: sNameTopology,
+		         		                         piNumWorkers: iNumWorkers,
+		            		                     piWaitSecs: iWaitSecs,
+		                    		             paComponents: aComponents
                                                 }, 
                                                 function(data){
-						      jsonResult = JSON.parse(data)
+						      						jsonResult = JSON.parse(data)
 						      
-                                                      if (jsonResult.output == 'None') {
+                                                    if (jsonResult.output == 'None') {
                                                          window.location.reload();
-                                                      }
-                                                      else {
-						         $("#divError").show();
-						      }
+                                                    }
+                                                    else {
+						         						$("#divError").show();
+						      						}
                                                 }, "text");
       } 
       else {

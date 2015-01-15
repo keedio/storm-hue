@@ -252,18 +252,24 @@ def topology_dashboard(request, topology_id, window_id):
   aTopology = []  
   
   jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
+  jsonTopology = get_json(TOPOLOGY_URL + topology_id)
   
   if (len(jsonStats) > 0):
      jsonDumpsStats = get_dumps(jsonStats["topologyStats"])
      jsonDumpsSpouts = get_dumps(jsonStats["spouts"])
      jsonDumpsBolts = get_dumps(jsonStats["bolts"])
      aTopology = get_topology(topology_id)                             
-  
-  return render('topology_dashboard.mako', request, {'Stats': jsonDumpsStats,
-						                             'Spouts': jsonDumpsSpouts,
-						                             'Bolts': jsonDumpsBolts,
+     
+     aSpouts = jsonTopology["spouts"]
+     aBolts = jsonTopology["bolts"]
+     
+  return render('topology_dashboard.mako', request, {'jStats': jsonDumpsStats,
+						                             'jSpouts': jsonDumpsSpouts,
+						                             'jBolts': jsonDumpsBolts,
 						                             'windowId': window_id,
-						                             'Topology': aTopology
+						                             'Topology': aTopology,
+                                                     'Spouts': aSpouts,
+                                                     'Bolts': aBolts
 						                            })
 #
 # topology_dashboard ******************************************************************************************************
