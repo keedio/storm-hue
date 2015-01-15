@@ -8,4 +8,4 @@ local_settings.py
 # compiled locales
 *.mo
 
-*.DS_Store
+.DS_Store
