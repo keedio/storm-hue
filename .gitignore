@@ -8,5 +8,4 @@ local_settings.py
 # compiled locales
 *.mo
 
-storm/.DS_Store
-storm/src/.DS_Store
+*.DS_Store
