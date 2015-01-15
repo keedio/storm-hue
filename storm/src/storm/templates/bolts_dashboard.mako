@@ -154,8 +154,8 @@ ${ storm.menubar(section = 'Bolts Detail')}
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
-       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
-          ${Templates.ControlPanelTopology("bolts_dashboard")}
+       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">   
+          ${Templates.ControlPanelTopology("spouts_dashboard")}
           <tr>
              <td colspan="2">                
                 ${Templates.tblRebalanceTopology(Topology[1])}

@@ -16,7 +16,7 @@
 
 <%!from desktop.views import commonheader, commonfooter %>
 
-${commonheader("Spouts Explain", app_name, user) | n,unicode}
+${commonheader("Spouts Detail", app_name, user) | n,unicode}
 
 <%namespace name="storm" file="navigation_bar.mako" />
 <%namespace name="Templates" file="templates.mako" />
@@ -148,7 +148,7 @@ ${ graphsHUE.import_charts() }
 
 ${ storm.header(_breadcrumbs) }
 
-${ storm.menubar(section = 'Topology Detail')}
+${ storm.menubar(section = 'Spouts Detail')}
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
