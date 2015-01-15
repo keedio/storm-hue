@@ -248,7 +248,7 @@
 
 <!-- New Window Modal. Rebalance Topology -->
 <%def name="tblRebalanceTopology(psName)">
-   <div class="modal fade" id="tblRebalanceTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal hide fade" id="tblRebalanceTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
          <form id="frmRebalanceTopology" method="post">
             <div class="modal-content">
