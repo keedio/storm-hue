@@ -289,7 +289,8 @@
                                              % endfor
                                           </div>
                                        </div>
-                                    </div>   
+                                    </div>
+                                 </td>      
                                  <td width="50%">
                                     <div class="col-lg-4">
                                        <div class="panel panel-default">
