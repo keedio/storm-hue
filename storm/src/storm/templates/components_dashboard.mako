@@ -47,6 +47,7 @@ ${commonheader("Components Dashboard", app_name, user) | n,unicode}
 </style>
 
 ${ graphsHUE.import_charts() }
+${ JavaScript.import_js() }
 
 <script type="text/javascript" charset="utf-8">    
    $(document).ready(function() {
@@ -328,7 +329,7 @@ ${ graphsHUE.import_charts() }
   _breadcrumbs = [
     ["Storm Dashboard", url('storm:storm_dashboard')],    
     ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [Component[4] + Component[0] + " Explain", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)]
+    [Component[4] + " " + Component[0] + " Explain", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)]
   ]
 %>
 
@@ -341,6 +342,11 @@ ${ storm.menubar(section = 'Components Dashboard')}
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                              
           ${Templates.ControlPanelTopology("components_dashboard")}
+          <tr>
+             <td colspan="2">                
+                ${Templates.tblRebalanceTopology(Topology[1])}
+             </td>
+          </tr>
           <tr>                          
              <td colspan="2">                
                 <div class="col-lg-4">

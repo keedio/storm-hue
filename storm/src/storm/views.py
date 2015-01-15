@@ -311,6 +311,9 @@ def components_dashboard(request, topology_id, component_id, system_id):
   if (len(jsonTopology) > 0):
      aTopology = get_topology(topology_id)
   
+     aSpouts = jsonTopology["spouts"]
+     aBolts = jsonTopology["bolts"]
+     
   if (len(jsonComponents) > 0):
      aComponent = [ component_id, 
 		            jsonComponents["name"], 
@@ -348,7 +351,9 @@ def components_dashboard(request, topology_id, component_id, system_id):
 					                                   'Input': jsonDumpsInput,
 					                                   'Executors': jsonDumpsExecutors,
 					                                   'Errors': jsonDumpsErrors,
-					                                   'isBolt': iBolt
+					                                   'isBolt': iBolt,
+                                                       'Spouts': aSpouts,
+                                                       'Bolts': aBolts
 					                                  })
 #
 # components_dashboard ****************************************************************************************************
