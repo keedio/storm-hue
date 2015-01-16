@@ -119,24 +119,6 @@ ${ JavaScript.import_js() }
 
                                   return graphBolts1;
    });
-   
-   function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
-      if (confirm('Are you sure you want too '  + psAction +  ' this Topology?')) {
-         // Accept.
-         $.post("/storm/changeTopologyStatus/", { sId: psId,
-                                                  sAction: psAction,
-   	                                          bWait: pbWait,
-	                                          iWait: piWait
-                                                }, function(data){                                                    
-                                                    if (data = 200) {
-                                                       window.location.reload();
-                                                    }
-                                               }, "text");
-      } 
-      else {
-         // Cancel.
-      }         
-   };
 </script>
 
 <%
