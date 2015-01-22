@@ -222,6 +222,7 @@ ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Detail Dashboard')}
 
+${Templates.tblSubmitTopology(frmNewTopology, frmHDFS)}
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        

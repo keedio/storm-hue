@@ -337,6 +337,8 @@ ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Topology Stats Detail')}
 
+${Templates.tblSubmitTopology(frmNewTopology, frmHDFS)}
+
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">

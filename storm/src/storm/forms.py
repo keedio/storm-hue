@@ -37,13 +37,20 @@ class PathField(CharField):
 
   def clean(self, value):
     return normpath(CharField.clean(self, value))
-  
+
+class UploadFileFormHDFS(forms.Form):
+  op = "uploadHDFS"
+  # The "hdfs" prefix in "hdfs_file" triggers the HDFSfileUploadHandler
+  hdfs_topology_name = CharField(label=_("Topology Name"), widget=forms.TextInput(attrs={'readonly':'readonly'}))
+  hdfs_class_name = CharField(label=_("Class Name"), widget=forms.TextInput(attrs={'readonly':'readonly'}))
+  hdfs_file = FileField(forms.Form, label=_("Save HDFS File"))  
+    
 class UploadFileForm(forms.Form):
   op = "upload"
   # The "hdfs" prefix in "hdfs_file" triggers the HDFSfileUploadHandler
   topology_name = CharField(label=_("Topology Name"), min_length=5, required=True)
-  class_name = CharField(label=_("Class Name"), min_length=5, required=True)
-  hdfs_file = FileField(forms.Form, label=_("File to Upload"))  
+  class_name = CharField(label=_("Class Name"), min_length=5, required=True)  
+  file = FileField(forms.Form, label=_("File to Upload"))
     
   #Validation. Topology Name between 5 and 100
   def clean_topology_name(self):

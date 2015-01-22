@@ -121,6 +121,8 @@ ${ JavaScript.import_js() }
 ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Storm Dashboard')}
+
+${Templates.tblSubmitTopology(frmNewTopology, frmHDFS)}
   
 % if (len(Topologies) > 0):
    <div class="container-fluid">

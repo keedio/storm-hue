@@ -26,6 +26,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+UPLOAD_ROOT = os.path.join(PROJECT_ROOT, 'upload')
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 THRIFT_ROOT = os.path.join(PROJECT_ROOT, 'thrift')
                       

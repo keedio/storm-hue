@@ -22,19 +22,14 @@ def is_selected(section, matcher):
     return ""
 %>
 
-<script type='text/javascript'>    
-   $(document).ready(function() {                      
-      //ko.applyBindings(new StormViewModel());       
-      var StormModel = new StormViewModel();
-      ko.applyBindings(StormModel);
-   });	
-</script>
-
 <%def name="header(breadcrumbs, withBody=True)">  
   <div class="container-fluid">
   <div class="row-fluid">
     <div class="card card-small">
-      <h1 class="card-heading simple">            
+      <h1 class="card-heading simple">
+      <div class="btn-group pull-right">                        
+         <button id="btnNewTopology" data-target="#tblSubmitTopology" class="btn" data-toggle="modal"><i class="fa fa-plus-circle"></i> New Topology </button>         
+      </div>            
       % for idx, crumb in enumerate(breadcrumbs):
         %if crumb[1] != "":
           <a href="${crumb[1]}">${crumb[0]}</a>

@@ -328,6 +328,55 @@
 </%def>
 <!-- ************************************************************************************************************************************* -->   
 
+<!-- New Window Modal. Submit New Topology -->
+<%def name="tblSubmitTopology(pfForm1, pfForm2)">
+   <div class="modal hide fade" id="tblSubmitTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">            
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>Create New Topology </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  <ul class="nav nav-tabs">
+                     <li class="active"><a href="#tabSubmit" data-toggle="tab" class="sidetab">Submit</a></li>               
+                     <li><a href="#tabHDFS" data-toggle="tab" class="sidetab">HDFS</a></li>                   
+                  </ul> 
+                  <div class="tab-content" style="min-height:200px">
+                     <script>
+                        $(document).ready(function() {
+                           $("#id_topology_name").change(function(){
+                              document.getElementById("id_hdfs_topology_name").value = document.getElementById("id_topology_name").value 
+                           });
+                           
+                           $("#id_class_name").change(function(){
+                              document.getElementById("id_hdfs_class_name").value = document.getElementById("id_class_name").value
+                           });
+                        });
+                     </script>
+                     <div class="tab-pane active" id="tabSubmit"> 
+                        ${ csrf_token(request) | n,unicode }                       
+                        ${pfForm1.as_p()|n}
+                     </div>
+                     <div class="tab-pane" id="tabHDFS">
+                        ${ csrf_token(request) | n,unicode }
+                        ${pfForm2.as_p()|n}
+                     </div>
+                  </div>                  
+               </div>
+               <div class="modal-footer">      
+                  <input type="hidden" name="psAction" value="submitTopology">
+                  <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
+                  <input type="submit" class="btn btn-primary" value="Submit"/>            
+               </div>
+            </div>   
+         </form>      
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
 <!-- New Window Modal. Show an error -->
 <%def name="divERROR(psError)">
    <div id="divERROR" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
