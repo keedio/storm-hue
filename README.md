@@ -6,6 +6,7 @@ Storm-HUE is a [HUE](http://www.gethue.com) application to admin and manage a po
 Requirements
 ------------
 - [HUE 3.5.0](http://www.gethue.com) or higher
+- Storm Client in the same Hue Server.
 
 Main Stack
 ----------
