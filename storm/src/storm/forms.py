@@ -41,10 +41,18 @@ class PathField(CharField):
 class UploadFileFormHDFS(forms.Form):
   op = "uploadHDFS"
   # The "hdfs" prefix in "hdfs_file" triggers the HDFSfileUploadHandler
-  hdfs_topology_name = CharField(label=_("Topology Name"), widget=forms.TextInput(attrs={'readonly':'readonly'}))
-  hdfs_class_name = CharField(label=_("Class Name"), widget=forms.TextInput(attrs={'readonly':'readonly'}))
   hdfs_file = FileField(forms.Form, label=_("Save HDFS File"))  
-    
+  
+  #Validation. Topology Name between 5 and 100
+  def clean_topology_name(self):
+     dict = self.cleaned_data
+     hdfs_file = dict.get('hdfs_file')     
+
+     if (len(hdfs_file) == 0):
+        raise forms.ValidationError("HDFS File must not be empty")
+ 
+     return hdfs_file
+   
 class UploadFileForm(forms.Form):
   op = "upload"
   # The "hdfs" prefix in "hdfs_file" triggers the HDFSfileUploadHandler

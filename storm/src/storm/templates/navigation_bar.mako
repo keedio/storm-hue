@@ -27,8 +27,23 @@ def is_selected(section, matcher):
   <div class="row-fluid">
     <div class="card card-small">
       <h1 class="card-heading simple">
+      <!--
       <div class="btn-group pull-right">                        
          <button id="btnNewTopology" data-target="#tblSubmitTopology" class="btn" data-toggle="modal"><i class="fa fa-plus-circle"></i> New Topology </button>         
+      </div>
+      -->
+      <div class="btn-group pull-right" style="display: inline; align: left">
+         <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
+            <a href="#" class="btn upload-link dropdown-toggle" title="Rebalance" data-toggle="dropdown">
+               <i class="fa fa-arrow-circle-o-up"></i> 
+               Create topology
+               <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+               <li><a href="#" data-target="#tblSubmitTopology" class="btn" data-toggle="modal" title="Submit a new topology"><i class="fa fa-plus-circle"></i> Submit</a></li>                     
+               <li><a href="#" data-target="#tblSaveTopology" class="btn" data-toggle="modal" title="Save to HDFS"><i class="fa fa-floppy-o"></i> Save to HDFS</a></li>                     
+            </ul>
+         </div>
       </div>            
       % for idx, crumb in enumerate(breadcrumbs):
         %if crumb[1] != "":

@@ -66,7 +66,8 @@ ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Nimbus Configuration')}
 
-${Templates.tblSubmitTopology(frmNewTopology, frmHDFS)}
+${Templates.tblSubmitTopology(frmNewTopology)}
+${Templates.tblSaveTopology(frmHDFS)}
 
 <div class="container-fluid">
   <div class="card">

@@ -319,7 +319,8 @@ ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Components Dashboard')}
 
-${Templates.tblSubmitTopology(frmNewTopology, frmHDFS)}
+${Templates.tblSubmitTopology(frmNewTopology)}
+${Templates.tblSaveTopology(frmHDFS)}
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        

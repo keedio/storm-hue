@@ -835,9 +835,7 @@ def set_topology_status(request):
     msg = ""
     sTopologyName = ""
     response = {'status': -1, 'output': -1, 'data': ''}  
-    sScript = "storm"
-    
-    print "REQUEST:  ",request.POST                           
+    sScript = "storm"                           
 
     if request.method == 'POST':
         sAction = request.POST['psAction']             
@@ -871,65 +869,70 @@ def set_topology_status(request):
             sURL = request.POST['psURL']
             form = UploadFileForm(request.POST, request.FILES)
 
-            if request.META.get('upload_failed'):
-                raise PopupException(request.META.get('upload_failed'))
-
             if form.is_valid():                                            
                 sServer = STORM_SERVER                       
                 sClass = request.POST['class_name'] if (request.POST['class_name'] <> "") else ""
                 sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] <> "") else ""
                 sFile = request.FILES['file']
-                sFileName = sFile.name
-                
-                try:
-                    sFileHDFS = request.FILES['hdfs_file']
-                except:
-                    sFileHDFS = ""
-                                    
-                username = request.user.username                    
+                sFileName = sFile.name                                                        
                 sClass = request.POST['class_name']  
-           
-                try:
-                    sPath = settings.UPLOAD_ROOT + '/' + sFileName
+                sPath = settings.UPLOAD_ROOT + '/' + sFileName
                     
-                    if not (os.path.isfile(sPath)):
-                        path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
-                        sPath = os.path.join(settings.UPLOAD_ROOT, path) 
+                if not (os.path.isfile(sPath)):
+                    path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
+                    sPath = os.path.join(settings.UPLOAD_ROOT, path)
+                    
+                sExecute = sScript + " " + "jar -c nimbus.host=" + sServer + " " + sPath + " " + sClass + " " + sTopologyName
+                response['status'] = 0
                         
-                    sExecute = sScript + " " + "jar -c nimbus.host=" + sServer + " " + sPath + " " + sClass + " " + sTopologyName                    
-                    
-                    print "FILE_HDFS:  ", sFileHDFS
-                    
-                    if (sFileHDFS <> ""):
-                        sFileNameHDFS = sFileHDFS.name
-                        sPathHDFS = "/user/" + username                 
-                        sPathHDFS = request.fs.join(sPathHDFS, sFileNameHDFS)                    
-                        tmp_file = sFileHDFS.get_temp_path()
-                        request.fs.do_as_user(username, request.fs.rename, tmp_file, sPathHDFS)                        
-                        msg = _('File %(name)s saved successful.\n')  % {'name': sPathHDFS}
-                        
-                    response['status'] = 0
-                           
-                except IOError, ex:
-                    already_exists = False
-                    response['status'] = -1
-                    
-                    try:
-                        already_exists = request.fs.exists(sPathHDFS)
-                    except Exception:
-                        pass
-         
-                    if already_exists:
-                        msg = _('Destination %(name)s already exists.\n')  % {'name': sPathHDFS}
-                    else:
-                        msg = _('Copy to %(name)s failed: %(error)s.\n') % {'name': sPathHDFS, 'error': ex}
-                 
             else:
                 #raise PopupException(_("Error in upload form: %s") % (form.errors,))
                 msg = _("Error in upload form: %s.\n") % form.errors
                 response['error'] = form.errors
                 response['status'] = -1
-                      
+              
+        if (sAction == "saveTopology"):
+            sURL = request.POST['psURL']
+            form = UploadFileFormHDFS(request.POST, request.FILES)
+            
+            if request.META.get('upload_failed'):
+                raise PopupException(request.META.get('upload_failed'))
+            
+            try:
+                sFileHDFS = request.FILES['hdfs_file']
+            except:
+                sFileHDFS = ""
+            
+            try:    
+                if (sFileHDFS <> ""):
+                    username = request.user.username
+                    sFileNameHDFS = sFileHDFS.name
+                    sPathHDFS = "/user/" + username                 
+                    sPathHDFS = request.fs.join(sPathHDFS, sFileNameHDFS)                    
+                    tmp_file = sFileHDFS.get_temp_path()
+                    request.fs.do_as_user(username, request.fs.rename, tmp_file, sPathHDFS)                        
+                    
+                    return HttpResponseRedirect(sURL)
+                else:        
+                    msg = _('HDFS File must not be empty.\n')
+                    raise PopupException(msg)
+                           
+            except IOError, ex:
+                already_exists = False
+                response['status'] = -1
+                    
+                try:
+                    already_exists = request.fs.exists(sPathHDFS)
+                except Exception:
+                    pass
+         
+                if already_exists:
+                    msg = _('Destination %(name)s already exists.\n')  % {'name': sPathHDFS}
+                else:
+                    msg = _('Copy to %(name)s failed: %(error)s.\n') % {'name': sPathHDFS, 'error': ex}    
+                
+                raise PopupException(msg)
+                          
     status, output = commands.getstatusoutput(sExecute)      
   
     response['output'] = output
@@ -973,8 +976,6 @@ def set_topology_status(request):
 #
 def get_seconds_from_strdate(psDate):
     iSeconds = 0
-	
-    print "FECHA: ",psDate
     
     try:
         aDate = psDate.split(" ")   

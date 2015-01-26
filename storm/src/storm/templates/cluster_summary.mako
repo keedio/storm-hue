@@ -71,7 +71,8 @@ ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Cluster Summary')}
 
-${Templates.tblSubmitTopology(frmNewTopology, frmHDFS)}
+${Templates.tblSubmitTopology(frmNewTopology)}
+${Templates.tblSaveTopology(frmHDFS)}
 
 <div class="container-fluid">
    <div class="card">        
