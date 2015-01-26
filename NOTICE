@@ -1,3 +1,0 @@
-This product includes Apache Storm Core software for management Storm topologies in pure Python using Thrift.
-(https://storm.apache.org/, https://github.com/apache/storm/tree/master/storm-core/src/py/storm).
-

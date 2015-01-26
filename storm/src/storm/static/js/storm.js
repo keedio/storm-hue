@@ -40,14 +40,14 @@ function StormViewModel() {
 	     if ((checks[i].type == 'checkbox') && (checks[i].name.substring(0, 3) == 'cp_') && (checks[i].checked)) {
             sName = checks[i].name;
 	        iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
-            aComponents.push(sName.substring(3),iExecutors);
+            aComponents.push(sName.substring(3),iExecutors);            
 	     }
       }            
       
       if (confirm('Are you sure you want to '  + sAction +  ' this Topology?')) {
          // Accept.
          $.post("/storm/set_topology_status/", { psAction: sAction,
-	                                             psNameTopology: sNameTopology,
+        	 									 psNameTopology: sNameTopology,
 		         		                         piNumWorkers: iNumWorkers,
 		            		                     piWaitSecs: iWaitSecs,
 		                    		             paComponents: aComponents
@@ -58,7 +58,7 @@ function StormViewModel() {
                                                     if (jsonResult.output == 'None') {
                                                          window.location.reload();
                                                     }
-                                                    else {
+                                                    else {                                               
 						         						$("#divError").show();
 						      						}
                                                 }, "text");

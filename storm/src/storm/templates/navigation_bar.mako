@@ -22,19 +22,29 @@ def is_selected(section, matcher):
     return ""
 %>
 
-<script type='text/javascript'>    
-   $(document).ready(function() {                      
-      //ko.applyBindings(new StormViewModel());       
-      var StormModel = new StormViewModel();
-      ko.applyBindings(StormModel);
-   });	
-</script>
-
 <%def name="header(breadcrumbs, withBody=True)">  
   <div class="container-fluid">
   <div class="row-fluid">
     <div class="card card-small">
-      <h1 class="card-heading simple">            
+      <h1 class="card-heading simple">
+      <div class="btn-group pull-right">                        
+         <button id="btnNewTopology" data-target="#tblSubmitTopology" class="btn" data-toggle="modal"><i class="fa fa-arrow-circle-o-up"></i> Submit Topology </button>         
+      </div>       
+      <!--
+      <div class="btn-group pull-right" style="display: inline; align: left">
+         <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
+            <a href="#" class="btn dropdown-toggle" title="Create topology" data-toggle="dropdown">
+               <i class="fa fa-arrow-circle-o-up"></i> 
+               Create topology
+               <span class="caret"></span>	
+            </a>
+            <ul class="dropdown-menu">
+               <li><a href="#" data-target="#tblSubmitTopology" class="btn" data-toggle="modal" title="Submit a new topology"><i class="fa fa-plus-circle"></i> Submit</a></li>                     
+               <li><a href="#" data-target="#tblSaveTopology" class="btn" data-toggle="modal" title="Save to HDFS"><i class="fa fa-floppy-o"></i> Save to HDFS</a></li>                     
+            </ul>
+         </div>
+      </div>
+      -->            
       % for idx, crumb in enumerate(breadcrumbs):
         %if crumb[1] != "":
           <a href="${crumb[1]}">${crumb[0]}</a>

@@ -328,6 +328,58 @@
 </%def>
 <!-- ************************************************************************************************************************************* -->   
 
+<!-- New Window Modal. Submit New Topology -->
+<%def name="tblSubmitTopology(pfForm1)">
+   <div class="modal hide fade" id="tblSubmitTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
+            ${ csrf_token(request) | n,unicode }            
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>Create New Topology </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${pfForm1.as_p()|n}                  
+               </div>
+               <div class="modal-footer">      
+                  <input type="hidden" name="psAction" value="submitTopology">
+                  <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
+                  <input type="submit" class="btn btn-primary" value="Submit"/>            
+               </div>
+            </div>   
+         </form>      
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Save Topology to HDFS -->
+<%def name="tblSaveTopology(pfForm1)">
+   <div class="modal hide fade" id="tblSaveTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
+            ${ csrf_token(request) | n,unicode }            
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>Save Topology to HDFS </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${pfForm1.as_p()|n}                  
+               </div>
+               <div class="modal-footer">      
+                  <input type="hidden" name="psAction" value="saveTopology">
+                  <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
+                  <input type="submit" class="btn btn-primary" value="Save"/>            
+               </div>
+            </div>   
+         </form>      
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
 <!-- New Window Modal. Show an error -->
 <%def name="divERROR(psError)">
    <div id="divERROR" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">

@@ -6,7 +6,7 @@ Storm-HUE is a [HUE](http://www.gethue.com) application to admin and manage a po
 Requirements
 ------------
 - [HUE 3.5.0](http://www.gethue.com) or higher
-- [Python-Thrift 0.9.2](https://pypi.python.org/pypi/thrift)
+- Storm Client in the same Hue Server.
 
 Main Stack
 ----------
@@ -21,9 +21,6 @@ Installation
 ------------
 To get the Storm-HUE app integrated and running in your HUE deployment:
 
-    $ wget https://pypi.python.org/packages/source/t/thrift/thrift-0.9.2.tar.gz#md5=91f1c224c46a257bb428431943387dfd
-    $ cd thrift-0.9.2
-    $ sudo python setup.py install
     $ git clone http://github.com/jjmleiro/storm-hue.git
     $ mv storm-hue/storm $HUE_HOME/apps
     $ cd $HUE_HOME/apps

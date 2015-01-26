@@ -17,12 +17,11 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-#JSON Libraries.  
 try:
-  import simplejson as json
-except ImportError: 
-  import json
-  print ImportError
+    import simplejson as json
+except ImportError:
+    import json
+    print ImportError
 
 import os
 import commands
@@ -38,8 +37,10 @@ from desktop.lib.django_util import render
 from desktop.lib.exceptions_renderable import PopupException
 from storm import settings
 from storm.conf import SERVER
+from storm.forms import UploadFileForm, UploadFileFormHDFS 
 
 SYSTEM_STATS = "?sys=1"
+STORM_SERVER = SERVER.STORM_SERVER.get()
 TOPOLOGIES_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_TOPOLOGIES.get()
 TOPOLOGY_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_TOPOLOGY.get()
 CLUSTER_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_CLUSTER.get()
@@ -69,47 +70,49 @@ LOG_URL = SERVER.STORM_UI_LOG.get()
 # @remarks -
 #
 def storm_dashboard(request):
-  sStatus = ""  
-  iActive = 0
-  iInactive = 0
-  iExecutors = 0
-  iWorkers = 0
-  iTasks = 0      
-  form = ""
-  aData = []        
+    sStatus = ""  
+    iActive = 0
+    iInactive = 0
+    iExecutors = 0
+    iWorkers = 0
+    iTasks = 0      
+    form = ""
+    aData = []        
   
-  jsonTopology = get_json(TOPOLOGIES_URL)    
+    jsonTopology = get_json(TOPOLOGIES_URL)    
     
-  if (len(jsonTopology) > 0):
+    if (len(jsonTopology) > 0):
   
-     try:
-        aData = jsonTopology["topologies"]        
-     except:
-        aData = []
+        try:
+            aData = jsonTopology["topologies"]        
+        except:
+            aData = []
      
-     if (len(aData) > 0):                           
-       for row in aData:       
-          row.update({'seconds': get_seconds_from_strdate(row["uptime"]) })
-          sStatus = row["status"]
+        if (len(aData) > 0):                           
+            for row in aData:       
+                row.update({'seconds': get_seconds_from_strdate(row["uptime"]) })
+                sStatus = row["status"]
                                         
-          if (sStatus == "ACTIVE"):
-             iActive += 1
-          else:   
-             iInactive += 1
+                if (sStatus == "ACTIVE"):
+                    iActive += 1
+                else:   
+                    iInactive += 1
        
-          iExecutors += row["executorsTotal"]
-          iWorkers += row["workersTotal"]
-          iTasks += row["tasksTotal"]                                                              
+                iExecutors += row["executorsTotal"]
+                iWorkers += row["workersTotal"]
+                iTasks += row["tasksTotal"]                                                              
   
   
-  return render('storm_dashboard.mako', request, {'user': request.user,
-                                                  'Topologies': aData,
-                                                  'Active': iActive,
-                                                  'Inactive': iInactive,
-                                                  'Executors': iExecutors,
-                                                  'Workers': iWorkers,
-                                                  'Tasks': iTasks                                                  
-                                                 })
+    return render('storm_dashboard.mako', request, {'user': request.user,
+                                                    'Topologies': aData,
+                                                    'Active': iActive,
+                                                    'Inactive': iInactive,
+                                                    'Executors': iExecutors,
+                                                    'Workers': iWorkers,
+                                                    'Tasks': iTasks,
+                                                    'frmNewTopology': get_newform(request, UploadFileForm),
+                                                    'frmHDFS': get_newform(request, UploadFileFormHDFS)                                                  
+                                                    })
 #
 # storm_dashboard *********************************************************************************************************
 
@@ -129,107 +132,117 @@ def storm_dashboard(request):
 # @remarks -
 #
 def detail_dashboard(request, topology_id, system_id):
-  aTopology = []
-  aStats = []
-  aSpouts = []
-  aBolts = []
-  aEmitted = []
-  aTransferred = []
-  aAcked = []
-  aFailed = []
-  iEmitted = 0
-  iTransferred = 0
-  iAcked = 0
-  iFailed = 0    
-  iSystem = int(system_id) if system_id is not None else 0
+    aTopology = []
+    aStats = []
+    aSpouts = []
+    aBolts = []
+    aEmitted = []
+    aTransferred = []
+    aAcked = []
+    aFailed = []
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0    
+    iSystem = int(system_id) if system_id is not None else 0
   
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)      
+    jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)      
   
-  iSystem = 1 if (iSystem == 0) else 0
+    iSystem = 1 if (iSystem == 0) else 0
   
-  jsonTopologyVisualization = get_json(TOPOLOGY_URL + topology_id + '/visualization')
-  jsonVisualization = get_dumps(jsonTopologyVisualization)        
+    jsonTopologyVisualization = get_json(TOPOLOGY_URL + topology_id + '/visualization')
+    jsonVisualization = get_dumps(jsonTopologyVisualization)        
   
-  if (len(jsonTopology) > 0):     
-     aTopology = get_topology(topology_id)
+    if (len(jsonTopology) > 0):     
+        aTopology = get_topology(topology_id)
      
-     try:
-        aStats = jsonTopology["topologyStats"]
+        try:
+            aStats = jsonTopology["topologyStats"]
         
-        if (len(aStats) == 1):        
-           if (aStats[0]["failed"] is None):
-              aStats = []        
-     except:
-        aStats = []
+            if (len(aStats) == 1):        
+                if (aStats[0]["failed"] is None):
+                    aStats = []        
+        except:
+            aStats = []
      
-     try:   
-        aSpouts = jsonTopology["spouts"]
-     except:
-        aSpouts = []
+        try:   
+            aSpouts = jsonTopology["spouts"]
+            
+            if (aSpouts[0]["transferred"] is None):
+                aSpouts = []
+                    
+        except:
+            aSpouts = []
         
-     try:
-        aBolts = jsonTopology["bolts"]          
-     except:
-        aBolts = []
+        try:
+            aBolts = jsonTopology["bolts"]
+            
+            if (aBolts[0]["transferred"] is None):
+                aBolts = []
+                              
+        except:
+            aBolts = []
              
-     for p in aStats:       
-       iEmitted+=p["emitted"] if p["emitted"] is not None else 0
-       iTransferred+=p["transferred"] if p["transferred"] is not None else 0
-       iAcked+=p["acked"] if p["acked"] is not None else 0
-       iFailed+=p["failed"] if p["failed"] is not None else 0
+        for p in aStats:       
+            iEmitted+=p["emitted"] if p["emitted"] is not None else 0
+            iTransferred+=p["transferred"] if p["transferred"] is not None else 0
+            iAcked+=p["acked"] if p["acked"] is not None else 0
+            iFailed+=p["failed"] if p["failed"] is not None else 0
      
-     aEmitted.append(iEmitted)     
-     aTransferred.append(iTransferred)     
-     aAcked.append(iAcked)     
-     aFailed.append(iFailed)     
+        aEmitted.append(iEmitted)     
+        aTransferred.append(iTransferred)     
+        aAcked.append(iAcked)     
+        aFailed.append(iFailed)     
           
-     iEmitted = 0
-     iTransferred = 0
-     iAcked = 0
-     iFailed = 0
+        iEmitted = 0
+        iTransferred = 0
+        iAcked = 0
+        iFailed = 0
      
-     for p in aSpouts:       
-       iEmitted+=p["emitted"] if p["emitted"] is not None else 0
-       iTransferred+=p["transferred"] if p["transferred"] is not None else 0
-       iAcked+=p["acked"] if p["acked"] is not None else 0
-       iFailed+=p["failed"] if p["failed"] is not None else 0
+        for p in aSpouts:       
+            iEmitted+=p["emitted"] if p["emitted"] is not None else 0
+            iTransferred+=p["transferred"] if p["transferred"] is not None else 0
+            iAcked+=p["acked"] if p["acked"] is not None else 0
+            iFailed+=p["failed"] if p["failed"] is not None else 0
      
-     aEmitted.append(iEmitted)     
-     aTransferred.append(iTransferred)     
-     aAcked.append(iAcked)     
-     aFailed.append(iFailed)
+        aEmitted.append(iEmitted)     
+        aTransferred.append(iTransferred)     
+        aAcked.append(iAcked)     
+        aFailed.append(iFailed)
      
-     iEmitted = 0
-     iTransferred = 0
-     iAcked = 0
-     iFailed = 0
+        iEmitted = 0
+        iTransferred = 0
+        iAcked = 0
+        iFailed = 0
      
-     for p in aBolts:       
-       iEmitted+=p["emitted"] if p["emitted"] is not None else 0
-       iTransferred+=p["transferred"] if p["transferred"] is not None else 0
-       iAcked+=p["acked"] if p["acked"] is not None else 0
-       iFailed+=p["failed"] if p["failed"] is not None else 0
+        for p in aBolts:       
+            iEmitted+=p["emitted"] if p["emitted"] is not None else 0
+            iTransferred+=p["transferred"] if p["transferred"] is not None else 0
+            iAcked+=p["acked"] if p["acked"] is not None else 0
+            iFailed+=p["failed"] if p["failed"] is not None else 0
        
-     aEmitted.append(iEmitted)     
-     aTransferred.append(iTransferred)     
-     aAcked.append(iAcked)     
-     aFailed.append(iFailed)                
+        aEmitted.append(iEmitted)     
+        aTransferred.append(iTransferred)     
+        aAcked.append(iAcked)     
+        aFailed.append(iFailed)                
     
-  return render('detail_dashboard.mako', request, {'user':request.user,
-					                               'Topology': aTopology,
-					                               'Visualization': jsonVisualization,
-					                               'Stats': aStats,
-					                               'Spouts': aSpouts,
-					                               'Bolts': aBolts,
-					                               'jStats': get_dumps(aStats),
-					                               'jSpouts': get_dumps(aSpouts),
-					                               'jBolts': get_dumps(aBolts),
-					                               'Emitted': aEmitted,
-					                               'Transferred': aTransferred,
-					                               'Acked': aAcked,
-					                               'Failed': aFailed,
-					                               'ShowSystem': iSystem
-					                              })
+    return render('detail_dashboard.mako', request, {'user':request.user,
+                                                     'Topology': aTopology,
+					                                 'Visualization': jsonVisualization,
+                                                     'Stats': aStats,
+                                                     'Spouts': aSpouts,
+                                                     'Bolts': aBolts,
+                                                     'jStats': get_dumps(aStats),
+                                                     'jSpouts': get_dumps(aSpouts),
+                                                     'jBolts': get_dumps(aBolts),
+                                                     'Emitted': aEmitted,
+                                                     'Transferred': aTransferred,
+                                                     'Acked': aAcked,
+                                                     'Failed': aFailed,
+                                                     'ShowSystem': iSystem,
+                                                     'frmNewTopology': get_newform(request, UploadFileForm),
+                                                     'frmHDFS': get_newform(request, UploadFileFormHDFS)
+                                                     })
 #
 # detail_dashboard ********************************************************************************************************
 
@@ -248,29 +261,31 @@ def detail_dashboard(request, topology_id, system_id):
 # @return -
 # @remarks -
 #
-def topology_dashboard(request, topology_id, window_id):  
-  aTopology = []  
+def topology_dashboard(request, topology_id, window_id):
+    aTopology = []  
   
-  jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id)
+    jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
+    jsonTopology = get_json(TOPOLOGY_URL + topology_id)
   
-  if (len(jsonStats) > 0):
-     jsonDumpsStats = get_dumps(jsonStats["topologyStats"])
-     jsonDumpsSpouts = get_dumps(jsonStats["spouts"])
-     jsonDumpsBolts = get_dumps(jsonStats["bolts"])
-     aTopology = get_topology(topology_id)                             
+    if (len(jsonStats) > 0):
+        jsonDumpsStats = get_dumps(jsonStats["topologyStats"])
+        jsonDumpsSpouts = get_dumps(jsonStats["spouts"])
+        jsonDumpsBolts = get_dumps(jsonStats["bolts"])
+        aTopology = get_topology(topology_id)                             
      
-     aSpouts = jsonTopology["spouts"]
-     aBolts = jsonTopology["bolts"]
+        aSpouts = jsonTopology["spouts"]
+        aBolts = jsonTopology["bolts"]
      
-  return render('topology_dashboard.mako', request, {'jStats': jsonDumpsStats,
-						                             'jSpouts': jsonDumpsSpouts,
-						                             'jBolts': jsonDumpsBolts,
-						                             'windowId': window_id,
-						                             'Topology': aTopology,
-                                                     'Spouts': aSpouts,
-                                                     'Bolts': aBolts
-						                            })
+    return render('topology_dashboard.mako', request, {'jStats': jsonDumpsStats,
+                                                       'jSpouts': jsonDumpsSpouts,
+                                                       'jBolts': jsonDumpsBolts,
+                                                       'windowId': window_id,
+                                                       'Topology': aTopology,
+                                                       'Spouts': aSpouts,
+                                                       'Bolts': aBolts,
+                                                       'frmNewTopology': get_newform(request, UploadFileForm),
+                                                       'frmHDFS': get_newform(request, UploadFileFormHDFS)
+                                                       })
 #
 # topology_dashboard ******************************************************************************************************
 
@@ -290,71 +305,72 @@ def topology_dashboard(request, topology_id, window_id):
 # @return -
 # @remarks -
 #
-def components_dashboard(request, topology_id, component_id, system_id):  
-  aTopology = []
-  aComponent = []
-  aComponentStats = []
-  jsonDumpsOutput = []
-  jsonDumpsInput = []
-  jsonDumpsExecutors = []
-  jsonDumpsErrors = []
-  iBolt = -1
-  iSystem = int(system_id) if system_id is not None else 0     
+def components_dashboard(request, topology_id, component_id, system_id):
+    aTopology = []
+    aComponent = []
+    aComponentStats = []
+    jsonDumpsOutput = []
+    jsonDumpsInput = []
+    jsonDumpsExecutors = []
+    jsonDumpsErrors = []
+    iBolt = -1
+    iSystem = int(system_id) if system_id is not None else 0     
     
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
-  #rTopology = requests.get(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else requests.get(TOPOLOGY_URL + topology_id)
-  #jsonTopology = rTopology.json()
-  iSystem = 1 if (iSystem == 0) else 0
+    jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
+
+    iSystem = 1 if (iSystem == 0) else 0
   
-  jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
+    jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
   
-  if (len(jsonTopology) > 0):
-     aTopology = get_topology(topology_id)
+    if (len(jsonTopology) > 0):
+        aTopology = get_topology(topology_id)
   
-     aSpouts = jsonTopology["spouts"]
-     aBolts = jsonTopology["bolts"]
+        aSpouts = jsonTopology["spouts"]
+        aBolts = jsonTopology["bolts"]
      
-  if (len(jsonComponents) > 0):
-     aComponent = [ component_id, 
-		            jsonComponents["name"], 
-		            jsonComponents["executors"], 
-		            jsonComponents["tasks"],
-		            jsonComponents["componentType"].upper()
-		          ]
+    if (len(jsonComponents) > 0):
+        aComponent = [component_id, 
+                      jsonComponents["name"], 
+                      jsonComponents["executors"], 
+                      jsonComponents["tasks"],
+                      jsonComponents["componentType"].upper()
+                      ]
      
-     if (aComponent[4] == "BOLT"):     
-        aComponentStats = jsonComponents["boltStats"]        
-        iBolt = 1
-     else:
-        aComponentStats = jsonComponents["spoutSummary"]
+        if (aComponent[4] == "BOLT"):     
+            aComponentStats = jsonComponents["boltStats"]        
+            iBolt = 1
+        else:
+            aComponentStats = jsonComponents["spoutSummary"]
   
-     jsonDumpsComponentStats = get_dumps(aComponentStats)
+        jsonDumpsComponentStats = get_dumps(aComponentStats)
      
-     if ("outputStats") in jsonComponents:     
-        jsonDumpsOutput = get_dumps(jsonComponents["outputStats"])            
+        if ("outputStats") in jsonComponents:     
+            jsonDumpsOutput = get_dumps(jsonComponents["outputStats"])            
      
-     if ("inputStats") in jsonComponents:     
-        jsonDumpsInput = get_dumps(jsonComponents["inputStats"])             
+        if ("inputStats") in jsonComponents:     
+            jsonDumpsInput = get_dumps(jsonComponents["inputStats"])             
         
-     if ("executorStats") in jsonComponents:     
-        jsonDumpsExecutors = get_dumps(jsonComponents["executorStats"])             
+        if ("executorStats") in jsonComponents:     
+            jsonDumpsExecutors = get_dumps(jsonComponents["executorStats"])             
      
-     if ("componentErrors") in jsonComponents:     
-        jsonDumpsErrors = get_dumps(jsonComponents["componentErrors"])
+        if ("componentErrors") in jsonComponents:     
+            jsonDumpsErrors = get_dumps(jsonComponents["componentErrors"])
      
-  return render('components_dashboard.mako', request, {'componentId': component_id,
-						                               'ShowSystem': iSystem,
-					                                   'Topology': aTopology,
-					                                   'Component': aComponent,
-					                                   'Components': jsonDumpsComponentStats,
-					                                   'Output': jsonDumpsOutput,
-					                                   'Input': jsonDumpsInput,
-					                                   'Executors': jsonDumpsExecutors,
-					                                   'Errors': jsonDumpsErrors,
-					                                   'isBolt': iBolt,
-                                                       'Spouts': aSpouts,
-                                                       'Bolts': aBolts
-					                                  })
+    return render('components_dashboard.mako', request, {'componentId': component_id,
+                                                         'ShowSystem': iSystem,
+                                                         'Topology': aTopology,
+                                                         'Component': aComponent,
+                                                         'Components': jsonDumpsComponentStats,
+                                                         'Output': jsonDumpsOutput,
+                                                         'Input': jsonDumpsInput,
+                                                         'Executors': jsonDumpsExecutors,
+                                                         'Errors': jsonDumpsErrors,
+                                                         'isBolt': iBolt,
+                                                         'Spouts': aSpouts,
+                                                         'Bolts': aBolts,
+                                                         'frmNewTopology': get_newform(request, UploadFileForm),
+                                                         'frmHDFS': get_newform(request, UploadFileFormHDFS)
+                                                         })
 #
 # components_dashboard ****************************************************************************************************
 
@@ -373,22 +389,24 @@ def components_dashboard(request, topology_id, component_id, system_id):
 # @remarks -
 #
 def spouts_dashboard(request, topology_id):
-  aTopology = []
-  aSpouts = []
+    aTopology = []
+    aSpouts = []
   
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id)
+    jsonTopology = get_json(TOPOLOGY_URL + topology_id)
   
-  if (len(jsonTopology) > 0):     
-     aTopology = get_topology(topology_id)
-     jsonDumpsSpouts = get_dumps(jsonTopology["spouts"])
-     aSpouts = jsonTopology["spouts"]
-     aBolts = jsonTopology["bolts"]
+    if (len(jsonTopology) > 0):     
+        aTopology = get_topology(topology_id)
+        jsonDumpsSpouts = get_dumps(jsonTopology["spouts"])
+        aSpouts = jsonTopology["spouts"]
+        aBolts = jsonTopology["bolts"]
   
-  return render('spouts_dashboard.mako', request, {'Topology': aTopology,
-					                               'jSpouts': jsonDumpsSpouts,
-					                               'Spouts': aSpouts,
-                                                   'Bolts': aBolts
-					          })
+    return render('spouts_dashboard.mako', request, {'Topology': aTopology,
+                                                     'jSpouts': jsonDumpsSpouts,
+                                                     'Spouts': aSpouts,
+                                                     'Bolts': aBolts,
+                                                     'frmNewTopology': get_newform(request, UploadFileForm),
+                                                     'frmHDFS': get_newform(request, UploadFileFormHDFS)
+                                                     })
 #
 # spouts_dashboard ********************************************************************************************************
 
@@ -407,22 +425,24 @@ def spouts_dashboard(request, topology_id):
 # @remarks -
 #
 def bolts_dashboard(request, topology_id):
-  aTopology = []
-  aBolts = []
+    aTopology = []
+    aBolts = []
   
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id)
+    jsonTopology = get_json(TOPOLOGY_URL + topology_id)
   
-  if (len(jsonTopology) > 0):            
-     aTopology = get_topology(topology_id)    
-     jsonDumpsBolts = get_dumps(jsonTopology["bolts"])
-     aBolts = jsonTopology["bolts"]
-     aSpouts = jsonTopology["spouts"]
+    if (len(jsonTopology) > 0):            
+        aTopology = get_topology(topology_id)    
+        jsonDumpsBolts = get_dumps(jsonTopology["bolts"])
+        aBolts = jsonTopology["bolts"]
+        aSpouts = jsonTopology["spouts"]
      
-  return render('bolts_dashboard.mako', request, {'Topology': aTopology,
-				                                  'jBolts': jsonDumpsBolts,
-					                              'Bolts': aBolts,
-                                                  'Spouts': aSpouts
-					                              })
+    return render('bolts_dashboard.mako', request, {'Topology': aTopology,
+                                                    'jBolts': jsonDumpsBolts,
+                                                    'Bolts': aBolts,
+                                                    'Spouts': aSpouts,
+                                                    'frmNewTopology': get_newform(request, UploadFileForm),
+                                                    'frmHDFS': get_newform(request, UploadFileFormHDFS)
+                                                    })
 #
 # bolts_dashboard *********************************************************************************************************
 
@@ -440,17 +460,19 @@ def bolts_dashboard(request, topology_id):
 # @remarks -
 #
 def cluster_summary(request):  
-  aSupervisor = []
+    aSupervisor = []
   
-  jsonCluster = get_json(CLUSTER_URL)
-  jsonSupervisor = get_json(SUPERVISOR_URL)                  
+    jsonCluster = get_json(CLUSTER_URL)
+    jsonSupervisor = get_json(SUPERVISOR_URL)                  
   
-  if (len(jsonSupervisor) > 0):        
-    aSupervisor = jsonSupervisor["supervisors"]
+    if (len(jsonSupervisor) > 0):        
+        aSupervisor = jsonSupervisor["supervisors"]
     
-  return render('cluster_summary.mako', request, {'Cluster': jsonCluster,
-						                          'Supervisor': aSupervisor
-						                         })  
+    return render('cluster_summary.mako', request, {'Cluster': jsonCluster,
+                                                    'Supervisor': aSupervisor,
+                                                    'frmNewTopology': get_newform(request, UploadFileForm),
+                                                    'frmHDFS': get_newform(request, UploadFileFormHDFS)
+                                                    })  
 #
 # cluster_summary *********************************************************************************************************
 
@@ -468,17 +490,20 @@ def cluster_summary(request):
 # @remarks -
 #
 def nimbus_configuration(request):
-  aConf = []
+    aConf = []
   
-  jsonConf = get_json(CONFIGURATION_URL)
+    jsonConf = get_json(CONFIGURATION_URL)
   
-  if (len(jsonConf) > 0):        
-    for prop in jsonConf:                  
-      aConf.append({ 'key': prop,
-                     'value': jsonConf[prop]
-      });             
+    if (len(jsonConf) > 0):        
+        for prop in jsonConf:                  
+            aConf.append({'key': prop,
+                          'value': jsonConf[prop]
+                          });             
     
-  return render('nimbus_configuration.mako', request, {'Conf': aConf})  
+    return render('nimbus_configuration.mako', request, {'Conf': aConf,
+                                                         'frmNewTopology': get_newform(request, UploadFileForm),
+                                                         'frmHDFS': get_newform(request, UploadFileFormHDFS) 
+                                                         })  
 #
 # nimbus_configuration ****************************************************************************************************
 
@@ -497,32 +522,32 @@ def nimbus_configuration(request):
 # @return -
 # @remarks -
 #
-def topology(request, topology_id, window_id):  
-  aTopology = []
-  aStat = []
-  aStats = []
-  aSpouts = []
-  aBolts = []  
+def topology(request, topology_id, window_id):
+    aTopology = []
+    aStat = []
+    aStats = []
+    aSpouts = []
+    aBolts = []  
   
-  jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
-  aTopology = get_topology(topology_id)
+    jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
+    aTopology = get_topology(topology_id)
   
-  if (len(jsonStats) > 0):         
-     aStats = jsonStats["topologyStats"]          
+    if (len(jsonStats) > 0):         
+        aStats = jsonStats["topologyStats"]          
      
-     for stat in aStats:
-        if (stat["window"] == window_id):
-	  aStat = stat               
+        for stat in aStats:
+            if (stat["window"] == window_id):
+	               aStat = stat               
      
-     aSpouts = jsonStats["spouts"]
-     aBolts = jsonStats["bolts"]                    
+        aSpouts = jsonStats["spouts"]
+        aBolts = jsonStats["bolts"]                    
      
-  return render('topology.mako', request, {'Topology': aTopology,
-					                       'Stats': aStat,
-					                       'Spouts': aSpouts,
-					                       'Bolts': aBolts,
-					                       'ShowSystem': 0
-					                      })
+    return render('topology.mako', request, {'Topology': aTopology,
+                                             'Stats': aStat,
+                                             'Spouts': aSpouts,
+                                             'Bolts': aBolts,
+                                             'ShowSystem': 0
+                                             })
 #
 # topology ****************************************************************************************************************
 
@@ -541,61 +566,61 @@ def topology(request, topology_id, window_id):
 # @return -
 # @remarks -
 #
-def components(request, topology_id, component_id, system_id):  
-  aTopology = []
-  aComponent = []
-  aStats = []
-  aOutput = []
-  aInput = []
-  aExecutors = []
-  aErrors = []   
-  iBolt = -1    
-  iSystem = int(system_id) if system_id is not None else 0       
+def components(request, topology_id, component_id, system_id): 
+    aTopology = []
+    aComponent = []
+    aStats = []
+    aOutput = []
+    aInput = []
+    aExecutors = []
+    aErrors = []   
+    iBolt = -1    
+    iSystem = int(system_id) if system_id is not None else 0       
   
-  jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
+    jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
   
-  iSystem = 1 if (iSystem == 0) else 0
+    iSystem = 1 if (iSystem == 0) else 0
   
-  aTopology = get_topology(topology_id)
+    aTopology = get_topology(topology_id)
   
-  if (len(jsonComponents) > 0):
-     aComponent = [component_id, 
-		   jsonComponents["name"], 
-		   jsonComponents["executors"], 
-		   jsonComponents["tasks"],
-		   jsonComponents["componentType"].upper()
-		  ]
+    if (len(jsonComponents) > 0):
+        aComponent = [component_id, 
+                      jsonComponents["name"], 
+		              jsonComponents["executors"], 
+		              jsonComponents["tasks"],
+		              jsonComponents["componentType"].upper()
+		              ]
      
-     if (aComponent[4] == "BOLT"):     
-        aStats = jsonComponents["boltStats"]
-        iBolt = 1
-     else:
-        aStats = jsonComponents["spoutSummary"]                     
+        if (aComponent[4] == "BOLT"):     
+            aStats = jsonComponents["boltStats"]
+            iBolt = 1
+        else:
+            aStats = jsonComponents["spoutSummary"]                     
         
-     if ("outputStats") in jsonComponents:     
-        aOutput = jsonComponents["outputStats"]             
+        if ("outputStats") in jsonComponents:     
+            aOutput = jsonComponents["outputStats"]             
      
-     if ("inputStats") in jsonComponents:     
-        aInput = jsonComponents["inputStats"]             
+        if ("inputStats") in jsonComponents:     
+            aInput = jsonComponents["inputStats"]             
         
-     if ("executorStats") in jsonComponents:     
-        aExecutors = jsonComponents["executorStats"]             
+        if ("executorStats") in jsonComponents:     
+            aExecutors = jsonComponents["executorStats"]             
      
-     if ("componentErrors") in jsonComponents:     
-        aErrors = jsonComponents["componentErrors"]                 
+        if ("componentErrors") in jsonComponents:     
+            aErrors = jsonComponents["componentErrors"]                 
   
-  return render('components.mako', request, {'Server_Log': LOG_URL,
-					                         'ShowSystem': iSystem,
-					                         'idComponent': component_id,
-					                         'Topology': aTopology,
-					                         'Component': aComponent,
-					                         'Stats': aStats,
-					                         'Output': aOutput,
-					                         'Input': aInput,
-					                         'Executors': aExecutors,
-					                         'Errors': aErrors,
-					                         'iBolt': iBolt
-					                        })
+    return render('components.mako', request, {'Server_Log': LOG_URL,
+                                               'ShowSystem': iSystem,
+                                               'idComponent': component_id,
+                                               'Topology': aTopology,
+                                               'Component': aComponent,
+                                               'Stats': aStats,
+                                               'Output': aOutput,
+                                               'Input': aInput,
+                                               'Executors': aExecutors,
+                                               'Errors': aErrors,
+                                               'iBolt': iBolt
+                                               })
 #
 # components **************************************************************************************************************
 
@@ -616,27 +641,24 @@ def components(request, topology_id, component_id, system_id):
 # @remarks -
 #
 def failed(request, topology_id, component_id, system_id):    
-  aComponent = []  
+    aComponent = []  
   
-  iSystem = int(system_id) if system_id is not None else 0  
-  jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
-  
-  #STATS.
-  if (int(component_id) == 1):
-     aComponent = jsonTopology["topologyStats"]
+    iSystem = int(system_id) if system_id is not None else 0  
+    jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
+
+    if (int(component_id) == 1):
+        aComponent = jsonTopology["topologyStats"]
      
-  #SPOUTS.
-  if (int(component_id) == 2):
-     aComponent = jsonTopology["spouts"]
+    if (int(component_id) == 2):
+        aComponent = jsonTopology["spouts"]
      
-  #BOLTS.
-  if (int(component_id) == 3):
-     aComponent = jsonTopology["bolts"]    
+    if (int(component_id) == 3):
+        aComponent = jsonTopology["bolts"]    
   
-  return render('failed.mako', request, {'Component': aComponent,
-					                     'idTopology': topology_id,
-					                     'idComponent': int(component_id)
-                                        })  
+    return render('failed.mako', request, {'Component': aComponent,
+                                           'idTopology': topology_id,
+                                           'idComponent': int(component_id)
+                                           })  
 #
 # failed ******************************************************************************************************************
 
@@ -661,14 +683,14 @@ def failed(request, topology_id, component_id, system_id):
 # @return JSON Object.
 # @remarks -
 #
-def get_json(psUrl):    
-  rJSON = requests.get(psUrl)
-  jsonObject = rJSON.json()      
+def get_json(psUrl):
+    rJSON = requests.get(psUrl)
+    jsonObject = rJSON.json()      
   
-  if (len(jsonObject) > 0):     
-     return jsonObject      
-  else:     
-     return []    
+    if (len(jsonObject) > 0):     
+        return jsonObject      
+    else:     
+        return []    
 #
 # get_json ****************************************************************************************************************
 
@@ -686,9 +708,9 @@ def get_json(psUrl):
 # @remarks -
 #
 def get_dumps(psObject):    
-  jsonDumps = json.dumps(psObject).replace("\\", "\\\\")
+    jsonDumps = json.dumps(psObject).replace("\\", "\\\\")
   
-  return jsonDumps
+    return jsonDumps
 #
 # get_dumps ***************************************************************************************************************
 
@@ -706,24 +728,23 @@ def get_dumps(psObject):
 # @remarks -
 #
 def get_topology(topology_id):  
-  aTopology = []  
+    aTopology = []  
   
-  rTopology = requests.get(TOPOLOGY_URL + topology_id)
-  jsonTopology = rTopology.json()  
+    rTopology = requests.get(TOPOLOGY_URL + topology_id)
+    jsonTopology = rTopology.json()  
   
-  if (len(jsonTopology) > 0):
-     #Topology Summary.
-     nameTopology = jsonTopology["name"]
-     idTopology = jsonTopology["id"]
-     statusTopology = jsonTopology["status"]
-     uptimeTopology = jsonTopology["uptime"]
-     workersTopology = jsonTopology["workersTotal"]
-     executorsTopology = jsonTopology["executorsTotal"]
-     tasksTopology = jsonTopology["tasksTotal"]
+    if (len(jsonTopology) > 0):
+        nameTopology = jsonTopology["name"]
+        idTopology = jsonTopology["id"]
+        statusTopology = jsonTopology["status"]
+        uptimeTopology = jsonTopology["uptime"]
+        workersTopology = jsonTopology["workersTotal"]
+        executorsTopology = jsonTopology["executorsTotal"]
+        tasksTopology = jsonTopology["tasksTotal"]
      
-     aTopology = [idTopology, nameTopology, statusTopology, uptimeTopology, workersTopology, executorsTopology, tasksTopology]
+        aTopology = [idTopology, nameTopology, statusTopology, uptimeTopology, workersTopology, executorsTopology, tasksTopology]
      
-  return aTopology   
+    return aTopology   
 #
 # get_topology ************************************************************************************************************
 
@@ -741,12 +762,12 @@ def get_topology(topology_id):
 # @remarks -
 #
 def get_newform(request, pfForm):
-  if request.method == 'POST':
-     form = pfForm(request.POST, request.FILES)
-  else:   
-     form = pfForm()
+    if request.method == 'POST':
+        form = pfForm(request.POST, request.FILES)
+    else:   
+        form = pfForm()
      
-  return form
+    return form
 #
 # get_newform *************************************************************************************************************
 
@@ -759,108 +780,184 @@ def get_newform(request, pfForm):
 #
 # @author Jose Juan
 # @date 2014-11-25
-# @param request, variable HTTPRequest con los datos solicitados.
+# @param request, HTTPRequest.
 # @return -
 # @remarks -
 #
 @csrf_exempt
-def changeTopologyStatus(request):        
-  iResult = -1
-  sId = ""
-  sAction = ""
-  bWait = False
-  iWait = -1    
+def changeTopologyStatus(request):
+    iResult = -1
+    sId = ""
+    sAction = ""
+    bWait = False
+    iWait = -1    
   
-  if request.method == 'POST':
-     sId = request.POST['sId']      
-     sAction = request.POST['sAction']
-     bWait = request.POST['bWait']
-     iWait = request.POST['iWait']
+    if request.method == 'POST':
+        sId = request.POST['sId']      
+        sAction = request.POST['sAction']
+        bWait = request.POST['bWait']
+        iWait = request.POST['iWait']
      
-     if (bWait == "true"):
-        post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)
-     else:
-        post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction)            
+        if (bWait == "true"):
+            post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)
+        else:
+            post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction)            
       
-     iResult =  post_response.status_code            
+        iResult =  post_response.status_code            
       
-  return HttpResponse(iResult, mimetype = "application/javascript") 
+    return HttpResponse(iResult, mimetype = "application/javascript") 
 #
 # changeTopologyStatus ****************************************************************************************************
-
+    
 # set_topology_status *****************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-25 Jose Juan
+# 001 2015-01-20 Jose Juan (Add submit topology)
 #
-# Activa una topología del clúster STORM.
+# Management of Storm Topology.
 #
 # @author Jose Juan
 # @date 2014-11-25
-# @param request, variable HTTPRequest con los datos solicitados.
+# @param request, HTTPRequest.
 # @return -
 # @remarks -
 #
 @csrf_exempt
-def set_topology_status(request):         
-  sAction = ""   
-  sExecute = ""
-  iNumWorkers = 0
-  sOptions = ""
-  sWaitSecs = ""
-  sNumWorkers = ""
-  sNumExecutors = ""
-  response = {'status': -1, 'output': -1, 'data': ''}
-  
-  sScript = "/./Nimbus-remote -f"                            
-  
-  if request.method == 'POST':
-     sAction = request.POST['psAction']             
-     sNameTopology = request.POST['psNameTopology']
+def set_topology_status(request):  
+    sAction = ""   
+    sExecute = ""
+    iNumWorkers = 0
+    sOptions = ""
+    sWaitSecs = ""
+    sNumWorkers = ""
+    sNumExecutors = ""
+    msg = ""
+    sTopologyName = ""
+    response = {'status': -1, 'output': -1, 'data': ''}  
+    sScript = "storm"                           
+
+    if request.method == 'POST':
+        sAction = request.POST['psAction']             
           
-     if (sAction == "rebalance"):                    
-        iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] <> "") else 0                        
-        iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] <> "") else 0                        
-        aComponent = request.POST.getlist('paComponents[]')
-	
-        if (iWaitSecs > 0):
-	   sOptions += "wait_secs=" + iWaitSecs        
+        if (sAction == "rebalance"):                   
+            sNameTopology = request.POST['psNameTopology'] 
+            iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] <> "") else 0                        
+            iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] <> "") else 0                        
+            aComponent = request.POST.getlist('paComponents[]')
+            
+            if (iWaitSecs > 0):
+                sOptions += " -w " + iWaitSecs        
 	  
-	if (iNumWorkers > 0):
-	   if (sOptions <> ""):
-	      sOptions += ","
-	   sOptions += "num_workers=" + iNumWorkers
-
-	iMod = 0
-	
-	if (len(aComponent) > 0):
-	   if (sOptions <> ""):
-	      sOptions += ","
-	      
-	   sOptions += "num_executors={'"
-	
-	   #for element in aComponent:
-	   while (iMod < len(aComponent)):
-              if(iMod%2 == 0):     
-	         sOptions+=aComponent[iMod] + "':"
-	      else:                           
-	         if (iMod == (len(aComponent) - 1)):
-	            sOptions+=aComponent[iMod] + "}"
-                 else:
-		    sOptions+=aComponent[iMod] + ",'"
-	   
-	      iMod+=1
-	
-	sRebalanceOptions = '"' + "RebalanceOptions(" + sOptions + ")" + '"'
-	   
-        sExecute = settings.THRIFT_ROOT + sScript + " " + sAction + " " + sNameTopology + " " + sRebalanceOptions                                
+            if (iNumWorkers > 0):
+                sOptions += " -n " + iNumWorkers
+            
+            iMod = 0
+            
+            if (aComponent <> []):    
+                while (iMod < len(aComponent)):
+                    if(iMod%2 == 0):     
+                        sOptions += " -e " + aComponent[iMod] + "="
+                    else:                           
+                        sOptions+=aComponent[iMod]
                         
-  status, output = commands.getstatusoutput(sExecute)      
-  
-  response['status'] = status
-  response['output'] = output
+                    iMod+=1
+                
+            sExecute = sScript + " " + sAction + " " + sNameTopology + " " + sOptions                                
+                    
+        if (sAction == "submitTopology"):            
+            sURL = request.POST['psURL']
+            form = UploadFileForm(request.POST, request.FILES)
 
-  return HttpResponse(json.dumps(response), content_type="text/plain")            
+            if form.is_valid():                                            
+                sServer = STORM_SERVER                       
+                sClass = request.POST['class_name'] if (request.POST['class_name'] <> "") else ""
+                sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] <> "") else ""
+                sFile = request.FILES['file']
+                sFileName = sFile.name                                                        
+                sClass = request.POST['class_name']  
+                sPath = settings.UPLOAD_ROOT + '/' + sFileName
+                    
+                if not (os.path.isfile(sPath)):
+                    path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
+                    sPath = os.path.join(settings.UPLOAD_ROOT, path)
+                    
+                sExecute = sScript + " " + "jar -c nimbus.host=" + sServer + " " + sPath + " " + sClass + " " + sTopologyName
+                response['status'] = 0
+                        
+            else:
+                #raise PopupException(_("Error in upload form: %s") % (form.errors,))
+                msg = _("Error in upload form: %s.\n") % form.errors
+                response['error'] = form.errors
+                response['status'] = -1
+              
+        if (sAction == "saveTopology"):
+            sURL = request.POST['psURL']
+            form = UploadFileFormHDFS(request.POST, request.FILES)
+            
+            if request.META.get('upload_failed'):
+                raise PopupException(request.META.get('upload_failed'))
+            
+            try:
+                sFileHDFS = request.FILES['hdfs_file']
+            except:
+                sFileHDFS = ""
+            
+            try:    
+                if (sFileHDFS <> ""):
+                    username = request.user.username
+                    sFileNameHDFS = sFileHDFS.name
+                    sPathHDFS = "/user/" + username                 
+                    sPathHDFS = request.fs.join(sPathHDFS, sFileNameHDFS)                    
+                    tmp_file = sFileHDFS.get_temp_path()
+                    request.fs.do_as_user(username, request.fs.rename, tmp_file, sPathHDFS)                        
+                    
+                    return HttpResponseRedirect(sURL)
+                else:        
+                    msg = _('HDFS File must not be empty.\n')
+                    raise PopupException(msg)
+                           
+            except IOError, ex:
+                already_exists = False
+                response['status'] = -1
+                    
+                try:
+                    already_exists = request.fs.exists(sPathHDFS)
+                except Exception:
+                    pass
+         
+                if already_exists:
+                    msg = _('Destination %(name)s already exists.\n')  % {'name': sPathHDFS}
+                else:
+                    msg = _('Copy to %(name)s failed: %(error)s.\n') % {'name': sPathHDFS, 'error': ex}    
+                
+                raise PopupException(msg)
+                          
+    status, output = commands.getstatusoutput(sExecute)      
+  
+    response['output'] = output
+            
+    if (sAction == "submitTopology"):
+        try:
+            os.remove(sPath)
+        except:
+            msg += "Exception raised while deleting temp file.\n"
+        pass
+
+        if (("Finished submitting topology: " + sTopologyName) in response['output']):
+            output = None
+            
+        if ((output is None) and (response['status'] == 0)):
+            return HttpResponseRedirect(sURL)
+        else:
+            if (output is None):
+                msg += "Topology submitted OK.\n"
+            else:
+                msg += "Error submitting topology.\n"
+                    
+            raise PopupException(msg)
+            
+    return HttpResponse(json.dumps(response), content_type="text/plain")            
 #
 # set_topology_status ***************************************************************************************************** 
       
@@ -878,26 +975,38 @@ def set_topology_status(request):
 # @remarks -
 #
 def get_seconds_from_strdate(psDate):
-   iSeconds = 0
-	
-   aDate = psDate.split(" ")   
-   iLen = len(aDate) if len(psDate) is not None else 0
+    iSeconds = 0
+    
+    try:
+        aDate = psDate.split(" ")   
+        iLen = len(aDate) if len(psDate) is not None else 0
+    except:
+        iLen = 0
+        
+    if (iLen == 1):
+        try:
+            iSeconds = int(aDate[0][:-1])
+        except:
+            iSeconds = 0    
    
-   #aDate = [map(int, x) for x in aDate]
-   #iSeconds = (days * 86400) + (hours * 86400) + (minutes * 86400) + seconds      
+    if (iLen == 2):
+        try:
+            iSeconds = (int(aDate[0][:-1]) * 60) + int(aDate[1][:-1])
+        except:
+            iSeconds = 0    
    
-   if (iLen == 1):
-      iSeconds = int(aDate[0][:-1])
+    if (iLen == 3):
+        try:
+            iSeconds = (int(aDate[0][:-1]) * 3600) + (int(aDate[1][:-1]) * 60) + int(aDate[2][:-1])
+        except:
+            iSeconds = 0   
    
-   if (iLen == 2):
-      iSeconds = (int(aDate[0][:-1]) * 60) + int(aDate[1][:-1])
+    if (iLen == 4):     
+        try:
+            iSeconds = (int(aDate[0][:-1]) * 86400) + (int(aDate[1][:-1]) * 3600) + (int(aDate[2][:-1]) * 60) + int(aDate[3][:-1])
+        except:
+            iSeconds = 0       
    
-   if (iLen == 3):
-      iSeconds = (int(aDate[0][:-1]) * 3600) + (int(aDate[1][:-1]) * 60) + int(aDate[2][:-1])   
-   
-   if (iLen == 4):      
-      iSeconds = (int(aDate[0][:-1]) * 86400) + (int(aDate[1][:-1]) * 3600) + (int(aDate[2][:-1]) * 60) + int(aDate[3][:-1])   
-   
-   return iSeconds
+    return iSeconds
 #  
 # get_seconds_from_strdate *************************************************************************************************

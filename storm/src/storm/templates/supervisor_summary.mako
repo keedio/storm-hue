@@ -66,6 +66,9 @@ ${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Supervisor')}
 
+${Templates.tblSubmitTopology(frmNewTopology)}
+${Templates.tblSaveTopology(frmHDFS)}
+
 <div class="container-fluid">
   <div class="card">        
     <div class="card-body">
