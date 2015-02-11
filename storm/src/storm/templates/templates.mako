@@ -256,7 +256,6 @@
                   <h3>Custom Rebalance: <b>${psName}</b></h3>
                </div>
                <div class="modal-body controls">               
-                  ${ csrf_token(request) | n,unicode }
                   <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="6">
                      <tr>
                         <td width="25%">
