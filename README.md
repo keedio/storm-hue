@@ -33,19 +33,19 @@ HUE.ini Config section
 Configs needed in hue.ini config file.
 
     [storm]
-        # The url of the Storm UI
-        url=http://storm_server:8080/
-
         # The URL of the STORM REST service
         # e.g. localhost:8080
         storm_server=localhost
+        
         storm_ui=http://localhost:8080/api/v1
         storm_ui_log=http://localhost:8000/log?file=worker-
-        storm_ui_cluster=/cluster/summary
-        storm_ui_supervisor=supervisor/summary
-        storm_ui_topologies=/topology/summary
-        storm_ui_topology=/topology/
-        storm_ui_configuration=/cluster/configuration
+        
+        # Storm-UI URL paths. Uncomment to modify them if necessary. 
+        ## storm_ui_cluster=/cluster/summary
+        ## storm_ui_supervisor=supervisor/summary
+        ## storm_ui_topologies=/topology/summary
+        ## storm_ui_topology=/topology/
+        ## storm_ui_configuration=/cluster/configuration
 
 License
 -------
