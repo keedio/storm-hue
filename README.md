@@ -34,11 +34,13 @@ Configs needed in hue.ini config file.
 
     [storm]
         # The URL of the STORM REST service
-        # e.g. localhost:8080
+        # default 
+        # storm_server=localhost
+        # storm_ui_port=8080
+        # storm_ui_log_port=8000
         storm_server=localhost
-        
-        storm_ui=http://localhost:8080/api/v1
-        storm_ui_log=http://localhost:8000/log?file=worker-
+        storm_ui_port=8080
+        storm_ui_log_port=8000
         
         # Storm-UI URL paths. Uncomment to modify them if necessary. 
         ## storm_ui_cluster=/cluster/summary
