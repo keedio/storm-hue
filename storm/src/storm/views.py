@@ -873,7 +873,7 @@ def set_topology_status(request):
             form = UploadFileForm(request.POST, request.FILES)
 
             if form.is_valid():                                            
-                sServer = STORM_UI_SERVER                       
+                sServer = SERVER.STORM_UI_SERVER.get()                       
                 sClass = request.POST['class_name'] if (request.POST['class_name'] <> "") else ""
                 sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] <> "") else ""
                 sFile = request.FILES['file']
