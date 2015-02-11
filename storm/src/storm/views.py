@@ -40,13 +40,16 @@ from storm.conf import SERVER
 from storm.forms import UploadFileForm, UploadFileFormHDFS 
 
 SYSTEM_STATS = "?sys=1"
-STORM_SERVER = SERVER.STORM_SERVER.get()
-TOPOLOGIES_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_TOPOLOGIES.get()
-TOPOLOGY_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_TOPOLOGY.get()
-CLUSTER_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_CLUSTER.get()
-SUPERVISOR_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_SUPERVISOR.get()
-CONFIGURATION_URL = SERVER.STORM_UI.get() + SERVER.STORM_UI_CONFIGURATION.get()
-LOG_URL = SERVER.STORM_UI_LOG.get()
+API_URL = "/api/v1"
+LOG_URL_PATH = "/log?file=worker-"
+STORM_UI_SERVER = "http://" + SERVER.STORM_UI_SERVER.get() + ":" + SERVER.STORM_UI_PORT.get()
+STORM_UI = STORM_UI_SERVER + API_URL
+TOPOLOGIES_URL = STORM_UI + SERVER.STORM_UI_TOPOLOGIES.get()
+TOPOLOGY_URL = STORM_UI + SERVER.STORM_UI_TOPOLOGY.get()
+CLUSTER_URL = STORM_UI + SERVER.STORM_UI_CLUSTER.get()
+SUPERVISOR_URL = STORM_UI + SERVER.STORM_UI_SUPERVISOR.get()
+CONFIGURATION_URL = STORM_UI + SERVER.STORM_UI_CONFIGURATION.get()
+LOG_URL = "http://" + SERVER.STORM_UI_SERVER.get() + ":" + SERVER.STORM_UI_LOG_PORT.get() + LOG_URL_PATH
 
 # *************************************************************************************************************************
 # **********                                                                                                     **********
@@ -870,7 +873,7 @@ def set_topology_status(request):
             form = UploadFileForm(request.POST, request.FILES)
 
             if form.is_valid():                                            
-                sServer = STORM_SERVER                       
+                sServer = STORM_UI_SERVER                       
                 sClass = request.POST['class_name'] if (request.POST['class_name'] <> "") else ""
                 sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] <> "") else ""
                 sFile = request.FILES['file']
