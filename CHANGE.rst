@@ -1,7 +1,18 @@
 Changelog
 =========
+1.1.0 (11-02-2015)
+----------------
 
-1.0.0 (14-04-2014)
+Bug Handling
+************
+
+- Issue #3: hue.ini config parameters
+- Issue #4: Conf.py default values
+- Issue #5: Settings.py never used variable
+- Issue #7: Error assigning host when submit topology
+
+
+1.0.0 (26-01-2015)
 ----------------
 
 Features
