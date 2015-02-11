@@ -27,10 +27,10 @@ def expand_package_data(src_dirs, strip=""):
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 setup(
   name = "storm",
-  version = "0.1",
-  url = 'TODO',
-  description = 'TODO',
-  author = 'TODO',
+  version = "1.1",
+  url = 'http://www.keedio.com',
+  description = 'Apache Storm Application',
+  author = 'Keedio',
   packages = find_packages('src'),
   package_dir = {'': 'src'},
   install_requires = ['setuptools', 'desktop'],
