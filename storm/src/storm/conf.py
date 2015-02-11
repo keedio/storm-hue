@@ -14,52 +14,54 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-from desktop.lib.conf import Config, ConfigSection
+from desktop.lib.conf import Config
 
-SERVER = ConfigSection(
-            'server', 
-            help = "Information about a STORM CLUSTER (Information returns like JSON elements)",
-            members = dict(        
-                         STORM_SERVER = Config( "storm_server",
-                                            help="Storm Server",
-                                            default="localhost",
-                                            type=str,
-                                          ),
-                         STORM_UI = Config( "storm_ui",
-                                            help="URL to STORM UI",
-                                            default="http://localhost:8080/api/v1",
-                                            type=str,
-                                          ),
-			             STORM_UI_LOG = Config( "storm_ui_log",
-                                                help="URL to STORM UI LOG",
-                                                default="http://localhost:8000/log?file=worker-",
-                                                type=str,
-                                              ),
-			             STORM_UI_CLUSTER = Config( "storm_ui_cluster",
-                                                    help="Path to cluster info summary, e.g. /cluster/summary",
-                                                    default="/cluster/summary",
-                                                    type=str,
-                                                  ),
-			             STORM_UI_SUPERVISOR = Config( "storm_ui_supervisor",
-                                                       help="Path to supervisor info summary, e.g. /supervisor/summary",
-                                                       default="/supervisor/summary",
-                                                       type=str,
-                                                     ),
-			             STORM_UI_TOPOLOGIES = Config( "storm_ui_topologies",
-                                                       help="Path to resume of all topologies, e.g. /topology/summary",
-                                                       default="/topology/summary",
-                                                       type=str,
-                                                     ),
-			             STORM_UI_TOPOLOGY = Config( "storm_ui_topology",
-                                                     help="Path to topology info summary, e.g. /topology",
-                                                     default="/topology/",
-                                                     type=str,
-                                                   ),
-			             STORM_UI_CONFIGURATION = Config( "storm_ui_configuration",
-                                                          help="Path to cluster configuration, e.g. /cluster/configuration",
-                                                          default="/cluster/configuration",
-                                                          type=str,
-                                                        ),
-        
-                      )
-         )
+      
+STORM_UI_SERVER = Config( "storm_ui_server",
+                        help="Storm-UI Server",
+                        default="localhost",
+                        type=str,
+                        )
+                      
+STORM_UI_PORT = Config( "storm_ui_port",
+			help="STORM-UI PORT",
+			default="8080",
+			type=str,
+			)
+
+STORM_UI_LOG_PORT = Config( "storm_ui_log_port",
+			help="STORM-UI LOG PORT",
+			default="8000",
+			type=str,
+			)
+			
+STORM_UI_CLUSTER = Config( "storm_ui_cluster",
+			help="Path to cluster info summary, e.g. /cluster/summary",
+			default="/cluster/summary",
+			type=str,
+			)
+
+STORM_UI_SUPERVISOR = Config( "storm_ui_supervisor",
+			help="Path to supervisor info summary, e.g. /supervisor/summary",
+			default="/supervisor/summary",
+			type=str,
+			)
+			
+STORM_UI_TOPOLOGIES = Config( "storm_ui_topologies",
+			help="Path to resume of all topologies, e.g. /topology/summary",
+			default="/topology/summary",
+			type=str,
+			)
+			
+STORM_UI_TOPOLOGY = Config( "storm_ui_topology",
+			help="Path to topology info summary, e.g. /topology",
+			default="/topology/",
+			type=str,
+			)
+
+STORM_UI_CONFIGURATION = Config( "storm_ui_configuration",
+			help="Path to cluster configuration, e.g. /cluster/configuration",
+			default="/cluster/configuration",
+			type=str,
+			)
+

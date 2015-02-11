@@ -8,5 +8,4 @@
    <script src="/storm/static/js/arbor.js" type="text/javascript" charset="utf-8"></script>
    <script src="/storm/static/js/arbor-graphics.js" type="text/javascript" charset="utf-8"></script>
    <script src="/storm/static/js/arbor-tween.js" type="text/javascript" charset="utf-8"></script>
-   <script src="/storm/static/js/functions.js" type="text/javascript" charset="utf-8"></script>
 </%def>
