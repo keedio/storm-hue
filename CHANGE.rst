@@ -1,5 +1,15 @@
 Changelog
 =========
+
+1.1.1 (12-02-2015)
+----------------
+
+Bug Handling
+************
+
+- Issue #9: csrf_token protection error
+- Issue #11: Upgrade Django 1.6
+
 1.1.0 (11-02-2015)
 ----------------
 
