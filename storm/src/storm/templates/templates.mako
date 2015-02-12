@@ -256,7 +256,6 @@
                   <h3>Custom Rebalance: <b>${psName}</b></h3>
                </div>
                <div class="modal-body controls">               
-                  ${ csrf_token(request) | n,unicode }
                   <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="6">
                      <tr>
                         <td width="25%">
@@ -333,7 +332,6 @@
    <div class="modal hide fade" id="tblSubmitTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
-            ${ csrf_token(request) | n,unicode }            
             <div class="modal-content">
                <div class="modal-header">
                   <h3>Create New Topology </b></h3>
@@ -359,7 +357,6 @@
    <div class="modal hide fade" id="tblSaveTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
-            ${ csrf_token(request) | n,unicode }            
             <div class="modal-content">
                <div class="modal-header">
                   <h3>Save Topology to HDFS </b></h3>
