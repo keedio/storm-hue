@@ -19,7 +19,7 @@ import os
 DJANGO_APPS = ["storm"]
 REQUIRES_HADOOP = False
 MENU_INDEX = 100
-ICON = "/storm/static/art/icon_storm_48.png"
+ICON = "/storm/static/art/icon_storm_24.png"
 IS_URL_NAMESPACED = True
 
 DEBUG = True
