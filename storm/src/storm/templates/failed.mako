@@ -14,7 +14,10 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+from desktop.views import commonheader, commonfooter 
+from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Failed", app_name, user) | n,unicode}
 
@@ -71,7 +74,7 @@ ${ JavaScript.import_js() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')]
   ]
 %>
 
@@ -98,20 +101,20 @@ ${ storm.menubar(section = 'Failed')}
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
                                      <thead>
                                         <tr>
-                                           <th> Window </th>
-                                           <th> Emitted </th>
-                                           <th> Transferred </th>
-                                           <th> Complete Latency (ms) </th>
-                                           <th> Acked </th>
-                                           <th> Failed </th>                         
+                                           <th> ${ _('Window') } </th>
+                                           <th> ${ _('Emitted') } </th>
+                                           <th> ${ _('Transferred') } </th>
+                                           <th> ${ _('Complete Latency (ms)') } </th>
+                                           <th> ${ _('Acked') } </th>
+                                           <th> ${ _('Failed') } </th>                         
                                         </tr>
                                      </thead>
                                      <tbody>
                                         % for row in Component:
                                            <tr>
                                               <td>
-                                                 <a class="fa fa-tachometer" title="Topology Stats Dashboard" href="${url('storm:topology_dashboard', topology_id = idTopology, window_id = row['window'])}"></a>
-                                                 <a title="Topology Stats Detail" href="${url('storm:topology', topology_id = idTopology, window_id = row['window'])}"> ${row["windowPretty"]} </a>
+                                                 <a class="fa fa-tachometer" title="${ _('Topology Stats Dashboard') }" href="${url('storm:topology_dashboard', topology_id = idTopology, window_id = row['window'])}"></a>
+                                                 <a title="${ _('Topology Stats Detail') }" href="${url('storm:topology', topology_id = idTopology, window_id = row['window'])}"> ${row["windowPretty"]} </a>
                                               </td>
                                               <td>${row["emitted"]}</td>                                                        
                                               <td>${row["transferred"]}</td>
@@ -142,29 +145,29 @@ ${ storm.menubar(section = 'Failed')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> Spouts (All Time)
+                                  <i class="fa fa-table fa-fw"></i> ${ _('Spouts (All Time)') }
                                </div>
                                <div class="panel-body">                         
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
                                      <thead>
                                         <tr>
-                                           <th> Id. </th>
-                                           <th> Executors </th>
-                                           <th> Tasks </th>
-                                           <th> Emitted </th>
-                                           <th> Transferred </th>
-                                           <th> Complete Latency (ms) </th>                         
-                                           <th> Acked </th>
-                                           <th> Failed </th>
-                                           <th> Last Error </th>
+                                           <th> ${ _('Id.') } </th>
+                                           <th> ${ _('Executors') } </th>
+                                           <th> ${ _('Tasks') } </th>
+                                           <th> ${ _('Emitted') } </th>
+                                           <th> ${ _('Transferred') } </th>
+                                           <th> ${ _('Complete Latency (ms)') } </th>                         
+                                           <th> ${ _('Acked') } </th>
+                                           <th> ${ _('Failed') } </th>
+                                           <th> ${ _('Last Error') } </th>
                                         </tr>
                                      </thead>
                                      <tbody>
                                         % for row in Component:
                                            <tr>                                     
                                               <td>
-                                                 <a class="fa fa-tachometer" title="Spout Dashboard" href="${url('storm:components_dashboard', topology_id = idTopology, component_id = row["spoutId"], system_id = 0)}"></a>                                                 
-                                                 <a title="Spout Detail" href="${url('storm:components', topology_id = idTopology, component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
+                                                 <a class="fa fa-tachometer" title="${ _('Spout Dashboard') }" href="${url('storm:components_dashboard', topology_id = idTopology, component_id = row["spoutId"], system_id = 0)}"></a>                                                 
+                                                 <a title="${ _('Spout Detail') }" href="${url('storm:components', topology_id = idTopology, component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
                                               </td>
                                               <td>${row["executors"]}</td>                                                        
                                               <td>${row["tasks"]}</td>
@@ -186,7 +189,7 @@ ${ storm.menubar(section = 'Failed')}
                                                  <td>
                                                     <span class="label label-important">
                                                        <a href="#" data-target="#divERROR" data-toggle="modal">                                                          
-                                                          ERROR
+                                                          ${ _('ERROR') }
                                                        </a>
                                                     </span>                                                                                                        
                                                     ${Templates.divERROR(row["lastError"])}
@@ -214,26 +217,26 @@ ${ storm.menubar(section = 'Failed')}
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyBolts" data-tablescroller-disable="true">
                                      <thead>
                                         <tr>
-                                           <th> Id. </th>
-                                           <th> Executors </th>
-                                           <th> Tasks </th>
-                                           <th> Emitted </th>
-                                           <th> Transferred </th>
-                                           <th> Capacity (last 10m) </th>                         
-                                           <th> Execute latency (ms) </th>
-                                           <th> Executed </th>
-                                           <th> Process latency (ms) </th>
-                                           <th> Acked </th>
-                                           <th> Failed </th>
-                                           <th> Last error </th>
+                                           <th> ${ _('Id.') } </th>
+                                           <th> ${ _('Executors') } </th>
+                                           <th> ${ _('Tasks') } </th>
+                                           <th> ${ _('Emitted') } </th>
+                                           <th> ${ _('Transferred') } </th>
+                                           <th> ${ _('Capacity (last 10m)') } </th>                         
+                                           <th> ${ _('Execute latency (ms)') } </th>
+                                           <th> ${ _('Executed') } </th>
+                                           <th> ${ _('Process latency (ms)') } </th>
+                                           <th> ${ _('Acked') } </th>
+                                           <th> ${ _('Failed') } </th>
+                                           <th> ${ _('Last error') } </th>
                                         </tr>
                                      </thead>
                                      <tbody>
                                         % for row in Component:
                                            <tr>                                     
                                               <td>
-                                                 <a class="fa fa-tachometer" title="Bolt Dashboard" href="${url('storm:components_dashboard', topology_id = idTopology, component_id = row["boltId"], system_id = 0)}"></a>
-                                                 <a title="Bolt Detail" href="${url('storm:components', topology_id = idTopology, component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
+                                                 <a class="fa fa-tachometer" title="${ _('Bolt Dashboard') }" href="${url('storm:components_dashboard', topology_id = idTopology, component_id = row["boltId"], system_id = 0)}"></a>
+                                                 <a title="${ _('Bolt Detail') }" href="${url('storm:components', topology_id = idTopology, component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
                                               </td>
                                               <td>${row["executors"]}</td>                                                        
                                               <td>${row["tasks"]}</td>
@@ -259,7 +262,7 @@ ${ storm.menubar(section = 'Failed')}
                                                  <td>
                                                     <span class="label label-important">
                                                        <a href="#" data-target="#divERROR" data-toggle="modal">                                                          
-                                                          ERROR
+                                                          ${ _('ERROR') }
                                                        </a>
                                                     </span>                                                                                                        
                                                     ${Templates.divERROR(row["lastError"])}

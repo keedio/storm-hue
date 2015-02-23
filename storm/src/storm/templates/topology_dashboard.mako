@@ -68,10 +68,10 @@ ${ graphsHUE.import_charts() }
       dataPieStatsTransferred.push({"label": jsonStats[i].windowPretty, "value" : jsonStats[i].transferred});
       dataPieStatsAcked.push({"label": jsonStats[i].windowPretty, "value" : jsonStats[i].acked});
       dataPieStatsFailed.push({"label": jsonStats[i].windowPretty, "value" : jsonStats[i].failed});
-      dataBarStats.push({"key": jsonStats[i].windowPretty, "values": [ {"x": "Emitted", "y": jsonStats[i].emitted},
-                                                                       {"x": "Transferred", "y": jsonStats[i].transferred},
-                                                                       {"x": "Acked", "y": jsonStats[i].acked},
-                                                                       {"x": "Failed", "y": jsonStats[i].failed}
+      dataBarStats.push({"key": jsonStats[i].windowPretty, "values": [ {"x": "${ _('Emitted') }", "y": jsonStats[i].emitted},
+                                                                       {"x": "${ _('Transferred') }", "y": jsonStats[i].transferred},
+                                                                       {"x": "${ _('Acked') }", "y": jsonStats[i].acked},
+                                                                       {"x": "${ _('Failed') }", "y": jsonStats[i].failed}
                                                      ]
                         });
    }           
@@ -88,16 +88,16 @@ ${ graphsHUE.import_charts() }
    for (var i=0; i<Object.keys(jsonSpouts).length; i++) {
       iTasks+=jsonSpouts[i].tasks;
       iExecutors+=jsonSpouts[i].executors;     
-      dataBarSpouts1.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "Emitted", "y": jsonSpouts[i].emitted},
-                                                                     {"x": "Transferred", "y": jsonSpouts[i].transferred},
-                                                                     {"x": "Acked", "y": jsonSpouts[i].acked},
-                                                                     {"x": "Failed", "y": jsonSpouts[i].failed}
+      dataBarSpouts1.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": _('Emitted'), "y": jsonSpouts[i].emitted},
+                                                                     {"x": _('Transferred'), "y": jsonSpouts[i].transferred},
+                                                                     {"x": _('Acked'), "y": jsonSpouts[i].acked},
+                                                                     {"x": _('Failed'), "y": jsonSpouts[i].failed}
                                                                    ]
                           });
       
    };
    
-   dataPieSpouts1.push({"label": "Tasks", "value" : iTasks}, {"label": "Executors", "value" : iExecutors});            
+   dataPieSpouts1.push({"label": _('Tasks'), "value" : iTasks}, {"label": _('Executors'), "value" : iExecutors});            
    
    var dataPieBolts1 = [];
    var dataBarBolts1 = [];
@@ -113,19 +113,19 @@ ${ graphsHUE.import_charts() }
       iTasks+=jsonBolts[i].tasks;
       iExecutors+=jsonBolts[i].executors;
       
-      dataBarBolts1.push({"key": jsonBolts[i].boltId, "values": [ {"x": "Emitted", "y": jsonBolts[i].emitted},
-                                                                   {"x": "Transferred", "y": jsonBolts[i].transferred},
-                                                                   {"x": "Acked", "y": jsonBolts[i].acked},
-                                                                   {"x": "Failed", "y": jsonBolts[i].failed}
+      dataBarBolts1.push({"key": jsonBolts[i].boltId, "values": [ {"x": _('Emitted'), "y": jsonBolts[i].emitted},
+                                                                   {"x": _('Transferred'), "y": jsonBolts[i].transferred},
+                                                                   {"x": _('Acked'), "y": jsonBolts[i].acked},
+                                                                   {"x": _('Failed'), "y": jsonBolts[i].failed}
                                                                  ]
                           });
-      dataBarBolts2.push({"key": jsonBolts[i].boltId, "values": [ {"x": "Execute Latency (ms)", "y": jsonBolts[i].executeLatency},
-                                                                  {"x": "Process Latency (ms)", "y": jsonBolts[i].processLatency}
+      dataBarBolts2.push({"key": jsonBolts[i].boltId, "values": [ {"x": _('Execute Latency (ms)'), "y": jsonBolts[i].executeLatency},
+                                                                  {"x": _('Process Latency (ms)'), "y": jsonBolts[i].processLatency}
                                                                  ]
                           });                    
    }
    
-   dataPieBolts1.push({"label": "Tasks", "value" : iTasks}, {"label": "Executors", "value" : iExecutors});
+   dataPieBolts1.push({"label": _('Tasks'), "value" : iTasks}, {"label": _('Executors'), "value" : iExecutors});
    
    nv.addGraph(function() {
                   var chart = nv.models.pieChart()
@@ -242,10 +242,10 @@ ${ graphsHUE.import_charts() }
                                   return graphSpouts1;
    });
    
-   var dataPieSpouts2 = [ { "label": "Active",                               
+   var dataPieSpouts2 = [ { "label": _('Active'),                               
                                "value" : 1
                              },
-                             { "label": "Inactive",                               
+                             { "label": _('Inactive'),                               
                                "value" : 3
                              }
                            ];
@@ -327,9 +327,9 @@ ${ graphsHUE.import_charts() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    ["Topology Stats Detail", url('storm:topology_dashboard', topology_id = Topology[0], window_id = windowId)]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+    [_('Topology ') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
+    [_('Topology Stats Detail'), url('storm:topology_dashboard', topology_id = Topology[0], window_id = windowId)]
   ]
 %>
 
@@ -355,7 +355,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> Topologies Stats
+                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Topologies Stats') }
                       </div>
                       <div class="panel-body">
                          <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
@@ -384,7 +384,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Topologies Stats
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Topologies Stats') }
                       </div>
                       <div class="panel-body">
                          <div id="barTopologyStats"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -398,7 +398,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> Spouts (Tasks/Executors)
+                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Spouts (Tasks/Executors)') }
                       </div>
                       <div class="panel-body">
                          <div id="pieSpouts1"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
@@ -410,7 +410,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Spouts Stats
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Spouts Stats') }
                       </div>
                       <div class="panel-body">
                          <div id="barSpouts1"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -423,7 +423,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> Spouts (Times)
+                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Spouts (Times)') }
                       </div>
                       <div class="panel-body">
                          <div id="pieSpouts2"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
@@ -438,7 +438,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> Bolts (Tasks/Executors)
+                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Bolts (Tasks/Executors)') }
                       </div>
                       <div class="panel-body">
                          <div id="pieBolts1"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -450,7 +450,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Bolts Stats
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Bolts Stats') }
                       </div>
                       <div class="panel-body">
                          <div id="barBolts1"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -462,7 +462,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> Bolts (Times)
+                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Bolts (Times)') }
                       </div>
                       <div class="panel-body">
                          <div id="barBolts2"><svg style="min-height: 240px; margin: 10px auto"></svg></div>

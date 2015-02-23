@@ -14,7 +14,10 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+from desktop.views import commonheader, commonfooter 
+from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Cluster Summary", app_name, user) | n,unicode}
 
@@ -62,8 +65,8 @@ ${ JavaScript.import_js() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Cluster Summary", url('storm:cluster_summary')]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+    [_('Cluster Summary'), url('storm:cluster_summary')]
   ]
 %>
 

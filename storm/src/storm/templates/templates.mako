@@ -25,7 +25,7 @@
    <div class="container-fluid">
       <div class="card">        
          <div class="card-body">
-            No active topologies available
+            ${ _('No active topologies available') }
          </div>
       </div>
    </div> 
@@ -38,55 +38,55 @@
       <td align="left">                               
          <span class="btn-group">            
             % if Topology[2] == "INACTIVE":
-               <button id="btnActivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'activate', false, 0)" ><i class="fa fa-play"></i> Activate </button>                                            
+               <button id="btnActivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'activate', false, 0)" ><i class="fa fa-play"></i> ${ _('Activate') } </button>                                            
             % else:
-               <button id="btnDeactivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'deactivate', false, 0)"><i class="fa fa-stop"></i> Deactivate</button>
+               <button id="btnDeactivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'deactivate', false, 0)"><i class="fa fa-stop"></i> ${ _('Deactivate') } </button>
             % endif            
             <div class="btn-toolbar" style="display: inline; vertical-align: middle">
                <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
-                  <a href="#" class="btn upload-link dropdown-toggle" title="Rebalance" data-toggle="dropdown">
-                     <i class="fa fa-refresh"></i> Rebalance
+                  <a href="#" class="btn upload-link dropdown-toggle" title="${ _('Rebalance') }" data-toggle="dropdown">
+                     <i class="fa fa-refresh"></i> ${ _('Rebalance') }
                      <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                     <li><a href="#" onclick="changeTopologyStatus('${Topology[0]}', 'rebalance', true, 5)" class="btn" title="Automatic"><i class="fa fa-refresh"></i> Automatic</a></li>                     
-                     <li><a href="#" data-target="#tblRebalanceTopology" class="btn" data-toggle="modal" ><i class="fa fa-cog"></i> Custom</a></li>                     
+                     <li><a href="#" onclick="changeTopologyStatus('${Topology[0]}', 'rebalance', true, 5)" class="btn" title="${ _('Automatic') }"><i class="fa fa-refresh"></i> ${ _('Automatic') } </a></li>                     
+                     <li><a href="#" data-target="#tblRebalanceTopology" class="btn" data-toggle="modal" ><i class="fa fa-cog"></i> ${ _('Custom') } </a></li>                     
                   </ul>
                </div>
             </div> 
-            <button id="btnKill" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'kill', true, 5)"><i class="fa fa-trash-o"></i> Kill </button>            
+            <button id="btnKill" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'kill', true, 5)"><i class="fa fa-trash-o"></i> ${ _('Kill') } </button>            
          </span>  
       </td>
       <td align="right">      
          <span class="btn-group">            
             % if (sURL == "detail_dashboard"):
                % if ShowSystem == 0:
-                  <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="Hide System Stats"><i class="fa fa-check-square-o"></i> Hide System Stats </a>                   
+                  <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="${ _('Hide System Stats') }"><i class="fa fa-check-square-o"></i> ${ _('Hide System Stats') } </a>                   
                % else:
-                  <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="Show System Stats"><i class="fa fa-square-o"></i> Show System Stats </a>                   
+                  <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="${ _('Show System Stats') }"><i class="fa fa-square-o"></i> ${ _('Show System Stats') } </a>                   
                % endif
             
-               <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> Tables </button>
+               <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> ${ _('Tables') } </button>
             % endif                                                                      
             
             % if (sURL == "components"):
                % if ShowSystem == 0:
-                  <a href="${url('storm:components', topology_id = Topology[0], component_id = idComponent, system_id = ShowSystem)}" class="btn" title="Hide System Stats"><i class="fa fa-check-square-o"></i> Hide System Stats </a>                   
+                  <a href="${url('storm:components', topology_id = Topology[0], component_id = idComponent, system_id = ShowSystem)}" class="btn" title="${ _('Hide System Stats') }"><i class="fa fa-check-square-o"></i> ${ _('Hide System Stats') } </a>                   
                % else:
-                  <a href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = idComponent, system_id = ShowSystem)}" class="btn" title="Show System Stats"><i class="fa fa-square-o"></i> Show System Stats </a>                   
+                  <a href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = idComponent, system_id = ShowSystem)}" class="btn" title="${ _('Show System Stats') }"><i class="fa fa-square-o"></i> ${ _('Show System Stats') } </a>                   
                % endif
             % endif
             
             <div class="btn-toolbar" style="display: inline; vertical-align: middle">
                <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
-                  <a href="#" class="btn upload-link dropdown-toggle" title="Dashboard" data-toggle="dropdown">
-                     <i class="fa fa-tachometer"></i> Dashboard
+                  <a href="#" class="btn upload-link dropdown-toggle" title="${ _('Dashboard') }" data-toggle="dropdown">
+                     <i class="fa fa-tachometer"></i> ${ _('Dashboard') }
                      <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                     <li><a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)}" class="btn" title="Detail"><i class="fa fa-tachometer"></i>  Detail </a></li>
-                     <li><a href="${url('storm:spouts_dashboard', topology_id = Topology[0])}" class="btn" title="Spouts"><i class="fa fa-tachometer"></i> Spouts </a></li>
-                     <li><a href="${url('storm:bolts_dashboard', topology_id = Topology[0])}" class="btn" title="Bolts"><i class="fa fa-tachometer"></i> Bolts </a></li>
+                     <li><a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)}" class="btn" title="${ _('Detail') }"><i class="fa fa-tachometer"></i> ${ _('Detail') } </a></li>
+                     <li><a href="${url('storm:spouts_dashboard', topology_id = Topology[0])}" class="btn" title="${ _('Spouts') }"><i class="fa fa-tachometer"></i> ${ _('Spouts') } </a></li>
+                     <li><a href="${url('storm:bolts_dashboard', topology_id = Topology[0])}" class="btn" title="${ _('Bolts') }"><i class="fa fa-tachometer"></i> ${ _('Bolts') } </a></li>
                   </ul>
                </div>
             </div>          
@@ -101,17 +101,17 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Supervisor Summary
+            <i class="fa fa-table fa-fw"></i> ${ _('Supervisor Summary') }
          </div>
          <div class="panel-body">                      
             <table class="table datatables table-striped table-hover table-condensed" id="tblSupervisor" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th>Id.</th> 
-                     <th>Host</th>
-                     <th>Uptime</th>
-                     <th>Slots</th>
-                     <th>Used slots</th>
+                     <th>${ _('Id.') }</th> 
+                     <th>${ _('Host') }</th>
+                     <th>${ _('Uptime') }</th>
+                     <th>${ _('Slots') }</th>
+                     <th>${ _('Used slots') }</th>
                   </tr>
                </thead>
                <tbody>
@@ -137,20 +137,20 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Cluster Summary
+            <i class="fa fa-table fa-fw"></i> ${ _('Cluster Summary') }
          </div>
          <div class="panel-body">
             <table class="table datatables table-striped table-hover table-condensed" id="tblCluster" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th>Version</th> 
-                     <th>Nimbus uptime</th>
-                     <th>supervisors</th>
-                     <th>Used slots</th>
-                     <th>Free slots</th> 
-                     <th>Total slots</th>
-                     <th>Executors</th>
-                     <th>Tasks</th>
+                     <th>${ _('Version') }</th> 
+                     <th>${ _('Nimbus uptime') }</th>
+                     <th>${ _('supervisors') }</th>
+                     <th>${ _('Used slots') }</th>
+                     <th>${ _('Free slots') }</th> 
+                     <th>${ _('Total slots') }</th>
+                     <th>${ _('Executors') }</th>
+                     <th>${ _('Tasks') }</th>
                   </tr>
                </thead>
                <tbody>                      
@@ -177,14 +177,14 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Nimbus Configuration
+            <i class="fa fa-table fa-fw"></i> ${ _('Nimbus Configuration') }
          </div>
          <div class="panel-body">                 
             <table class="table datatables table-striped table-hover table-condensed" id="tblConfiguration" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th> Key </th>
-                     <th> Value </th>                         
+                     <th> ${ _('Key') } </th>
+                     <th> ${ _('Value') } </th>                         
                   </tr>
                </thead>
                <tbody>
@@ -207,19 +207,19 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Topology Summary
+            <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
          </div>
          <div class="panel-body">
             <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySummary" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th> Name </th>
-                     <th> Id. </th>
-                     <th> Status </th>
-                     <th> Uptime </th>
-                     <th> Num.Workers </th>
-                     <th> Num.Executors </th>
-                     <th> Num.Tasks </th>
+                     <th> ${ _('Name') } </th>
+                     <th> ${ _('Id.') } </th>
+                     <th> ${ _('Status') } </th>
+                     <th> ${ _('Uptime') } </th>
+                     <th> ${ _('Num.Workers') } </th>
+                     <th> ${ _('Num.Executors') } </th>
+                     <th> ${ _('Num.Tasks') } </th>
                   </tr>
                </thead>
                <tbody>
@@ -253,22 +253,22 @@
          <form id="frmRebalanceTopology" method="post">
             <div class="modal-content">
                <div class="modal-header">
-                  <h3>Custom Rebalance: <b>${psName}</b></h3>
+                  <h3> ${ _('Custom Rebalance:') } <b>${psName}</b></h3>
                </div>
                <div class="modal-body controls">               
                   <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="6">
                      <tr>
                         <td width="25%">
-                           <label>Set Workers</label><input type="number" id="iNumWorkers" min="1" value=1 style="width: 75%"/>                     
+                           <label>${ _('Set Workers') }</label><input type="number" id="iNumWorkers" min="1" value=1 style="width: 75%"/>                     
                         </td>
                         <td width="25%">
-                           <label>Set Wait Secs.</label><input type="number" id="iWaitSecs" min="30" value=30 style="width: 75%"/>                     
+                           <label>${ _('Set Wait Secs.') }</label><input type="number" id="iWaitSecs" min="30" value=30 style="width: 75%"/>                     
                         </td>
                         <td width="25%">
-                           <label>Topology Workers</label><input type="number" name="numTopologyWorkers" min="0" value="${Topology[4]}" disabled style="width: 75%"/>
+                           <label>${ _('Topology Workers') }</label><input type="number" name="numTopologyWorkers" min="0" value="${Topology[4]}" disabled style="width: 75%"/>
                         </td>
                         <td width="25%">
-                           <label>Topology Executors</label><input type="number" name="numTopologyExecutors" min="0" value="${Topology[5]}" disabled style="width: 75%"/>
+                           <label>${ _('Topology Executors') }</label><input type="number" name="numTopologyExecutors" min="0" value="${Topology[5]}" disabled style="width: 75%"/>
                         </td>
                      </tr>
                      <tr valign="top">
@@ -279,12 +279,12 @@
                                     <div class="col-lg-4">
                                        <div class="panel panel-default">
                                           <div class="panel-heading">
-                                             <i class="fa fa-table fa-fw"></i> Spouts
+                                             <i class="fa fa-table fa-fw"></i> ${ _('Spouts') }
                                           </div>
                                           <div class="panel-body">
                                              % for row in Spouts:
                                                 <input type="checkbox" name="cp_${row['spoutId']}" id="cp_${row['spoutId']}"/>${row["spoutId"]} 
-                                                <input type="number" id="numExecutors_${row['spoutId']}" min="0" placeholder="Set Num. Executors" style="width: 96%"/>                                       
+                                                <input type="number" id="numExecutors_${row['spoutId']}" min="0" placeholder="${ _('Set Num. Executors') }" style="width: 96%"/>                                       
                                              % endfor
                                           </div>
                                        </div>
@@ -294,12 +294,12 @@
                                     <div class="col-lg-4">
                                        <div class="panel panel-default">
                                           <div class="panel-heading">
-                                             <i class="fa fa-table fa-fw"></i> Bolts
+                                             <i class="fa fa-table fa-fw"></i> ${ _('Bolts') }
                                           </div>
                                           <div class="panel-body">
                                              % for row in Bolts:
                                                 <input type="checkbox" name="cp_${row['boltId']}" id="cp_${row['boltId']}"/>${row["boltId"]} 
-                                                <input type="number" id="numExecutors_${row['boltId']}" min="0" placeholder="Set Num. Executors" style="width: 96%"/>                                       
+                                                <input type="number" id="numExecutors_${row['boltId']}" min="0" placeholder="${ _('Set Num. Executors') }" style="width: 96%"/>                                       
                                              % endfor
                                           </div>
                                        </div>
@@ -313,12 +313,12 @@
                </div>
                <div class="modal-footer">      
                   <div id="divError" class="hide" style="position: absolute; left: 10px;">
-                     <span class="label label-important"> ERROR rebalancing this topology </span>
+                     <span class="label label-important"> ${ _('ERROR rebalancing this topology') } </span>
                   </div>
                   <input type="hidden" id="sAction" value="rebalance">
                   <input type="hidden" id="sNameTopology" value="${psName}">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                                    
-                  <button type="button" class="btn btn-primary" data-bind="click: set_topology_status">Submit</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>                                    
+                  <button type="button" class="btn btn-primary" data-bind="click: set_topology_status">${ _('Submit') }</button>
                </div>
             </div>   
          </form>      
@@ -334,7 +334,7 @@
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
             <div class="modal-content">
                <div class="modal-header">
-                  <h3>Create New Topology </b></h3>
+                  <h3>${ _('Create New Topology') } </b></h3>
                </div>
                <div class="modal-body controls">
                   ${pfForm1.as_p()|n}                  
@@ -342,8 +342,8 @@
                <div class="modal-footer">      
                   <input type="hidden" name="psAction" value="submitTopology">
                   <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
-                  <input type="submit" class="btn btn-primary" value="Submit"/>            
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>                  
+                  <input type="submit" class="btn btn-primary" value="${ _('Submit') }"/>            
                </div>
             </div>   
          </form>      
@@ -359,7 +359,7 @@
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
             <div class="modal-content">
                <div class="modal-header">
-                  <h3>Save Topology to HDFS </b></h3>
+                  <h3>${ _('Save Topology to HDFS') } </b></h3>
                </div>
                <div class="modal-body controls">
                   ${pfForm1.as_p()|n}                  
@@ -367,8 +367,8 @@
                <div class="modal-footer">      
                   <input type="hidden" name="psAction" value="saveTopology">
                   <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
-                  <input type="submit" class="btn btn-primary" value="Save"/>            
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>                  
+                  <input type="submit" class="btn btn-primary" value="${ _('Save') }"/>            
                </div>
             </div>   
          </form>      
@@ -384,7 +384,7 @@
          <div class="modal-content">
             <div class="modal-header">
                <button class="close" data-dismiss="modal" aria-hidden="true">X</button>
-               <h3 class="modal-title">Last error:</h3>
+               <h3 class="modal-title">${ _('Last error:') }</h3>
             </div>
             ${psError}
          </div>

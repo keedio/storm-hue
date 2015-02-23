@@ -68,15 +68,15 @@ ${ JavaScript.import_js() }
    
    for (var i=0; i<Object.keys(jsonComponents).length; i++) {           
       dataBarComponentsStats.push({"key": jsonComponents[i].windowPretty, 
-                                   "values": [ {"x": "Emitted", "y": jsonComponents[i].emitted},
-                                               {"x": "Transferred", "y": jsonComponents[i].transferred},                                                                   
-                                               {"x": "Acked", "y": jsonComponents[i].acked},
-                                               {"x": "Failed", "y": jsonComponents[i].failed}
+                                   "values": [ {"x": "${ _('Emitted') }", "y": jsonComponents[i].emitted},
+                                               {"x": "${ _('Transferred') }", "y": jsonComponents[i].transferred},                                                                   
+                                               {"x": "${ _('Acked') }", "y": jsonComponents[i].acked},
+                                               {"x": "${ _('Failed') }", "y": jsonComponents[i].failed}
                                              ]
                           });
       dataBarComponentsTimes.push({"key": jsonComponents[i].windowPretty, 
-                                   "values": [ {"x": "Execute Latency (ms)", "y": jsonComponents[i].executeLatency},
-                                               {"x": "Process Latency (ms)", "y": jsonComponents[i].processLatency}
+                                   "values": [ {"x": "${ _('Execute Latency (ms)') }", "y": jsonComponents[i].executeLatency},
+                                               {"x": "${ _('Process Latency (ms)') }", "y": jsonComponents[i].processLatency}
                                              ]
                           });                     
    };
@@ -134,14 +134,14 @@ ${ JavaScript.import_js() }
    
    for (var i=0; i<Object.keys(jsonInput).length; i++) {
       dataBarInputStats.push({"key": jsonInput[i].stream, 
-                              "values": [ {"x": "Executed", "y": jsonInput[i].executed},                                                                        
-                                          {"x": "Acked", "y": jsonInput[i].acked},
-                                          {"x": "Failed", "y": jsonInput[i].failed}
+                              "values": [ {"x": "${ _('Executed') }", "y": jsonInput[i].executed},                                                                        
+                                          {"x": "${ _('Acked') }", "y": jsonInput[i].acked},
+                                          {"x": "${ _('Failed') }", "y": jsonInput[i].failed}
                                         ]
                           });
       dataBarInputTimes.push({"key": jsonInput[i].stream, 
-                              "values": [ {"x": "Execute Latency (ms)", "y": jsonInput[i].executeLatency},
-                                          {"x": "Process Latency (ms)", "y": jsonInput[i].processLatency}
+                              "values": [ {"x": "${ _('Execute Latency (ms)') }", "y": jsonInput[i].executeLatency},
+                                          {"x": "${ _('Process Latency (ms)') }", "y": jsonInput[i].processLatency}
                                         ]
                           });                     
    };       
@@ -198,10 +198,10 @@ ${ JavaScript.import_js() }
    
    for (var i=0; i<Object.keys(jsonOutput).length; i++) {
       dataBarOutputStats.push({"key": jsonOutput[i].stream, 
-                               "values": [ {"x": "Emitted", "y": jsonOutput[i].emitted},
-                                           {"x": "Transferred", "y": jsonOutput[i].transferred},                                                                   
-                                           {"x": "Acked", "y": jsonOutput[i].acked},
-                                           {"x": "Failed", "y": jsonOutput[i].failed}
+                               "values": [ {"x": "${ _('Emitted') }", "y": jsonOutput[i].emitted},
+                                           {"x": "${ _('Transferred') }", "y": jsonOutput[i].transferred},                                                                   
+                                           {"x": "${ _('Acked') }", "y": jsonOutput[i].acked},
+                                           {"x": "${ _('Failed') }", "y": jsonOutput[i].failed}
                                          ]
                           });
    }; 
@@ -238,25 +238,25 @@ ${ JavaScript.import_js() }
    for (var i=0; i<Object.keys(jsonExecutors).length; i++) {
       if ("${isBolt}" == "1") {
          dataBarExecutorsStats.push({"key": jsonExecutors[i].id, 
-                                     "values": [ {"x": "Emitted", "y": jsonExecutors[i].emitted},
-                                                 {"x": "Transferred", "y": jsonExecutors[i].transferred},                                                                   
-                                                 {"x": "Executed", "y": jsonExecutors[i].executed},
-                                                 {"x": "Acked", "y": jsonExecutors[i].acked},
-                                                 {"x": "Failed", "y": jsonExecutors[i].failed}
+                                     "values": [ {"x": "${ _('Emitted') }", "y": jsonExecutors[i].emitted},
+                                                 {"x": "${ _('Transferred') }", "y": jsonExecutors[i].transferred},                                                                   
+                                                 {"x": "${ _('Executed') }", "y": jsonExecutors[i].executed},
+                                                 {"x": "${ _('Acked') }", "y": jsonExecutors[i].acked},
+                                                 {"x": "${ _('Failed') }", "y": jsonExecutors[i].failed}
                                                ]
                              });
          dataBarExecutorsTimes.push({"key": jsonExecutors[i].id, 
-                                     "values": [ {"x": "Execute Latency (ms)", "y": jsonExecutors[i].executeLatency},
-                                                 {"x": "Process Latency (ms)", "y": jsonExecutors[i].processLatency}
+                                     "values": [ {"x": "${ _('Execute Latency (ms)') }", "y": jsonExecutors[i].executeLatency},
+                                                 {"x": "${ _('Process Latency (ms)') }", "y": jsonExecutors[i].processLatency}
                                         ]
                           });                    
       }
       else {
          dataBarExecutorsStats.push({"key": jsonExecutors[i].id, 
-                                     "values": [ {"x": "Emitted", "y": jsonExecutors[i].emitted},
-                                                 {"x": "Transferred", "y": jsonExecutors[i].transferred},                                                                   
-                                                 {"x": "Acked", "y": jsonExecutors[i].acked},
-                                                 {"x": "Failed", "y": jsonExecutors[i].failed}
+                                     "values": [ {"x": "${ _('Emitted') }", "y": jsonExecutors[i].emitted},
+                                                 {"x": "${ _('Transferred') }", "y": jsonExecutors[i].transferred},                                                                   
+                                                 {"x": "${ _('Acked') }", "y": jsonExecutors[i].acked},
+                                                 {"x": "${ _('Failed') }", "y": jsonExecutors[i].failed}
                                                ]
                              });
       };
@@ -309,9 +309,9 @@ ${ JavaScript.import_js() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [Component[4] + " " + Component[0] + " Explain", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+    [_('Topology ') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
+    [Component[4] + " " + Component[0] + _(' Explain'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)]
   ]
 %>
 
@@ -337,16 +337,16 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Component Summary
+                         <i class="fa fa-table fa-fw"></i> ${ _('Component Summary') }
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyComponent" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Id </th>
-                                  <th> Topology </th>
-                                  <th> Executors </th>
-                                  <th> Tasks </th>                         
+                                  <th> ${ _('Id') } </th>
+                                  <th> ${ _('Topology') } </th>
+                                  <th> ${ _('Executors') } </th>
+                                  <th> ${ _('Tasks') } </th>                         
                                </tr>
                             </thead>
                             <tbody>
@@ -387,7 +387,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Times
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Times') }
                       </div>                      
                       <div class="panel-body">
                          <div id="barComponentsTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
@@ -402,7 +402,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Executors
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Executors') }
                       </div>
                       <div class="panel-body">                         
                          <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
@@ -428,7 +428,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Input
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Input') }
                       </div>
                       <div class="panel-body">                      
                          <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
@@ -451,7 +451,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Output
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Output') }
                       </div>
                       <div class="panel-body">
                          <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">

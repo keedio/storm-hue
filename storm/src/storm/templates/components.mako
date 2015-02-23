@@ -14,7 +14,10 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+from desktop.views import commonheader, commonfooter 
+from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Components Explain", app_name, user) | n,unicode}
 
@@ -86,9 +89,9 @@ ${ JavaScript.import_js() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [Component[4] + " Id. " + Component[0] + " Explain", url('storm:components', topology_id = Topology[0], component_id = idComponent, system_id = 0)]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+    [_('Topology ') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
+    [Component[4] + " Id. " + Component[0] + _(' Explain'), url('storm:components', topology_id = Topology[0], component_id = idComponent, system_id = 0)]
   ]
 %>
 
@@ -111,10 +114,10 @@ ${ storm.menubar(section = 'Components Explain')}
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyComponent" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Id. </th>
-                                  <th> Topology </th>
-                                  <th> Executors </th>
-                                  <th> Tasks </th>                         
+                                  <th> ${ _('Id.') } </th>
+                                  <th> ${ _('Topology') } </th>
+                                  <th> ${ _('Executors') } </th>
+                                  <th> ${ _('Tasks') } </th>                         
                                </tr>
                             </thead>
                             <tbody>
@@ -137,20 +140,20 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> ${Component[4]} Stats
+                         <i class="fa fa-table fa-fw"></i> ${Component[4]} ${ _('Stats') }
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Window </th>
-                                  <th> Emitted </th>
-                                  <th> Transferred </th>
-                                  <th> Execute Latency (ms) </th>
-                                  <th> Executed </th>
-                                  <th> Process Latency (ms) </th>
-                                  <th> Acked </th>
-                                  <th> Failed </th>                         
+                                  <th> ${ _('Window') } </th>
+                                  <th> ${ _('Emitted') } </th>
+                                  <th> ${ _('Transferred') } </th>
+                                  <th> ${ _('Execute Latency (ms)') } </th>
+                                  <th> ${ _('Executed') } </th>
+                                  <th> ${ _('Process Latency (ms)') } </th>
+                                  <th> ${ _('Acked') } </th>
+                                  <th> ${ _('Failed') } </th>                         
                                </tr>
                             </thead>
                             <tbody>
@@ -185,18 +188,18 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> ${Component[4]} Stats
+                         <i class="fa fa-table fa-fw"></i> ${Component[4]} ${ _('Stats') }
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Window </th>
-                                  <th> Emitted </th>
-                                  <th> Transferred </th>                         
-                                  <th> Complete Latency (ms) </th>
-                                  <th> Acked </th>
-                                  <th> Failed </th>                         
+                                  <th> ${ _('Window') } </th>
+                                  <th> ${ _('Emitted') } </th>
+                                  <th> ${ _('Transferred') } </th>                         
+                                  <th> ${ _('Complete Latency (ms)') } </th>
+                                  <th> ${ _('Acked') } </th>
+                                  <th> ${ _('Failed') } </th>                         
                                </tr>
                             </thead>
                             <tbody>
@@ -231,19 +234,19 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Input Stats
+                         <i class="fa fa-table fa-fw"></i> ${ _('Input Stats') }
                       </div>
                       <div class="panel-body">               
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyInput" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Component </th>
-                                  <th> Stream </th>
-                                  <th> Execute Latency (ms) </th>
-                                  <th> Executed </th>
-                                  <th> Process Latency (ms) </th>
-                                  <th> Acked </th>
-                                  <th> Failed </th>                         
+                                  <th> ${ _('Component') } </th>
+                                  <th> ${ _('Stream') } </th>
+                                  <th> ${ _('Execute Latency (ms)') } </th>
+                                  <th> ${ _('Executed') } </th>
+                                  <th> ${ _('Process Latency (ms)') } </th>
+                                  <th> ${ _('Acked') } </th>
+                                  <th> ${ _('Failed') } </th>                         
                                </tr>
                             </thead>
                             <tbody>
@@ -278,15 +281,15 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Output Stats
+                         <i class="fa fa-table fa-fw"></i> ${ _('Output Stats') }
                       </div>
                       <div class="panel-body">                
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyOutput" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Stream </th>
-                                  <th> Emitted </th>
-                                  <th> Transferred </th>                                   
+                                  <th> ${ _('Stream') } </th>
+                                  <th> ${ _('Emitted') } </th>
+                                  <th> ${ _('Transferred') } </th>                                   
                                </tr>
                             </thead>
                             <tbody>
@@ -310,24 +313,24 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Executors
+                         <i class="fa fa-table fa-fw"></i> ${ _('Executors') }
                       </div>
                       <div class="panel-body">                 
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyExecutors" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Id. </th>
-                                  <th> Uptime </th>
-                                  <th> Host </th>
-                                  <th> Port </th>
-                                  <th> Emitted </th>
-                                  <th> Transferred </th>
-                                  <th> Capacity (last 10m) </th>
-                                  <th> Execute Latency (ms) </th>
-                                  <th> Executed </th>
-                                  <th> Process Latency (ms) </th>
-                                  <th> Acked </th>
-                                  <th> Failed </th>              
+                                  <th> ${ _('Id.') } </th>
+                                  <th> ${ _('Uptime') } </th>
+                                  <th> ${ _('Host') } </th>
+                                  <th> ${ _('Port') } </th>
+                                  <th> ${ _('Emitted') } </th>
+                                  <th> ${ _('Transferred') } </th>
+                                  <th> ${ _('Capacity (last 10m)') } </th>
+                                  <th> ${ _('Execute Latency (ms)') } </th>
+                                  <th> ${ _('Executed') } </th>
+                                  <th> ${ _('Process Latency (ms)') } </th>
+                                  <th> ${ _('Acked') } </th>
+                                  <th> ${ _('Failed') } </th>              
                                </tr>
                             </thead>
                             <tbody>
@@ -370,21 +373,21 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Executors
+                         <i class="fa fa-table fa-fw"></i> ${ _('Executors') }
                       </div>
                       <div class="panel-body">                
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyExecutors" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Id. </th>
-                                  <th> Uptime </th>
-                                  <th> Host </th>
-                                  <th> Port </th>
-                                  <th> Emitted </th>
-                                  <th> Transferred </th>                         
-                                  <th> Complete Latency (ms) </th>
-                                  <th> Acked </th>
-                                  <th> Failed </th>              
+                                  <th> ${ _('Id.') } </th>
+                                  <th> ${ _('Uptime') } </th>
+                                  <th> ${ _('Host') } </th>
+                                  <th> ${ _('Port') } </th>
+                                  <th> ${ _('Emitted') } </th>
+                                  <th> ${ _('Transferred') } </th>                         
+                                  <th> ${ _('Complete Latency (ms)') } </th>
+                                  <th> ${ _('Acked') } </th>
+                                  <th> ${ _('Failed') } </th>              
                                </tr>
                             </thead>
                             <tbody>
@@ -426,14 +429,14 @@ ${ storm.menubar(section = 'Components Explain')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Errors
+                         <i class="fa fa-table fa-fw"></i> ${ _('Errors') }
                       </div>
                       <div class="panel-body">                 
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyErrors" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Time </th>
-                                  <th> Error </th>                         
+                                  <th> ${ _('Time') } </th>
+                                  <th> ${ _('Error') } </th>                         
                                </tr>
                             </thead>
                             <tbody>

@@ -14,7 +14,10 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+from desktop.views import commonheader, commonfooter 
+from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Nimbus Configuration", app_name, user) | n,unicode}
 
@@ -57,8 +60,8 @@ ${ JavaScript.import_js() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Nimbus Configuration", url('storm:nimbus_configuration')]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+    [_('Nimbus Configuration'), url('storm:nimbus_configuration')]
   ]
 %>
 

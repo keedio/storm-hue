@@ -14,7 +14,10 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+from desktop.views import commonheader, commonfooter 
+from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Spouts Detail", app_name, user) | n,unicode}
 
@@ -71,13 +74,13 @@ ${ graphsHUE.import_charts() }
    for (var i=0; i<Object.keys(jsonSpouts).length; i++) {
       iTasks+=jsonSpouts[i].tasks;
       iExecutors+=jsonSpouts[i].executors;     
-      dataBarSpouts1.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "Emitted", "y": jsonSpouts[i].emitted},
-                                                                     {"x": "Transferred", "y": jsonSpouts[i].transferred},
-                                                                     {"x": "Acked", "y": jsonSpouts[i].acked},
-                                                                     {"x": "Failed", "y": jsonSpouts[i].failed}
+      dataBarSpouts1.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "${ _('Emitted') }", "y": jsonSpouts[i].emitted},
+                                                                     {"x": "${ _('Transferred') }", "y": jsonSpouts[i].transferred},
+                                                                     {"x": "${ _('Acked') }", "y": jsonSpouts[i].acked},
+                                                                     {"x": "${ _('Failed') }", "y": jsonSpouts[i].failed}
                                                                    ]
                           });
-      dataPieSpouts1.push({"label": "Tasks", "value" : iTasks}, {"label": "Executors", "value" : iExecutors});                    
+      dataPieSpouts1.push({"label": "${ _('Tasks') }", "value" : iTasks}, {"label": "${ _('Executors') }", "value" : iExecutors});                    
       
    };                   
    
@@ -122,9 +125,9 @@ ${ graphsHUE.import_charts() }
 
 <%
   _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    ["Spouts Detail", url('storm:spouts_dashboard', topology_id = Topology[0])]
+    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+    [_('Topology ') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
+    [_('Spouts Detail'), url('storm:spouts_dashboard', topology_id = Topology[0])]
   ]
 %>
 
@@ -162,7 +165,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> Executors/Tasks
+                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Executors/Tasks') }
                       </div>
                       <div class="panel-body">
                          <div id="pieSpouts1"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -176,21 +179,21 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Summary
+                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Summary') }
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
                             <thead>
                                <tr>
-                                  <th> Id. </th>
-                                  <th> Executors </th>
-                                  <th> Tasks </th>
-                                  <th> Emitted </th>
-                                  <th> Transferred </th>
-                                  <th> Complete Latency (ms) </th>                         
-                                  <th> Acked </th>
-                                  <th> Failed </th>
-                                  <th> Last Error </th>
+                                  <th> ${ _('Id.') } </th>
+                                  <th> ${ _('Executors') } </th>
+                                  <th> ${ _('Tasks') } </th>
+                                  <th> ${ _('Emitted') } </th>
+                                  <th> ${ _('Transferred') } </th>
+                                  <th> ${ _('Complete Latency (ms)') } </th>                         
+                                  <th> ${ _('Acked') } </th>
+                                  <th> ${ _('Failed') } </th>
+                                  <th> ${ _('Last Error') } </th>
                                </tr>
                             </thead>
                             <tbody>
@@ -221,7 +224,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                         <td>
                                            <span class="label label-important">
                                               <a href="#" data-target="#divERROR" data-toggle="modal">                                                          
-                                                 ERROR
+                                                 ${ _('ERROR') }
                                               </a>
                                            </span>                                                                                                        
                                            ${Templates.divERROR(row["lastError"])}
