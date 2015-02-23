@@ -31,21 +31,6 @@ ${commonheader("Topology Stats Detail", app_name, user) | n,unicode}
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
 
-<style>
-   .dataTables_length {
-      width: 50%;
-      float: left;
-      text-align: left;
-      vertical-align:top;
-   } 
-   .dataTables_filter {
-      width: 50%;
-      float: right;
-      text-align: right;
-      vertical-align:top;
-   }   
-</style>
-
 ${ graphsHUE.import_charts() }
 
 <script type="text/javascript" charset="utf-8">                     

@@ -18,6 +18,20 @@
 	  any elements inside it should also be absolutely positioned
 */
 
+.dataTables_length {
+  width: 50%;
+  float: left;
+  text-align: left;
+  vertical-align:top;
+} 
+  
+.dataTables_filter {
+  width: 50%;
+  float: right;
+  text-align: right;
+  vertical-align:top;
+}   
+
 .modalmask {
 	position: fixed;
 	font-family: Arial, sans-serif;

@@ -31,21 +31,6 @@ ${commonheader("Spouts Detail", app_name, user) | n,unicode}
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
 
-<style>
-   .dataTables_length {
-      width: 50%;
-      float: left;
-      text-align: left;
-      vertical-align:top;
-   } 
-   .dataTables_filter {
-      width: 50%;
-      float: right;
-      text-align: right;
-      vertical-align:top;
-   }   
-</style>
-
 ${ JavaScript.import_js() }
 ${ graphsHUE.import_charts() }
 
