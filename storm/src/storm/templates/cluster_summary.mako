@@ -55,30 +55,58 @@ ${ JavaScript.import_js() }
   ]
 %>
 
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Cluster Summary')}
+${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+${Templates.tblSaveTopology(Data['frmHDFS'])}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+  ${ storm.header(_breadcrumbs) }
 
-<div class="container-fluid">
+  <div class="container-fluid">
    <div class="card">        
       <div class="card-body">         
          <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">          
             <tr>               
                <td>
-                  ${Templates.tblSupervisor()}
+                    % if not Data['cluster']:
+                      <div class="alert alert-error">
+                        ${ _('There are currently no cluster information to show in Storm UI Server: ') }<b>${Data['storm_ui']}</b>
+                        </br>
+                        ${ _('Please contact your administrator to solve this.') }
+                      </div>
+                    % else:
+                      ${Templates.tblCluster()}
+                    % endif  
                </td>
             </tr>
             <tr>               
                <td>
-                  ${Templates.tblCluster()}
+                  % if not Data['supervisor']['supervisors']:
+                    <div class="alert alert-error">
+                      ${ _('There are currently no supervisor information to show in Storm UI Server: ') }<b>${Data['storm_ui']}</b>
+                      </br>
+                      ${ _('Please contact your administrator to solve this.') }
+                    </div>  
+                  % else:
+                    ${Templates.tblSupervisor()}
+                  % endif              
                </td>
             </tr>
          </table>
       </div>
    </div>
-</div>
+  </div>
+% endif
 
 ${commonfooter(messages) | n,unicode}

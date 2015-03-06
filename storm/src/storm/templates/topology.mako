@@ -59,20 +59,34 @@ ${ JavaScript.import_js() }
 <%
   _breadcrumbs = [
     [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Topology ') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [_('Topology ') + Topology[0] + _(' Stats Detail'), url('storm:topology', topology_id = Topology[0], window_id = Stats['window'])]
+    [_('Topology ') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
+    [_('Topology ') + Data['topology']['id'] + _(' Stats Detail'), url('storm:topology', topology_id = Data['topology']['id'], window_id = Data['stats']['window'])]
   ]
 %>
 
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Topology Stats Detail')}
+${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+${Templates.tblSaveTopology(Data['frmHDFS'])}
+
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+${ storm.header(_breadcrumbs) }
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                                          
-          ${Templates.ControlPanelTopology("topology")}
+          ${Templates.ControlPanelTopology(Data['topology'], "topology")} 
           <tr>
              <td colspan="3">
                 <div class="col-lg-4">
@@ -95,20 +109,20 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
                             <tbody>
                                <tr>                         
                                   <td>
-                                     <a class="fa fa-tachometer" title="${ _('Topology Stats Dashboard') }" href="${url('storm:topology_dashboard', topology_id = Topology[0], window_id = Stats['window'])}"></a>
-                                     <a href="${url('storm:topology', topology_id = Topology[0], window_id = Stats['window'])}"> ${Stats["windowPretty"]} </a>
+                                     <a class="fa fa-tachometer" title="${ _('Topology Stats Dashboard') }" href="${url('storm:topology_dashboard', topology_id = Data['topology']['id'], window_id = Data['stats']['window'])}"></a>
+                                     <a href="${url('storm:topology', topology_id = Data['topology']['id'], window_id = Data['stats']['window'])}"> ${Data['stats']["windowPretty"]} </a>
                                   </td>
-                                  <td>${Stats["emitted"]}</td>                                                        
-                                  <td>${Stats["transferred"]}</td>
-                                  <td>${Stats["completeLatency"]}</td>
+                                  <td>${Data['stats']["emitted"]}</td>                                                        
+                                  <td>${Data['stats']["transferred"]}</td>
+                                  <td>${Data['stats']["completeLatency"]}</td>
                                   <td>
                                      <span style="color: green; font-weight: bold">
-                                        ${Stats["acked"]}
+                                        ${Data['stats']["acked"]}
                                      </span>
                                   </td>
                                   <td>
                                      <span style="color: red; font-weight: bold">
-                                        ${Stats["failed"]}
+                                        ${Data['stats']["failed"]}
                                      </span>
                                   </td>                         
                                </tr>                      
@@ -124,7 +138,7 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> ${ _('Spouts') } (${Stats["windowPretty"]})
+                         <i class="fa fa-table fa-fw"></i> ${ _('Spouts') } (${Data['stats']["windowPretty"]})
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
@@ -142,7 +156,7 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
                                </tr>
                             </thead>
                             <tbody>
-                               % for row in Spouts:
+                               % for row in Data['spouts']:
                                   <tr>
                                      <td>${row["spoutId"]}</td>
                                      <td>${row["executors"]}</td>                                                        
@@ -177,7 +191,7 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> ${ _('Bolts') } (${Stats["windowPretty"]})
+                         <i class="fa fa-table fa-fw"></i> ${ _('Bolts') } (${Data['stats']["windowPretty"]})
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyBolts" data-tablescroller-disable="true">
@@ -198,7 +212,7 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
                                </tr>
                             </thead>
                             <tbody>
-                               % for row in Bolts:
+                               % for row in Data['bolts']:
                                   <tr>
                                      <td>${row["boltId"]}</td>
                                      <td>${row["executors"]}</td>                                                        
@@ -233,5 +247,5 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
     </div>
   </div>
 </div>
-
+% endif
 ${commonfooter(messages) | n,unicode}

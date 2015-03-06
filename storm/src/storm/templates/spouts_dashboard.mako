@@ -45,92 +45,103 @@ ${ graphsHUE.import_charts() }
 	    	"autoWidth": true,
 	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
 	    } );
-   });
-   
-   var dataPieSpouts1 = [];
-   var dataBarSpouts1 = [];
-   var iTasks = 0;
-   var iExecutors = 0;
-   
-   var sData = "${jSpouts}";   
-   var swData = sData.replace(/&quot;/ig,'"')   
-   var jsonSpouts = JSON.parse(swData);
-   
-   for (var i=0; i<Object.keys(jsonSpouts).length; i++) {
-      iTasks+=jsonSpouts[i].tasks;
-      iExecutors+=jsonSpouts[i].executors;     
-      dataBarSpouts1.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "${ _('Emitted') }", "y": jsonSpouts[i].emitted},
-                                                                     {"x": "${ _('Transferred') }", "y": jsonSpouts[i].transferred},
-                                                                     {"x": "${ _('Acked') }", "y": jsonSpouts[i].acked},
-                                                                     {"x": "${ _('Failed') }", "y": jsonSpouts[i].failed}
-                                                                   ]
-                          });
-      dataPieSpouts1.push({"label": "${ _('Tasks') }", "value" : iTasks}, {"label": "${ _('Executors') }", "value" : iExecutors});                    
-      
-   };                   
-   
-   nv.addGraph(function() {
-                  var chart = nv.models.pieChart()
-                                       .x(function(d) { return d.label })
-                                       .y(function(d) { return d.value })
-                                       .valueFormat(d3.format(".0f"))
-                                       .color(['#468847', '#f89406'])
-                                       .showLabels(false);
 
-                  d3.select("#pieSpouts1 svg")
-                    .datum(dataPieSpouts1)
-                    .transition().duration(350)
-                    .call(chart);
- 
-                  return chart;
-   });   
-   
-   nv.addGraph(function() {
-                 var graphSpouts1 = nv.models.multiBarChart()
-                                           .transitionDuration(350)
-                                           .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                                           .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                           .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                           .showControls(true);
-                                  
-                                  graphSpouts1.multibar.stacked(false);         
-    
-                                  graphSpouts1.yAxis
-                                            .tickFormat(d3.format('d'));
+       var dataPieSpouts1 = [];
+       var dataBarSpouts1 = [];
+       var iTasks = 0;
+       var iExecutors = 0;
+       
+       var sData = "${Data['jSpouts']}";   
+       var swData = sData.replace(/&quot;/ig,'"')   
+       var jsonSpouts = JSON.parse(swData);
+       
+       for (var i=0; i<Object.keys(jsonSpouts).length; i++) {
+          iTasks+=jsonSpouts[i].tasks;
+          iExecutors+=jsonSpouts[i].executors;     
+          dataBarSpouts1.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "${ _('Emitted') }", "y": jsonSpouts[i].emitted},
+                                                                         {"x": "${ _('Transferred') }", "y": jsonSpouts[i].transferred},
+                                                                         {"x": "${ _('Acked') }", "y": jsonSpouts[i].acked},
+                                                                         {"x": "${ _('Failed') }", "y": jsonSpouts[i].failed}
+                                                                       ]
+                              });
+          dataPieSpouts1.push({"label": "${ _('Tasks') }", "value" : iTasks}, {"label": "${ _('Executors') }", "value" : iExecutors});                    
+          
+       };                   
+       
+       nv.addGraph(function() {
+                      var chart = nv.models.pieChart()
+                                           .x(function(d) { return d.label })
+                                           .y(function(d) { return d.value })
+                                           .valueFormat(d3.format(".0f"))
+                                           .color(['#468847', '#f89406'])
+                                           .showLabels(false);
+
+                      d3.select("#pieSpouts1 svg")
+                        .datum(dataPieSpouts1)
+                        .transition().duration(350)
+                        .call(chart);
+     
+                      return chart;
+       });   
+       
+       nv.addGraph(function() {
+                     var graphSpouts1 = nv.models.multiBarChart()
+                                               .transitionDuration(350)
+                                               .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+                                               .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                               .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                               .showControls(true);
+                                      
+                                      graphSpouts1.multibar.stacked(false);         
         
-                                  d3.select('#barSpouts1 svg')
-                                    .datum(dataBarSpouts1)
-                                    .call(graphSpouts1);
+                                      graphSpouts1.yAxis
+                                                .tickFormat(d3.format('d'));
+            
+                                      d3.select('#barSpouts1 svg')
+                                        .datum(dataBarSpouts1)
+                                        .call(graphSpouts1);
 
-                                  nv.utils.windowResize(graphSpouts1.update);
+                                      nv.utils.windowResize(graphSpouts1.update);
 
-                                  return graphSpouts1;
+                                      return graphSpouts1;
+       });
    });
 </script>
 
 <%
   _breadcrumbs = [
     [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Topology ') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [_('Spouts Detail'), url('storm:spouts_dashboard', topology_id = Topology[0])]
+    [_('Topology ') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
+    [_('Spouts Detail'), url('storm:spouts_dashboard', topology_id = Data['topology']['id'])]
   ]
 %>
 
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Spouts Detail')}
+${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+${Templates.tblSaveTopology(Data['frmHDFS'])}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+${ storm.header(_breadcrumbs) }
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">   
-          ${Templates.ControlPanelTopology("spouts_dashboard")}
+          ${Templates.ControlPanelTopology(Data['topology'], "spouts_dashboard")} 
           <tr>
              <td colspan="2">                
-                ${Templates.tblRebalanceTopology(Topology[1])}
+                ${Templates.tblRebalanceTopology(Data['topology'])}
              </td>
           </tr>  
           <tr valign="top">
@@ -182,11 +193,11 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                </tr>
                             </thead>
                             <tbody>
-                               % for row in Spouts:
+                               % for row in Data['spouts']:
                                   <tr>                                     
                                      <td>
-                                        <a class="fa fa-tachometer" href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = row["spoutId"], system_id = 0)}"></a>                                                 
-                                        <a href="${url('storm:components', topology_id = Topology[0], component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
+                                        <a class="fa fa-tachometer" href="${url('storm:components_dashboard', topology_id = Data['topology']['id'], component_id = row["spoutId"], system_id = 0)}"></a>                                                 
+                                        <a href="${url('storm:components', topology_id = Data['topology']['id'], component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
                                      </td>
                                      <td>${row["executors"]}</td>                                                        
                                      <td>${row["tasks"]}</td>
@@ -228,5 +239,5 @@ ${Templates.tblSaveTopology(frmHDFS)}
     </div>
   </div>
 </div>
-  
+% endif  
 ${commonfooter(messages) | n,unicode}

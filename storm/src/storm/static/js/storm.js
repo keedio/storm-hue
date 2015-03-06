@@ -1,18 +1,23 @@
+
 function changeDisplay(id1, id2) {
    document.getElementById(id1).style.display = "";
    document.getElementById(id2).style.display = "none";            
 };
    
 function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
-   if (confirm('Are you sure you want too '  + psAction +  ' this Topology?')) {
+   if (confirm('Are you sure you wants to '  + psAction +  ' this Topology?')) {
       // Accept.
       $.post("/storm/changeTopologyStatus/", { sId: psId,
                                                sAction: psAction,
    	                                           bWait: pbWait,
-	                                           iWait: piWait
-                                             }, function(data){                                                    
-                                                   if (data = 200) {
+	                                             iWait: piWait
+                                             }, function(data){                                                 
+                                                   if (data == 200) {
                                                       window.location.reload();
+                                                   }
+                                                   else {
+                                                      console.log("ERROR");
+                                                      
                                                    }
                                                 }, "text");
    } 
@@ -44,7 +49,7 @@ function StormViewModel() {
 	     }
       }            
       
-      if (confirm('Are you sure you want to '  + sAction +  ' this Topology?')) {
+      if (confirm(_('Are you sure you want to ' + sAction + ' this Topology?'))) {
          // Accept.
          $.post("/storm/set_topology_status/", { psAction: sAction,
         	 									 psNameTopology: sNameTopology,
@@ -59,7 +64,7 @@ function StormViewModel() {
                                                          window.location.reload();
                                                     }
                                                     else {                                               
-						         						$("#divError").show();
+						         						                         $("#divError").show();
 						      						}
                                                 }, "text");
       } 

@@ -50,25 +50,45 @@ ${ JavaScript.import_js() }
   ]
 %>
 
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Nimbus Configuration')}
+${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+${Templates.tblSaveTopology(Data['frmHDFS'])}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+  ${ storm.header(_breadcrumbs) }
 
-<div class="container-fluid">
-  <div class="card">
-    <div class="card-body">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
           <tr>
-             <td>                
-                ${Templates.tblConfiguration()}                                                
+             <td>
+                % if not Data['configuration']:
+                  <div class="alert alert-error">
+                    ${ _('There are currently no settings to show in Storm UI Server: ') }<b>${Data['storm_ui']}</b>
+                    </br>
+                    ${ _('Please contact your administrator to solve this.') }
+                  </div>
+                % else:
+                  ${Templates.tblConfiguration()}
+                % endif                 
              </td>
           </tr>
        </table>
+      </div>
     </div>
   </div>
-</div>
+% endif
 
 ${commonfooter(messages) | n,unicode}

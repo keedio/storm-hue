@@ -63,9 +63,21 @@ ${ JavaScript.import_js() }
   ]
 %>
 
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Failed')}
+
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+${ storm.header(_breadcrumbs) }
 
 <div class="container-fluid">
    <div class="card">        
@@ -74,7 +86,7 @@ ${ storm.menubar(section = 'Failed')}
             <tr>               
                <td>                                    
                   <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                                                        
-                   % if idComponent == 1:
+                   % if Data['component_id'] == 1:
                    <tr>
                       <td>
                          <div class="col-lg-4">
@@ -95,11 +107,11 @@ ${ storm.menubar(section = 'Failed')}
                                         </tr>
                                      </thead>
                                      <tbody>
-                                        % for row in Component:
+                                        % for row in Data['stats']:
                                            <tr>
                                               <td>
-                                                 <a class="fa fa-tachometer" title="${ _('Topology Stats Dashboard') }" href="${url('storm:topology_dashboard', topology_id = idTopology, window_id = row['window'])}"></a>
-                                                 <a title="${ _('Topology Stats Detail') }" href="${url('storm:topology', topology_id = idTopology, window_id = row['window'])}"> ${row["windowPretty"]} </a>
+                                                 <a class="fa fa-tachometer" title="${ _('Topology Stats Dashboard') }" href="${url('storm:topology_dashboard', topology_id = Data['topology']['id'], window_id = row['window'])}"></a>
+                                                 <a title="${ _('Topology Stats Detail') }" href="${url('storm:topology', topology_id = Data['topology']['id'], window_id = row['window'])}"> ${row["windowPretty"]} </a>
                                               </td>
                                               <td>${row["emitted"]}</td>                                                        
                                               <td>${row["transferred"]}</td>
@@ -124,7 +136,7 @@ ${ storm.menubar(section = 'Failed')}
                       </td>
                    </tr>
                    % endif
-                   % if idComponent == 2:
+                   % if Data['component_id'] == 2:
                    <tr>
                       <td>
                          <div class="col-lg-4">
@@ -148,11 +160,11 @@ ${ storm.menubar(section = 'Failed')}
                                         </tr>
                                      </thead>
                                      <tbody>
-                                        % for row in Component:
+                                        % for row in Data['spouts']:
                                            <tr>                                     
                                               <td>
-                                                 <a class="fa fa-tachometer" title="${ _('Spout Dashboard') }" href="${url('storm:components_dashboard', topology_id = idTopology, component_id = row["spoutId"], system_id = 0)}"></a>                                                 
-                                                 <a title="${ _('Spout Detail') }" href="${url('storm:components', topology_id = idTopology, component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
+                                                 <a class="fa fa-tachometer" title="${ _('Spout Dashboard') }" href="${url('storm:components_dashboard', topology_id = Data['topology']['id'], component_id = row["spoutId"], system_id = 0)}"></a>                                                 
+                                                 <a title="${ _('Spout Detail') }" href="${url('storm:components', topology_id = Data['topology']['id'], component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
                                               </td>
                                               <td>${row["executors"]}</td>                                                        
                                               <td>${row["tasks"]}</td>
@@ -190,7 +202,7 @@ ${ storm.menubar(section = 'Failed')}
                       </td>
                    </tr>
                    % endif
-                   % if idComponent == 3:
+                   % if Data['component_id'] == 3:
                    <tr>
                       <td>
                          <div class="col-lg-4">
@@ -217,11 +229,11 @@ ${ storm.menubar(section = 'Failed')}
                                         </tr>
                                      </thead>
                                      <tbody>
-                                        % for row in Component:
+                                        % for row in Data['bolts']:
                                            <tr>                                     
                                               <td>
-                                                 <a class="fa fa-tachometer" title="${ _('Bolt Dashboard') }" href="${url('storm:components_dashboard', topology_id = idTopology, component_id = row["boltId"], system_id = 0)}"></a>
-                                                 <a title="${ _('Bolt Detail') }" href="${url('storm:components', topology_id = idTopology, component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
+                                                 <a class="fa fa-tachometer" title="${ _('Bolt Dashboard') }" href="${url('storm:components_dashboard', topology_id = Data['topology']['id'], component_id = row["boltId"], system_id = 0)}"></a>
+                                                 <a title="${ _('Bolt Detail') }" href="${url('storm:components', topology_id = Data['topology']['id'], component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
                                               </td>
                                               <td>${row["executors"]}</td>                                                        
                                               <td>${row["tasks"]}</td>
@@ -270,5 +282,5 @@ ${ storm.menubar(section = 'Failed')}
       </div>
    </div>
 </div>
-
+% endif
 ${commonfooter(messages) | n,unicode}

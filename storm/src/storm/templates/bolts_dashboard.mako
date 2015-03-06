@@ -45,93 +45,104 @@ ${ JavaScript.import_js() }
 	    	"autoWidth": true,
 	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
 	    } );
-   });
-   
-   var dataPieBolts1 = [];
-   var dataBarBolts1 = [];
-   var iTasks = 0;
-   var iExecutors = 0;
-   
-   var sData = "${jBolts}";   
-   var swData = sData.replace(/&quot;/ig,'"')   
-   var jsonBolts = JSON.parse(swData);
-   
-   for (var i=0; i<Object.keys(jsonBolts).length; i++) {
-      iTasks+=jsonBolts[i].tasks;
-      iExecutors+=jsonBolts[i].executors;     
-      dataBarBolts1.push({"key": jsonBolts[i].boltId, "values": [ {"x": "${ _('Emitted') }", "y": jsonBolts[i].emitted},
-                                                                   {"x": "${ _('"Transferred') }", "y": jsonBolts[i].transferred},
-                                                                   {"x": "${ _('"Executed') }", "y": jsonBolts[i].executed},
-                                                                   {"x": "${ _('"Acked') }", "y": jsonBolts[i].acked},
-                                                                   {"x": "${ _('"Failed') }", "y": jsonBolts[i].failed}
-                                                                 ]
-                          });
-      dataPieBolts1.push({"label": _('Tasks'), "value" : iTasks}, {"label": _('Executors'), "value" : iExecutors});                                 
-      
-   };      
-   
-   nv.addGraph(function() {
-                  var chart = nv.models.pieChart()
-                                       .x(function(d) { return d.label })
-                                       .y(function(d) { return d.value })
-                                       .valueFormat(d3.format(".0f"))
-                                       .color(['#468847', '#f89406'])
-                                       .showLabels(false);
 
-                  d3.select("#pieBolts1 svg")
-                    .datum(dataPieBolts1)
-                    .transition().duration(350)
-                    .call(chart);
- 
-                  return chart;
-   });   
-   
-   nv.addGraph(function() {
-                 var graphBolts1 = nv.models.multiBarChart()
-                                           .transitionDuration(350)
-                                           .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                                           .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                           .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                           .showControls(true);
-                                  
-                                  graphBolts1.multibar.stacked(false);         
-    
-                                  graphBolts1.yAxis
-                                            .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barBolts1 svg')
-                                    .datum(dataBarBolts1)
-                                    .call(graphBolts1);
+         var dataPieBolts1 = [];
+         var dataBarBolts1 = [];
+         var iTasks = 0;
+         var iExecutors = 0;
+         
+         var sData = "${Data['jBolts']}";   
+         var swData = sData.replace(/&quot;/ig,'"')   
+         var jsonBolts = JSON.parse(swData);
+         
+         for (var i=0; i<Object.keys(jsonBolts).length; i++) {
+            iTasks+=jsonBolts[i].tasks;
+            iExecutors+=jsonBolts[i].executors;     
+            dataBarBolts1.push({"key": jsonBolts[i].boltId, "values": [ {"x": "${ _('Emitted') }", "y": jsonBolts[i].emitted},
+                                                                         {"x": "${ _('Transferred') }", "y": jsonBolts[i].transferred},
+                                                                         {"x": "${ _('Executed') }", "y": jsonBolts[i].executed},
+                                                                         {"x": "${ _('Acked') }", "y": jsonBolts[i].acked},
+                                                                         {"x": "${ _('Failed') }", "y": jsonBolts[i].failed}
+                                                                       ]
+                                });            
+         };      
+         
+         dataPieBolts1.push({"label": "${ _('Tasks') }", "value" : iTasks}, {"label": "${ _('Executors') }", "value" : iExecutors});                                 
 
-                                  nv.utils.windowResize(graphBolts1.update);
+         nv.addGraph(function() {
+                        var chart = nv.models.pieChart()
+                                             .x(function(d) { return d.label })
+                                             .y(function(d) { return d.value })
+                                             .valueFormat(d3.format(".0f"))
+                                             .color(['#468847', '#f89406'])
+                                             .showLabels(false);
 
-                                  return graphBolts1;
+                        d3.select("#pieBolts1 svg")
+                          .datum(dataPieBolts1)
+                          .transition().duration(350)
+                          .call(chart);
+       
+                        return chart;
+         });   
+         
+         nv.addGraph(function() {
+                       var graphBolts1 = nv.models.multiBarChart()
+                                                 .transitionDuration(350)
+                                                 .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+                                                 .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                 .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                 .showControls(true);
+                                        
+                                        graphBolts1.multibar.stacked(false);         
+          
+                                        graphBolts1.yAxis
+                                                  .tickFormat(d3.format('d'));
+              
+                                        d3.select('#barBolts1 svg')
+                                          .datum(dataBarBolts1)
+                                          .call(graphBolts1);
+
+                                        nv.utils.windowResize(graphBolts1.update);
+
+                                        return graphBolts1;
+         });
    });
 </script>
 
 <%
   _breadcrumbs = [
     [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Topology') + Topology[0] + _(' Detail'), url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [_('Bolts Detail'), url('storm:bolts_dashboard', topology_id = Topology[0])]
+    [_('Topology') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
+    [_('Bolts Detail'), url('storm:bolts_dashboard', topology_id = Data['topology']['id'])]
   ]
 %>
 
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Bolts Detail')}
+${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+${Templates.tblSaveTopology(Data['frmHDFS'])}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+${ storm.header(_breadcrumbs) }
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">   
-          ${Templates.ControlPanelTopology("bolts_dashboard")}
+          ${Templates.ControlPanelTopology(Data['topology'], "bolts_dashboard")} 
           <tr>
              <td colspan="2">                
-                ${Templates.tblRebalanceTopology(Topology[1])}
+                ${Templates.tblRebalanceTopology(Data['topology'])}
              </td>
           </tr>
           <tr valign="top">
@@ -186,11 +197,11 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                </tr>
                             </thead>
                             <tbody>
-                               % for row in Bolts:
+                               % for row in Data['bolts']:
                                   <tr>                                     
                                      <td>
-                                        <a class="fa fa-tachometer" href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = row["boltId"], system_id = 0)}"></a>
-                                        <a href="${url('storm:components', topology_id = Topology[0], component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
+                                        <a class="fa fa-tachometer" href="${url('storm:components_dashboard', topology_id = Data['topology']['id'], component_id = row["boltId"], system_id = 0)}"></a>
+                                        <a href="${url('storm:components', topology_id = Data['topology']['id'], component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
                                      </td>
                                      <td>${row["executors"]}</td>                                                        
                                      <td>${row["tasks"]}</td>
@@ -235,5 +246,5 @@ ${Templates.tblSaveTopology(frmHDFS)}
     </div>
   </div>
 </div>
-
+% endif
 ${commonfooter(messages) | n,unicode}
