@@ -86,7 +86,16 @@ ${ storm.header(_breadcrumbs) }
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                                          
-          ${Templates.ControlPanelTopology(Data['topology'], "topology")} 
+          ${Templates.ControlPanelTopology(Data['topology'], "topology")}
+          <tr>
+             <td colspan="3">                
+                ${Templates.tblRebalanceTopology(Data['topology'])}
+                ${Templates.tblAutomaticRebalance(Data['topology'])}
+                ${Templates.tblKill(Data['topology'])}
+                ${Templates.tblActivate(Data['topology'])}
+                ${Templates.tblDeactivate(Data['topology'])}
+             </td>
+          </tr> 
           <tr>
              <td colspan="3">
                 <div class="col-lg-4">

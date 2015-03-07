@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hue VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-03-07 10:07+0100\n"
+"POT-Creation-Date: 2015-03-07 12:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgid "Copy to %(name)s failed: %(error)s.\n"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:61
-#: src/storm/templates/bolts_dashboard.mako:188
+#: src/storm/templates/bolts_dashboard.mako:192
 #: src/storm/templates/components.mako:147
 #: src/storm/templates/components.mako:195
 #: src/storm/templates/components.mako:288
@@ -66,24 +66,24 @@ msgstr ""
 #: src/storm/templates/detail_dashboard.mako:87
 #: src/storm/templates/detail_dashboard.mako:124
 #: src/storm/templates/detail_dashboard.mako:159
-#: src/storm/templates/detail_dashboard.mako:243
-#: src/storm/templates/detail_dashboard.mako:293
-#: src/storm/templates/detail_dashboard.mako:357
+#: src/storm/templates/detail_dashboard.mako:247
+#: src/storm/templates/detail_dashboard.mako:297
+#: src/storm/templates/detail_dashboard.mako:361
 #: src/storm/templates/failed.mako:102 src/storm/templates/failed.mako:154
 #: src/storm/templates/failed.mako:220
 #: src/storm/templates/spouts_dashboard.mako:61
-#: src/storm/templates/spouts_dashboard.mako:187
-#: src/storm/templates/topology.mako:102 src/storm/templates/topology.mako:150
-#: src/storm/templates/topology.mako:203
+#: src/storm/templates/spouts_dashboard.mako:191
+#: src/storm/templates/topology.mako:111 src/storm/templates/topology.mako:159
+#: src/storm/templates/topology.mako:212
 #: src/storm/templates/topology_dashboard.mako:53
 #: src/storm/templates/topology_dashboard.mako:73
 #: src/storm/templates/topology_dashboard.mako:98
-#: src/storm/templates/topology_dashboard.mako:372
+#: src/storm/templates/topology_dashboard.mako:376
 msgid "Emitted"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:62
-#: src/storm/templates/bolts_dashboard.mako:189
+#: src/storm/templates/bolts_dashboard.mako:193
 #: src/storm/templates/components.mako:148
 #: src/storm/templates/components.mako:196
 #: src/storm/templates/components.mako:289
@@ -96,37 +96,37 @@ msgstr ""
 #: src/storm/templates/detail_dashboard.mako:88
 #: src/storm/templates/detail_dashboard.mako:125
 #: src/storm/templates/detail_dashboard.mako:160
-#: src/storm/templates/detail_dashboard.mako:244
-#: src/storm/templates/detail_dashboard.mako:294
-#: src/storm/templates/detail_dashboard.mako:358
+#: src/storm/templates/detail_dashboard.mako:248
+#: src/storm/templates/detail_dashboard.mako:298
+#: src/storm/templates/detail_dashboard.mako:362
 #: src/storm/templates/failed.mako:103 src/storm/templates/failed.mako:155
 #: src/storm/templates/failed.mako:221
 #: src/storm/templates/spouts_dashboard.mako:62
-#: src/storm/templates/spouts_dashboard.mako:188
-#: src/storm/templates/topology.mako:103 src/storm/templates/topology.mako:151
-#: src/storm/templates/topology.mako:204
+#: src/storm/templates/spouts_dashboard.mako:192
+#: src/storm/templates/topology.mako:112 src/storm/templates/topology.mako:160
+#: src/storm/templates/topology.mako:213
 #: src/storm/templates/topology_dashboard.mako:54
 #: src/storm/templates/topology_dashboard.mako:74
 #: src/storm/templates/topology_dashboard.mako:99
-#: src/storm/templates/topology_dashboard.mako:375
+#: src/storm/templates/topology_dashboard.mako:379
 msgid "Transferred"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:63
-#: src/storm/templates/bolts_dashboard.mako:192
+#: src/storm/templates/bolts_dashboard.mako:196
 #: src/storm/templates/components.mako:150
 #: src/storm/templates/components.mako:243
 #: src/storm/templates/components.mako:327
 #: src/storm/templates/components_dashboard.mako:121
 #: src/storm/templates/components_dashboard.mako:227
 #: src/storm/templates/detail_dashboard.mako:161
-#: src/storm/templates/detail_dashboard.mako:361
-#: src/storm/templates/failed.mako:224 src/storm/templates/topology.mako:207
+#: src/storm/templates/detail_dashboard.mako:365
+#: src/storm/templates/failed.mako:224 src/storm/templates/topology.mako:216
 msgid "Executed"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:64
-#: src/storm/templates/bolts_dashboard.mako:194
+#: src/storm/templates/bolts_dashboard.mako:198
 #: src/storm/templates/components.mako:152
 #: src/storm/templates/components.mako:198
 #: src/storm/templates/components.mako:245
@@ -140,24 +140,24 @@ msgstr ""
 #: src/storm/templates/detail_dashboard.mako:89
 #: src/storm/templates/detail_dashboard.mako:126
 #: src/storm/templates/detail_dashboard.mako:162
-#: src/storm/templates/detail_dashboard.mako:246
-#: src/storm/templates/detail_dashboard.mako:296
-#: src/storm/templates/detail_dashboard.mako:363
+#: src/storm/templates/detail_dashboard.mako:250
+#: src/storm/templates/detail_dashboard.mako:300
+#: src/storm/templates/detail_dashboard.mako:367
 #: src/storm/templates/failed.mako:105 src/storm/templates/failed.mako:157
 #: src/storm/templates/failed.mako:226
 #: src/storm/templates/spouts_dashboard.mako:63
-#: src/storm/templates/spouts_dashboard.mako:190
-#: src/storm/templates/topology.mako:105 src/storm/templates/topology.mako:153
-#: src/storm/templates/topology.mako:209
+#: src/storm/templates/spouts_dashboard.mako:194
+#: src/storm/templates/topology.mako:114 src/storm/templates/topology.mako:162
+#: src/storm/templates/topology.mako:218
 #: src/storm/templates/topology_dashboard.mako:55
 #: src/storm/templates/topology_dashboard.mako:75
 #: src/storm/templates/topology_dashboard.mako:100
-#: src/storm/templates/topology_dashboard.mako:378
+#: src/storm/templates/topology_dashboard.mako:382
 msgid "Acked"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:65
-#: src/storm/templates/bolts_dashboard.mako:195
+#: src/storm/templates/bolts_dashboard.mako:199
 #: src/storm/templates/components.mako:153
 #: src/storm/templates/components.mako:199
 #: src/storm/templates/components.mako:246
@@ -171,58 +171,58 @@ msgstr ""
 #: src/storm/templates/detail_dashboard.mako:90
 #: src/storm/templates/detail_dashboard.mako:127
 #: src/storm/templates/detail_dashboard.mako:163
-#: src/storm/templates/detail_dashboard.mako:247
-#: src/storm/templates/detail_dashboard.mako:297
-#: src/storm/templates/detail_dashboard.mako:364
-#: src/storm/templates/detail_dashboard.mako:442
-#: src/storm/templates/detail_dashboard.mako:472
-#: src/storm/templates/detail_dashboard.mako:502
+#: src/storm/templates/detail_dashboard.mako:251
+#: src/storm/templates/detail_dashboard.mako:301
+#: src/storm/templates/detail_dashboard.mako:368
+#: src/storm/templates/detail_dashboard.mako:446
+#: src/storm/templates/detail_dashboard.mako:476
+#: src/storm/templates/detail_dashboard.mako:506
 #: src/storm/templates/failed.mako:106 src/storm/templates/failed.mako:158
 #: src/storm/templates/failed.mako:227
 #: src/storm/templates/spouts_dashboard.mako:64
-#: src/storm/templates/spouts_dashboard.mako:191
+#: src/storm/templates/spouts_dashboard.mako:195
 #: src/storm/templates/storm_dashboard.mako:240
-#: src/storm/templates/topology.mako:106 src/storm/templates/topology.mako:154
-#: src/storm/templates/topology.mako:210
+#: src/storm/templates/topology.mako:115 src/storm/templates/topology.mako:163
+#: src/storm/templates/topology.mako:219
 #: src/storm/templates/topology_dashboard.mako:56
 #: src/storm/templates/topology_dashboard.mako:76
 #: src/storm/templates/topology_dashboard.mako:101
-#: src/storm/templates/topology_dashboard.mako:381
+#: src/storm/templates/topology_dashboard.mako:385
 msgid "Failed"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:70
-#: src/storm/templates/bolts_dashboard.mako:187
+#: src/storm/templates/bolts_dashboard.mako:191
 #: src/storm/templates/components.mako:117
-#: src/storm/templates/components_dashboard.mako:345
-#: src/storm/templates/detail_dashboard.mako:292
-#: src/storm/templates/detail_dashboard.mako:356
+#: src/storm/templates/components_dashboard.mako:349
+#: src/storm/templates/detail_dashboard.mako:296
+#: src/storm/templates/detail_dashboard.mako:360
 #: src/storm/templates/failed.mako:153 src/storm/templates/failed.mako:219
 #: src/storm/templates/spouts_dashboard.mako:67
-#: src/storm/templates/spouts_dashboard.mako:186
+#: src/storm/templates/spouts_dashboard.mako:190
 #: src/storm/templates/storm_dashboard.mako:75
-#: src/storm/templates/templates.mako:155 src/storm/templates/topology.mako:149
-#: src/storm/templates/topology.mako:202
+#: src/storm/templates/templates.mako:155 src/storm/templates/topology.mako:158
+#: src/storm/templates/topology.mako:211
 #: src/storm/templates/topology_dashboard.mako:82
 #: src/storm/templates/topology_dashboard.mako:110
 msgid "Tasks"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:70
-#: src/storm/templates/bolts_dashboard.mako:186
+#: src/storm/templates/bolts_dashboard.mako:190
 #: src/storm/templates/components.mako:116
 #: src/storm/templates/components.mako:313
 #: src/storm/templates/components.mako:373
-#: src/storm/templates/components_dashboard.mako:344
-#: src/storm/templates/components_dashboard.mako:401
-#: src/storm/templates/detail_dashboard.mako:291
-#: src/storm/templates/detail_dashboard.mako:355
+#: src/storm/templates/components_dashboard.mako:348
+#: src/storm/templates/components_dashboard.mako:405
+#: src/storm/templates/detail_dashboard.mako:295
+#: src/storm/templates/detail_dashboard.mako:359
 #: src/storm/templates/failed.mako:152 src/storm/templates/failed.mako:218
 #: src/storm/templates/spouts_dashboard.mako:67
-#: src/storm/templates/spouts_dashboard.mako:185
+#: src/storm/templates/spouts_dashboard.mako:189
 #: src/storm/templates/storm_dashboard.mako:69
-#: src/storm/templates/templates.mako:154 src/storm/templates/topology.mako:148
-#: src/storm/templates/topology.mako:201
+#: src/storm/templates/templates.mako:154 src/storm/templates/topology.mako:157
+#: src/storm/templates/topology.mako:210
 #: src/storm/templates/topology_dashboard.mako:82
 #: src/storm/templates/topology_dashboard.mako:110
 msgid "Executors"
@@ -244,7 +244,7 @@ msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:115
 #: src/storm/templates/components.mako:115
-#: src/storm/templates/components_dashboard.mako:343
+#: src/storm/templates/components_dashboard.mako:347
 msgid "Topology"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgid " Detail"
 msgstr ""
 
 #: src/storm/templates/bolts_dashboard.mako:116
-#: src/storm/templates/detail_dashboard.mako:552
+#: src/storm/templates/detail_dashboard.mako:556
 msgid "Bolts Detail"
 msgstr ""
 
@@ -294,56 +294,56 @@ msgstr ""
 msgid "Please contact your administrator to solve this."
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:165
-#: src/storm/templates/spouts_dashboard.mako:164
+#: src/storm/templates/bolts_dashboard.mako:169
+#: src/storm/templates/spouts_dashboard.mako:168
 msgid "Executors/Tasks"
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:185
+#: src/storm/templates/bolts_dashboard.mako:189
 #: src/storm/templates/components.mako:114
 #: src/storm/templates/components.mako:319
 #: src/storm/templates/components.mako:379
-#: src/storm/templates/detail_dashboard.mako:290
-#: src/storm/templates/detail_dashboard.mako:354
+#: src/storm/templates/detail_dashboard.mako:294
+#: src/storm/templates/detail_dashboard.mako:358
 #: src/storm/templates/failed.mako:151 src/storm/templates/failed.mako:217
-#: src/storm/templates/spouts_dashboard.mako:184
+#: src/storm/templates/spouts_dashboard.mako:188
 #: src/storm/templates/storm_dashboard.mako:267
 #: src/storm/templates/templates.mako:112
-#: src/storm/templates/templates.mako:219 src/storm/templates/topology.mako:147
-#: src/storm/templates/topology.mako:200
+#: src/storm/templates/templates.mako:219 src/storm/templates/topology.mako:156
+#: src/storm/templates/topology.mako:209
 msgid "Id."
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:190
+#: src/storm/templates/bolts_dashboard.mako:194
 #: src/storm/templates/components.mako:325
-#: src/storm/templates/detail_dashboard.mako:359
-#: src/storm/templates/failed.mako:222 src/storm/templates/topology.mako:205
+#: src/storm/templates/detail_dashboard.mako:363
+#: src/storm/templates/failed.mako:222 src/storm/templates/topology.mako:214
 msgid "Capacity (last 10m)"
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:191
-#: src/storm/templates/detail_dashboard.mako:360
-#: src/storm/templates/failed.mako:223 src/storm/templates/topology.mako:206
+#: src/storm/templates/bolts_dashboard.mako:195
+#: src/storm/templates/detail_dashboard.mako:364
+#: src/storm/templates/failed.mako:223 src/storm/templates/topology.mako:215
 msgid "Execute latency (ms)"
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:193
-#: src/storm/templates/detail_dashboard.mako:362
-#: src/storm/templates/failed.mako:225 src/storm/templates/topology.mako:208
+#: src/storm/templates/bolts_dashboard.mako:197
+#: src/storm/templates/detail_dashboard.mako:366
+#: src/storm/templates/failed.mako:225 src/storm/templates/topology.mako:217
 msgid "Process latency (ms)"
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:196
-#: src/storm/templates/detail_dashboard.mako:365
-#: src/storm/templates/failed.mako:228 src/storm/templates/topology.mako:211
+#: src/storm/templates/bolts_dashboard.mako:200
+#: src/storm/templates/detail_dashboard.mako:369
+#: src/storm/templates/failed.mako:228 src/storm/templates/topology.mako:220
 msgid "Last error"
 msgstr ""
 
-#: src/storm/templates/bolts_dashboard.mako:230
-#: src/storm/templates/detail_dashboard.mako:328
-#: src/storm/templates/detail_dashboard.mako:399
+#: src/storm/templates/bolts_dashboard.mako:234
+#: src/storm/templates/detail_dashboard.mako:332
+#: src/storm/templates/detail_dashboard.mako:403
 #: src/storm/templates/failed.mako:189 src/storm/templates/failed.mako:262
-#: src/storm/templates/spouts_dashboard.mako:223
+#: src/storm/templates/spouts_dashboard.mako:227
 msgid "ERROR"
 msgstr ""
 
@@ -375,22 +375,22 @@ msgid " Explain"
 msgstr ""
 
 #: src/storm/templates/components.mako:108
-#: src/storm/templates/components_dashboard.mako:336
+#: src/storm/templates/components_dashboard.mako:340
 msgid "Component Summary"
 msgstr ""
 
 #: src/storm/templates/components.mako:140
 #: src/storm/templates/components.mako:188
-#: src/storm/templates/components_dashboard.mako:367
-#: src/storm/templates/detail_dashboard.mako:524
-#: src/storm/templates/spouts_dashboard.mako:152
+#: src/storm/templates/components_dashboard.mako:371
+#: src/storm/templates/detail_dashboard.mako:528
+#: src/storm/templates/spouts_dashboard.mako:156
 msgid "Stats"
 msgstr ""
 
 #: src/storm/templates/components.mako:146
 #: src/storm/templates/components.mako:194
-#: src/storm/templates/detail_dashboard.mako:242
-#: src/storm/templates/failed.mako:101 src/storm/templates/topology.mako:101
+#: src/storm/templates/detail_dashboard.mako:246
+#: src/storm/templates/failed.mako:101 src/storm/templates/topology.mako:110
 msgid "Window"
 msgstr ""
 
@@ -416,11 +416,11 @@ msgstr ""
 
 #: src/storm/templates/components.mako:197
 #: src/storm/templates/components.mako:385
-#: src/storm/templates/detail_dashboard.mako:245
-#: src/storm/templates/detail_dashboard.mako:295
+#: src/storm/templates/detail_dashboard.mako:249
+#: src/storm/templates/detail_dashboard.mako:299
 #: src/storm/templates/failed.mako:104 src/storm/templates/failed.mako:156
-#: src/storm/templates/spouts_dashboard.mako:189
-#: src/storm/templates/topology.mako:104 src/storm/templates/topology.mako:152
+#: src/storm/templates/spouts_dashboard.mako:193
+#: src/storm/templates/topology.mako:113 src/storm/templates/topology.mako:161
 msgid "Complete Latency (ms)"
 msgstr ""
 
@@ -472,109 +472,109 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:342
+#: src/storm/templates/components_dashboard.mako:346
 msgid "Id"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:386
+#: src/storm/templates/components_dashboard.mako:390
 msgid "Times"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:427
+#: src/storm/templates/components_dashboard.mako:431
 msgid "Input"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:450
+#: src/storm/templates/components_dashboard.mako:454
 msgid "Output"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:236
-#: src/storm/templates/detail_dashboard.mako:443
+#: src/storm/templates/detail_dashboard.mako:240
+#: src/storm/templates/detail_dashboard.mako:447
 #: src/storm/templates/failed.mako:95
 #: src/storm/templates/storm_dashboard.mako:241
 msgid "Topology Stats"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:254
-#: src/storm/templates/failed.mako:113 src/storm/templates/topology.mako:112
+#: src/storm/templates/detail_dashboard.mako:258
+#: src/storm/templates/failed.mako:113 src/storm/templates/topology.mako:121
 msgid "Topology Stats Dashboard"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:255
-#: src/storm/templates/detail_dashboard.mako:522
+#: src/storm/templates/detail_dashboard.mako:259
+#: src/storm/templates/detail_dashboard.mako:526
 #: src/storm/templates/failed.mako:114
 #: src/storm/templates/topology_dashboard.mako:315
 msgid "Topology Stats Detail"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:284
+#: src/storm/templates/detail_dashboard.mako:288
 #: src/storm/templates/failed.mako:145
 msgid "Spouts (All Time)"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:298
+#: src/storm/templates/detail_dashboard.mako:302
 #: src/storm/templates/failed.mako:159
-#: src/storm/templates/spouts_dashboard.mako:192
-#: src/storm/templates/topology.mako:155
+#: src/storm/templates/spouts_dashboard.mako:196
+#: src/storm/templates/topology.mako:164
 msgid "Last Error"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:305
+#: src/storm/templates/detail_dashboard.mako:309
 #: src/storm/templates/failed.mako:166
 msgid "Spout Dashboard"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:306
+#: src/storm/templates/detail_dashboard.mako:310
 #: src/storm/templates/failed.mako:167
 msgid "Spout Detail"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:348
+#: src/storm/templates/detail_dashboard.mako:352
 #: src/storm/templates/failed.mako:211
 msgid "Bolts (All Time)"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:372
+#: src/storm/templates/detail_dashboard.mako:376
 #: src/storm/templates/failed.mako:235
 msgid "Bolt Dashboard"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:373
+#: src/storm/templates/detail_dashboard.mako:377
 #: src/storm/templates/failed.mako:236
 msgid "Bolt Detail"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:449
-#: src/storm/templates/detail_dashboard.mako:479
-#: src/storm/templates/detail_dashboard.mako:509
+#: src/storm/templates/detail_dashboard.mako:453
+#: src/storm/templates/detail_dashboard.mako:483
+#: src/storm/templates/detail_dashboard.mako:513
 #: src/storm/templates/storm_dashboard.mako:247
 msgid "View Details"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:473
-#: src/storm/templates/detail_dashboard.mako:539
+#: src/storm/templates/detail_dashboard.mako:477
+#: src/storm/templates/detail_dashboard.mako:543
 #: src/storm/templates/templates.mako:90 src/storm/templates/templates.mako:284
-#: src/storm/templates/topology.mako:141
+#: src/storm/templates/topology.mako:150
 msgid "Spouts"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:503
-#: src/storm/templates/detail_dashboard.mako:554
+#: src/storm/templates/detail_dashboard.mako:507
+#: src/storm/templates/detail_dashboard.mako:558
 #: src/storm/templates/templates.mako:91 src/storm/templates/templates.mako:299
-#: src/storm/templates/topology.mako:194
+#: src/storm/templates/topology.mako:203
 msgid "Bolts"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:537
+#: src/storm/templates/detail_dashboard.mako:541
 #: src/storm/templates/spouts_dashboard.mako:115
 msgid "Spouts Detail"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:569
+#: src/storm/templates/detail_dashboard.mako:573
 msgid "Topology Visualization"
 msgstr ""
 
-#: src/storm/templates/detail_dashboard.mako:580
+#: src/storm/templates/detail_dashboard.mako:584
 msgid "Streams"
 msgstr ""
 
@@ -587,7 +587,7 @@ msgstr ""
 msgid "There are currently no settings to show in Storm UI Server: "
 msgstr ""
 
-#: src/storm/templates/spouts_dashboard.mako:178
+#: src/storm/templates/spouts_dashboard.mako:182
 msgid "Summary"
 msgstr ""
 
@@ -606,8 +606,8 @@ msgid "Workers"
 msgstr ""
 
 #: src/storm/templates/storm_dashboard.mako:132
-#: src/storm/templates/topology_dashboard.mako:352
-#: src/storm/templates/topology_dashboard.mako:395
+#: src/storm/templates/topology_dashboard.mako:356
+#: src/storm/templates/topology_dashboard.mako:399
 msgid "Topologies Stats"
 msgstr ""
 
@@ -794,7 +794,44 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/storm/templates/templates.mako:389
+#: src/storm/templates/templates.mako:388
+#: src/storm/templates/templates.mako:409
+#: src/storm/templates/templates.mako:430
+#: src/storm/templates/templates.mako:451
+msgid "Confirm action"
+msgstr ""
+
+#: src/storm/templates/templates.mako:391
+msgid "Are you sure you want to do this action: ACTIVE? "
+msgstr ""
+
+#: src/storm/templates/templates.mako:394
+#: src/storm/templates/templates.mako:415
+#: src/storm/templates/templates.mako:436
+#: src/storm/templates/templates.mako:457
+msgid "No"
+msgstr ""
+
+#: src/storm/templates/templates.mako:395
+#: src/storm/templates/templates.mako:416
+#: src/storm/templates/templates.mako:437
+#: src/storm/templates/templates.mako:458
+msgid "Yes"
+msgstr ""
+
+#: src/storm/templates/templates.mako:412
+msgid "Are you sure you want to do this action: Deactivate? "
+msgstr ""
+
+#: src/storm/templates/templates.mako:433
+msgid "Are you sure you want to do this action: REBALANCE? "
+msgstr ""
+
+#: src/storm/templates/templates.mako:454
+msgid "Are you sure you want to do this action: KILL? "
+msgstr ""
+
+#: src/storm/templates/templates.mako:473
 msgid "Last error:"
 msgstr ""
 
@@ -802,31 +839,31 @@ msgstr ""
 msgid " Stats Detail"
 msgstr ""
 
-#: src/storm/templates/topology.mako:95
+#: src/storm/templates/topology.mako:104
 msgid "Window Summary"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:409
+#: src/storm/templates/topology_dashboard.mako:413
 msgid "Spouts (Tasks/Executors)"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:421
+#: src/storm/templates/topology_dashboard.mako:425
 msgid "Spouts Stats"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:434
+#: src/storm/templates/topology_dashboard.mako:438
 msgid "Spouts (Times)"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:449
+#: src/storm/templates/topology_dashboard.mako:453
 msgid "Bolts (Tasks/Executors)"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:461
+#: src/storm/templates/topology_dashboard.mako:465
 msgid "Bolts Stats"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:473
+#: src/storm/templates/topology_dashboard.mako:477
 msgid "Bolts (Times)"
 msgstr ""
 

@@ -142,6 +142,10 @@ ${ storm.header(_breadcrumbs) }
           <tr>
              <td colspan="2">                
                 ${Templates.tblRebalanceTopology(Data['topology'])}
+                ${Templates.tblAutomaticRebalance(Data['topology'])}
+                ${Templates.tblKill(Data['topology'])}
+                ${Templates.tblActivate(Data['topology'])}
+                ${Templates.tblDeactivate(Data['topology'])}
              </td>
           </tr>  
           <tr valign="top">

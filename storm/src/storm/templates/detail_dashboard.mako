@@ -222,6 +222,10 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
              <td colspan="2">
                 ${Templates.tblTopologySummary(Data['topology'])}
                 ${Templates.tblRebalanceTopology(Data['topology'])}
+                ${Templates.tblAutomaticRebalance(Data['topology'])}
+                ${Templates.tblKill(Data['topology'])}
+                ${Templates.tblActivate(Data['topology'])}
+                ${Templates.tblDeactivate(Data['topology'])}
              </td>
           </tr>         
           <tr>

@@ -40,9 +40,9 @@
       <td align="left">                               
          <span class="btn-group">            
             % if paTopology['status'] == "INACTIVE":
-               <button id="btnActivate" class="btn" onclick="changeTopologyStatus('${paTopology['id']}', 'activate', false, 0)" ><i class="fa fa-play"></i> ${ _('Activate') } </button>                                            
+               <button id="btnActivate" data-target="#tblActivate" class="btn" data-toggle="modal"><i class="fa fa-play"></i> ${ _('Activate') } </button>
             % else:
-               <button id="btnDeactivate" class="btn" onclick="changeTopologyStatus('${paTopology['id']}', 'deactivate', false, 0)"><i class="fa fa-stop"></i> ${ _('Deactivate') } </button>
+               <button id="btnDeactivate" data-target="#tblDeactivate" class="btn" data-toggle="modal"><i class="fa fa-stop"></i> ${ _('Deactivate') } </button>
             % endif            
             <div class="btn-toolbar" style="display: inline; vertical-align: middle">
                <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
@@ -51,12 +51,12 @@
                      <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                     <li><a href="#" onclick="changeTopologyStatus('${paTopology['id']}', 'rebalance', true, 5)" class="btn" title="${ _('Automatic') }"><i class="fa fa-refresh"></i> ${ _('Automatic') } </a></li>                     
-                     <li><a href="#" data-target="#tblRebalanceTopology" class="btn" data-toggle="modal" ><i class="fa fa-cog"></i> ${ _('Custom') } </a></li>                     
+                     <li><a href="#" data-target="#tblAutomaticRebalance" class="btn" data-toggle="modal"><i class="fa fa-refresh"></i> ${ _('Automatic') } </a></li>                                          
+                     <li><a href="#" data-target="#tblRebalanceTopology" class="btn" data-toggle="modal"><i class="fa fa-cog"></i> ${ _('Custom') } </a></li>                     
                   </ul>
                </div>
             </div> 
-            <button id="btnKill" class="btn" onclick="changeTopologyStatus('${paTopology['id']}', 'kill', true, 5)"><i class="fa fa-trash-o"></i> ${ _('Kill') } </button>            
+            <button id="btnKill" data-target="#tblKill" class="btn" data-toggle="modal"><i class="fa fa-trash-o"></i> ${ _('Kill') } </button>         
          </span>  
       </td>
       <td align="right">      
@@ -374,6 +374,90 @@
                </div>
             </div>   
          </form>      
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Active Topology -->
+<%def name="tblActivate(paTopology)">
+   <div class="modal hide fade" id="tblActivate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: ACTIVE? ') }
+               </div>
+               <div class="modal-footer">      
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
+               </div>
+            </div>   
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Inactive Topology -->
+<%def name="tblDeactivate(paTopology)">
+   <div class="modal hide fade" id="tblDeactivate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: Deactivate? ') }
+               </div>
+               <div class="modal-footer">      
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
+               </div>
+            </div>   
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Automatic Rebalance Topology -->
+<%def name="tblAutomaticRebalance(paTopology)">
+   <div class="modal hide fade" id="tblAutomaticRebalance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: REBALANCE? ') }
+               </div>
+               <div class="modal-footer">      
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
+               </div>
+            </div>   
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Kill Topology -->
+<%def name="tblKill(paTopology)">
+   <div class="modal hide fade" id="tblKill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: KILL? ') }
+               </div>
+               <div class="modal-footer">      
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>            
+               </div>
+            </div>   
       </div>
    </div>
 </%def>

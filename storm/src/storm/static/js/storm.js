@@ -4,9 +4,7 @@ function changeDisplay(id1, id2) {
 };
    
 function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
-   if (confirm('Are you sure you want to do this action: ' + psAction + '?')) {
-      // Accept.
-      $.post("/storm/changeTopologyStatus/", { sId: psId,
+   $.post("/storm/changeTopologyStatus/", { sId: psId,
                                                sAction: psAction,
    	                                           bWait: pbWait,
 	                                             iWait: piWait
@@ -18,11 +16,7 @@ function changeTopologyStatus(psId, psAction, pbWait, piWait) {
                                                       console.log("ERROR");
                                                       
                                                    }
-                                                }, "text");
-   } 
-   else {
-      // Cancel.
-   }         
+                                                }, "text");         
 };
 
 function StormViewModel() {
@@ -48,9 +42,7 @@ function StormViewModel() {
 	     }
       }            
       
-      if (confirm('Are you sure you want to do this action: ' + sAction + '?')) {
-         // Accept.
-         $.post("/storm/set_topology_status/", { psAction: sAction,
+      $.post("/storm/set_topology_status/", { psAction: sAction,
         	 									 psNameTopology: sNameTopology,
 		         		                         piNumWorkers: iNumWorkers,
 		            		                     piWaitSecs: iWaitSecs,
@@ -65,11 +57,7 @@ function StormViewModel() {
                                                     else {                                               
 						         						                         $("#divError").show();
 						      						}
-                                                }, "text");
-      } 
-      else {
-         // Cancel.
-      }         
+                                                }, "text");         
    };   
    
    self.getData = function() {  
