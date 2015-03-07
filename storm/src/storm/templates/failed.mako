@@ -92,7 +92,7 @@ ${ storm.header(_breadcrumbs) }
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> Topology Stats
+                                  <i class="fa fa-table fa-fw"></i> ${ _('Topology Stats') }
                                </div>
                                <div class="panel-body">
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
@@ -208,7 +208,7 @@ ${ storm.header(_breadcrumbs) }
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> Bolts (All Time)
+                                  <i class="fa fa-table fa-fw"></i> ${ _('Bolts (All Time)') }
                                </div>
                                <div class="panel-body">                  
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyBolts" data-tablescroller-disable="true">

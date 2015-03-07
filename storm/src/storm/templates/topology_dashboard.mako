@@ -224,10 +224,10 @@ ${ graphsHUE.import_charts() }
                                       return graphSpouts1;
        });
        
-       var dataPieSpouts2 = [ { "label": "${ _('Active') }",                               
+       var dataPieSpouts2 = [ { "label": "${ _('Actives') }",                               
                                    "value" : 1
                                  },
-                                 { "label": "${ _('Inactive') }",                               
+                                 { "label": "${ _('Inactives') }",                               
                                    "value" : 3
                                  }
                                ];

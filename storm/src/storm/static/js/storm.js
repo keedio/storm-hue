@@ -1,11 +1,10 @@
-
 function changeDisplay(id1, id2) {
    document.getElementById(id1).style.display = "";
    document.getElementById(id2).style.display = "none";            
 };
    
 function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
-   if (confirm('Are you sure you wants to '  + psAction +  ' this Topology?')) {
+   if (confirm('Are you sure you want to do this action: ' + psAction + '?')) {
       // Accept.
       $.post("/storm/changeTopologyStatus/", { sId: psId,
                                                sAction: psAction,
@@ -44,12 +43,12 @@ function StormViewModel() {
       for(var i = 0; i < checks.length; i++) {  
 	     if ((checks[i].type == 'checkbox') && (checks[i].name.substring(0, 3) == 'cp_') && (checks[i].checked)) {
             sName = checks[i].name;
-	        iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
+	          iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
             aComponents.push(sName.substring(3),iExecutors);            
 	     }
       }            
       
-      if (confirm(_('Are you sure you want to ' + sAction + ' this Topology?'))) {
+      if (confirm('Are you sure you want to do this action: ' + sAction + '?')) {
          // Accept.
          $.post("/storm/set_topology_status/", { psAction: sAction,
         	 									 psNameTopology: sNameTopology,

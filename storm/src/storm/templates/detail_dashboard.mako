@@ -84,10 +84,10 @@ ${ graphsHUE.import_charts() }
    var jsonStats = JSON.parse(swData);   
 
    for (var i=0; i<Object.keys(jsonStats).length; i++) {      
-      dataBarStats.push({"key": jsonStats[i].windowPretty, "values": [ {"x": "Emitted", "y": jsonStats[i].emitted},
-                                                                       {"x": "Transferred", "y": jsonStats[i].transferred},
-                                                                       {"x": "Acked", "y": jsonStats[i].acked},
-                                                                       {"x": "Failed", "y": jsonStats[i].failed}
+      dataBarStats.push({"key": jsonStats[i].windowPretty, "values": [ {"x": "${ _('Emitted') }", "y": jsonStats[i].emitted},
+                                                                       {"x": "${ _('Transferred') }", "y": jsonStats[i].transferred},
+                                                                       {"x": "${ _('Acked') }", "y": jsonStats[i].acked},
+                                                                       {"x": "${ _('Failed') }", "y": jsonStats[i].failed}
                                                                      ]
                          });
       
@@ -121,10 +121,10 @@ ${ graphsHUE.import_charts() }
    var jsonSpouts = JSON.parse(swData);
    
    for (var i=0; i<Object.keys(jsonSpouts).length; i++) {      
-      dataBarSpouts.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "Emitted", "y": jsonSpouts[i].emitted},
-                                                                    {"x": "Transferred", "y": jsonSpouts[i].transferred},
-                                                                    {"x": "Acked", "y": jsonSpouts[i].acked},
-                                                                    {"x": "Failed", "y": jsonSpouts[i].failed}
+      dataBarSpouts.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "${ _('Emitted') }", "y": jsonSpouts[i].emitted},
+                                                                    {"x": "${ _('Transferred') }", "y": jsonSpouts[i].transferred},
+                                                                    {"x": "${ _('Acked') }", "y": jsonSpouts[i].acked},
+                                                                    {"x": "${ _('Failed') }", "y": jsonSpouts[i].failed}
                                                                   ]
                          });
       
@@ -156,11 +156,11 @@ ${ graphsHUE.import_charts() }
    var jsonBolts = JSON.parse(swData);
    
    for (var i=0; i<Object.keys(jsonBolts).length; i++) {         
-      dataBarBolts.push({"key": jsonBolts[i].boltId, "values": [ {"x": "Emitted", "y": jsonBolts[i].emitted},
-                                                                   {"x": "Transferred", "y": jsonBolts[i].transferred},
-                                                                   {"x": "Executed", "y": jsonBolts[i].executed},
-                                                                   {"x": "Acked", "y": jsonBolts[i].acked},
-                                                                   {"x": "Failed", "y": jsonBolts[i].failed}
+      dataBarBolts.push({"key": jsonBolts[i].boltId, "values": [ {"x": "${ _('Emitted') }", "y": jsonBolts[i].emitted},
+                                                                   {"x": "${ _('Transferred') }", "y": jsonBolts[i].transferred},
+                                                                   {"x": "${ _('Executed') }", "y": jsonBolts[i].executed},
+                                                                   {"x": "${ _('Acked') }", "y": jsonBolts[i].acked},
+                                                                   {"x": "${ _('Failed') }", "y": jsonBolts[i].failed}
                                                                  ]
                           });
       
@@ -506,7 +506,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                                </div>
                                <a href="/storm/failed/Data['topology']['id']/3/0">                               
                                   <div class="panel-footer">
-                                     <span class="pull-left">View Details</span>
+                                     <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                      <div class="clearfix"></div>
                                   </div>
