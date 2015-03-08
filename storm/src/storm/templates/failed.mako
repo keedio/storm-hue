@@ -84,9 +84,9 @@ ${ storm.header(_breadcrumbs) }
       <div class="card-body">         
          <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">          
             <tr>               
-               <td>                                    
+               <td>               
                   <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                                                        
-                   % if Data['component_id'] == 1:
+                   % if Data['component_id'] == "1":
                    <tr>
                       <td>
                          <div class="col-lg-4">
@@ -136,7 +136,7 @@ ${ storm.header(_breadcrumbs) }
                       </td>
                    </tr>
                    % endif
-                   % if Data['component_id'] == 2:
+                   % if Data['component_id'] == "2":
                    <tr>
                       <td>
                          <div class="col-lg-4">
@@ -202,7 +202,7 @@ ${ storm.header(_breadcrumbs) }
                       </td>
                    </tr>
                    % endif
-                   % if Data['component_id'] == 3:
+                   % if Data['component_id'] == "3":
                    <tr>
                       <td>
                          <div class="col-lg-4">

@@ -448,7 +448,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                                      </div>
                                   </div>
                                </div>
-                               <a href="/storm/failed/Data['topology']['id']/1/0">                               
+                               <a href="/storm/failed/${Data['topology']['id']}/1/0">                               
                                   <div class="panel-footer">
                                      <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -478,7 +478,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                                      </div>
                                   </div>
                                </div>
-                               <a href="/storm/failed/Data['topology']['id']/2/0">                               
+                               <a href="/storm/failed/${Data['topology']['id']}/2/0">                               
                                   <div class="panel-footer">
                                      <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -508,7 +508,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                                      </div>
                                   </div>
                                </div>
-                               <a href="/storm/failed/Data['topology']['id']/3/0">                               
+                               <a href="/storm/failed/${Data['topology']['id']}/3/0">                               
                                   <div class="panel-footer">
                                      <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
