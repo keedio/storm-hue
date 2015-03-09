@@ -368,7 +368,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-bar-chart fa-fw"></i> ${ _('Stats') }
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Stats') }
                         </div>
                         <div class="panel-body">
                            <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
@@ -387,7 +387,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-bar-chart fa-fw"></i> ${ _('Times') }
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Times') }
                         </div>                      
                         <div class="panel-body">
                            <div id="barComponentsTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
@@ -402,7 +402,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-bar-chart fa-fw"></i> ${ _('Executors') }
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Executors') }
                         </div>
                         <div class="panel-body">                         
                            <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
@@ -428,7 +428,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-bar-chart fa-fw"></i> ${ _('Input') }
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Input') }
                         </div>
                         <div class="panel-body">                      
                            <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
@@ -451,7 +451,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-bar-chart fa-fw"></i> ${ _('Output') }
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Output') }
                         </div>
                         <div class="panel-body">
                            <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">

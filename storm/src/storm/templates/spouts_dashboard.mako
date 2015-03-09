@@ -153,7 +153,7 @@ ${ storm.header(_breadcrumbs) }
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Stats') }
+                         <i class="fa fa-trello fa-fw"></i> ${ _('Stats') }
                       </div>
                       <div class="panel-body">
                          <div id="barSpouts1"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
@@ -165,7 +165,7 @@ ${ storm.header(_breadcrumbs) }
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Executors/Tasks') }
+                         <i class="fa fa-database fa-fw"></i> ${ _('Executors/Tasks') }
                       </div>
                       <div class="panel-body">
                          <div id="pieSpouts1"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -179,7 +179,7 @@ ${ storm.header(_breadcrumbs) }
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> ${ _('Summary') }
+                         <i class="fa fa-table fa-fw"></i> ${ _('Summary') }
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">

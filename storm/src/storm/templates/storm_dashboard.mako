@@ -129,7 +129,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                    <div class="col-lg-4">
                       <div class="panel panel-default">
                          <div class="panel-heading">
-                            <i class="fa fa-pie-chart fa-fw"></i> ${ _('Topologies Stats') }
+                            <i class="fa fa-database fa-fw"></i> ${ _('Topologies Stats') }
                          </div>
                          <div class="panel-body">
                             <div id="pieTopologyStats"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -141,7 +141,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                    <div class="col-lg-4">
                       <div class="panel panel-default">
                          <div class="panel-heading">
-                            <i class="fa fa-pie-chart fa-fw"></i> ${ _('Topologies: Executors/Tasks') }
+                            <i class="fa fa-database fa-fw"></i> ${ _('Topologies: Executors/Tasks') }
                          </div>
                          <div class="panel-body">
                             <div id="pieExecWorkers"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
