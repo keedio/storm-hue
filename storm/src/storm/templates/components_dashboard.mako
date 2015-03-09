@@ -43,13 +43,12 @@ ${ JavaScript.import_js() }
 	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
 	    } );
 
-         var dataBarComponentsStats = [];
+       var dataBarComponentsStats = [];
        var dataBarComponentsTimes = [];
-       
-       var sData = "${Data['components']}";   
+       var sData = "${Data['jComponents']}";   
        var swData = sData.replace(/&quot;/ig,'"')   
        var jsonComponents = JSON.parse(swData);
-       
+
        for (var i=0; i<Object.keys(jsonComponents).length; i++) {           
           dataBarComponentsStats.push({"key": jsonComponents[i].windowPretty, 
                                        "values": [ {"x": "${ _('Emitted') }", "y": jsonComponents[i].emitted},
@@ -111,7 +110,6 @@ ${ JavaScript.import_js() }
        
        var dataBarInputStats = [];
        var dataBarInputTimes = [];
-       
        var sData = "${Data['input']}";   
        var swData = sData.replace(/&quot;/ig,'"')   
        var jsonInput = JSON.parse(swData);
@@ -138,8 +136,8 @@ ${ JavaScript.import_js() }
                                                .groupSpacing(0.1)    //Distance between each group of bars.                                
                                                .showControls(true);
                                       
+                                      graphInputStats.legend.margin({top: 5, right:0, left:30, bottom: 20}); 
                                       graphInputStats.multibar.stacked(false);         
-        
                                       graphInputStats.yAxis
                                                       .tickFormat(d3.format('d'));
             
@@ -160,8 +158,8 @@ ${ JavaScript.import_js() }
                                                     .groupSpacing(0.1)    //Distance between each group of bars.                                
                                                     .showControls(true);
                                       
+                                      graphInputTimes.legend.margin({top: 5, right:0, left:30, bottom: 20}); 
                                       graphInputTimes.multibar.stacked(false);         
-        
                                       graphInputTimes.yAxis
                                                      .tickFormat(d3.format('d'));
             
@@ -175,11 +173,10 @@ ${ JavaScript.import_js() }
        });
        
        var dataBarOutputStats = [];
-       
        var sData = "${Data['output']}";   
        var swData = sData.replace(/&quot;/ig,'"')   
        var jsonOutput = JSON.parse(swData);
-       
+
        for (var i=0; i<Object.keys(jsonOutput).length; i++) {
           dataBarOutputStats.push({"key": jsonOutput[i].stream, 
                                    "values": [ {"x": "${ _('Emitted') }", "y": jsonOutput[i].emitted},
@@ -423,7 +420,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                </td>                
             </tr>
             <tr valign="top">             
-               % if Input:
+               % if Data['input']:
                <td>
                   <div class="col-lg-4">
                      <div class="panel panel-default">
@@ -433,10 +430,10 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                         <div class="panel-body">                      
                            <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
                               <tr>
-                                 <td>
+                                 <td width="45%">
                                     <div id="barInputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
                                  </td>
-                                 <td>
+                                 <td width="55%">
                                     <div id="barInputTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
                                  </td>
                               </tr>                            
@@ -446,7 +443,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                   </div>
                </td>
                % endif
-               % if Output:
+               % if Data['output']:
                <td>
                   <div class="col-lg-4">
                      <div class="panel panel-default">

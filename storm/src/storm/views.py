@@ -561,6 +561,12 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
           data['components'] = st_ui._get_components(topology_id, component_id, 0)
+          
+          if (data['components']['componentType'] == "bolt"):
+            data['jComponents'] = utils._get_dumps(data['components']["boltStats"])
+          else:
+            data['jComponents'] = utils._get_dumps(data['components']["spoutSummary"])
+
           data['system'] = 1 if (iSystem == 0) else 0
           data['topology'] = _get_topology_info(topology_id)
           data['component_id'] = component_id
@@ -592,6 +598,7 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
     except StormREST.NotFound:
       data = {'storm_ui': utils.STORM_UI, 
               'components': [], 
+              'jComponents': [], 
               'system': -1, 
               'topology': _get_topology_info(topology_id),
               'component_id': -1,  
@@ -605,7 +612,7 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
               'frmNewTopology':utils._get_newform(request, UploadFileForm),
               'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
               'error': 1}
-     
+
     return data
 #
 # _get_components_dashboard ***********************************************************************************************
@@ -970,8 +977,7 @@ def changeTopologyStatus(request):
         iResult = e
     except:
         iResult = 1
-    
-    print "RESULT: ",iResult     
+       
     return HttpResponse(iResult, mimetype = "application/javascript") 
 #
 # changeTopologyStatus ****************************************************************************************************
