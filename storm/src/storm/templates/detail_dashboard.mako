@@ -570,14 +570,21 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }
+                                     <span class="pull-left">
+                                        <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }
+                                     </span>
+                                     <span class="pull-right">
+                                        <a id="lnkRefresh" href="#" onclick="reloadDiv('visualization-container');return false;">
+                                          <i class="fa fa-refresh fa-fw"></i></span>
+                                        </a>  
+                                     <div class="clearfix"></div>
                                   </div>
                                   <div class="panel-body">
                                      <!-- <input type="button" id="show-hide-visualization" value="Show Visualization"/> -->
                                      <div id="topology-visualization"> </div>
-                                        <div id="visualization-container">
+                                        <div id="visualization-container">                                                                                    
                                            <p>
-                                              <table class="zebra-striped">
+                                              <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
                                                  <thead>
                                                     <tr>
                                                         <th align="left" class="header" colspan=4>
@@ -585,19 +592,13 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                                                         </th>
                                                     </tr>
                                                  </thead>          
-                                                 <tr>                                        
-                                                    <td>
-                                                       <input type="checkbox" id="default1544803905" class="stream-box" checked /> default              
-                                                    </td>
-                                                    <td>
-                                                       <input type="checkbox" id="s__ack_ack1278315507" class="stream-box"/> __ack_ack             
-                                                    </td>
-                                                    <td>
-                                                       <input type="checkbox" id="s__ack_init973324006" class="stream-box"/> __ack_init    
-                                                    </td>
-                                                    <td>
-                                                       <input type="checkbox" id="s__ack_fail973222132" class="stream-box"/> __ack_fail   
-                                                    </td>
+                                                 <tr>                                                    
+                                                    % for element in Data['aCheck']:
+                                                      <td>
+                                                        <input type="checkbox" id="${element['id']}" class="stream-box" ${element['check']}/> 
+                                                        ${element['name']}
+                                                      </td>                                          
+                                                    % endfor
                                                  </tr>          
                                               </table>
                                            </p>

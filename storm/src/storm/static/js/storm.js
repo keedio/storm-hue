@@ -1,3 +1,7 @@
+function reloadDiv(id) {
+   window.location.reload();
+};
+
 function changeDisplay(id1, id2) {
    document.getElementById(id1).style.display = "";
    document.getElementById(id2).style.display = "none";            

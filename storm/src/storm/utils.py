@@ -21,7 +21,6 @@ try:
     import simplejson as json
 except ImportError:
     import json
-    print ImportError
 
 from storm import conf
 
@@ -105,29 +104,32 @@ def _get_seconds_from_strdate(psDate):
 	except:
 		iLen = 0
 
-	if (iLen == 1):
+	if iLen == 1:
 		try:
 			iSeconds = int(aDate[0][:-1])
 		except:
 			iSeconds = 0    
 
-	if (iLen == 2):
+	elif iLen == 2:
 		try:
 			iSeconds = (int(aDate[0][:-1]) * 60) + int(aDate[1][:-1])
 		except:
 			iSeconds = 0    
 
-	if (iLen == 3):
+	elif iLen == 3:
 		try:
 			iSeconds = (int(aDate[0][:-1]) * 3600) + (int(aDate[1][:-1]) * 60) + int(aDate[2][:-1])
 		except:
 			iSeconds = 0
 
-	if (iLen == 4):
+	elif iLen == 4:
 		try:
 			iSeconds = (int(aDate[0][:-1]) * 86400) + (int(aDate[1][:-1]) * 3600) + (int(aDate[2][:-1]) * 60) + int(aDate[3][:-1])
 		except:
 			iSeconds = 0
+
+	else:
+		iSeconds = 0
 
 	return iSeconds
 #  

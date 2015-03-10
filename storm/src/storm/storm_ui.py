@@ -21,10 +21,8 @@ try:
     import simplejson as json
 except ImportError:
     import json
-    print ImportError
 
 import requests
-
 from storm import settings, conf, utils
 
 class StormREST(object):
@@ -49,11 +47,11 @@ class StormREST(object):
 			raise
 
 	def _get_topology(self, id, system_id=0, visualization=False, window_id=""):
-		if (not visualization):
-			if (window_id <> ""):
+		if not visualization:
+			if window_id != "":
 				url = "%s%s%s%s%s" % (self._base, utils.TOPOLOGY_URL, id, utils.WINDOW_ID, window_id)
 			else:
-				if (system_id == 0):
+				if system_id == 0:
 					url = "%s%s%s" % (self._base, utils.TOPOLOGY_URL, id)
 				else:
 					url = "%s%s%s%s" % (self._base, utils.TOPOLOGY_URL, id, utils.SYSTEM_STATS)
@@ -66,7 +64,7 @@ class StormREST(object):
 			raise
 
 	def _get_components(self, id, component_id, system_id=0):
-		if (system_id == 0):
+		if system_id == 0:
 			url = "%s%s%s%s%s" % (self._base, utils.TOPOLOGY_URL, id, utils.COMPONENTS, component_id)
 		else:
 			url = "%s%s%s%s%s%s" % (self._base, utils.TOPOLOGY_URL, id, utils.COMPONENTS, component_id, utils.SYSTEM_STATS)
@@ -106,13 +104,10 @@ class StormREST(object):
 			resp = req.json()
 			return resp
 		except requests.exceptions.URLRequired as e:
-			print "URLERROR: ",e
 			raise STORMREST.NotFound(uri)
 		except requests.exceptions.HTTPError as e:
-			print "HTTPERROR: ",e
 			if e.code == 404:
 				raise StormREST.NotFound(uri)
 			raise
 		except requests.exceptions.RequestException as e:
-			print "RequestERROR: ",e
 			raise StormREST.NotFound(url)

@@ -18,10 +18,9 @@
 ## limitations under the License.
 
 try:
-    import simplejson as json
+  import simplejson as json
 except ImportError:
-    import json
-    print ImportError
+  import json
 
 import os
 import commands
@@ -318,14 +317,14 @@ def _get_storm_dashboard(request):
       data = {}
       data['storm_ui'] = utils.STORM_UI
             
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
           data['topologies'] = st_ui._get_topologies()
           for topology in data['topologies']['topologies']:
               topology.update({'seconds': utils._get_seconds_from_strdate(topology["uptime"]) })
 
-              if (topology["status"] == "ACTIVE"):
+              if topology["status"] == "ACTIVE":
                 iActive += 1
               else:   
                 iInactive += 1
@@ -387,13 +386,14 @@ def _get_detail_dashboard(request, topology_id, system_id):
     iAcked = 0
     iFailed = 0    
     iSystem = int(system_id) if system_id is not None else 0
+    aCheck = []
 
     try:
       st_ui = StormREST(utils.STORM_UI)
       data = {}
       data['storm_ui'] = utils.STORM_UI
       
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['topology'] = _get_topology_info(topology_id)
@@ -405,7 +405,21 @@ def _get_detail_dashboard(request, topology_id, system_id):
         data['jStats'] = utils._get_dumps(topology['topologyStats'])
         data['jSpouts'] = utils._get_dumps(topology['spouts'])
         data['jBolts'] = utils._get_dumps(topology['bolts'])
-        data['visualization'] = utils._get_dumps(st_ui._get_topology(topology_id, 0, True, ""))
+        visualization = st_ui._get_topology(topology_id, 0, True, "")
+        data['visualization'] = utils._get_dumps(visualization)
+
+        for default in visualization:
+          if len(visualization[default][':inputs']):
+            if not (visualization[default][':inputs'][0][':stream'].startswith("__")):
+              aCheck.append({'id': visualization[default][':inputs'][0][':sani-stream'], 
+                             'name': visualization[default][':inputs'][0][':stream'], 
+                             'check': "checked"});
+              
+        for check in visualization['__acker'][':inputs']:
+          aCheck.append({'id': check[':sani-stream'], 'name': check[':stream'], 'check': ""});
+        
+        #For each element(d) in aCheck Dict, delete repeat elements.
+        aCheck = [dict(t) for t in set([tuple(d.items()) for d in aCheck])]
 
         for stat in data['stats']:
             iEmitted+=stat["emitted"] if stat["emitted"] is not None else 0
@@ -452,6 +466,7 @@ def _get_detail_dashboard(request, topology_id, system_id):
         data['transferred'] = aTransferred
         data['acked'] = aAcked
         data['failed'] = aFailed
+        data['aCheck'] = aCheck
         data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
         data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
         data['error'] = 0
@@ -470,6 +485,7 @@ def _get_detail_dashboard(request, topology_id, system_id):
               'transferred': [], 
               'acked': [], 
               'failed': [], 
+              'aCheck': [],
               'frmNewTopology':utils._get_newform(request, UploadFileForm),
               'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
               'error': 1}
@@ -501,7 +517,7 @@ def _get_topology_dashboard(request, topology_id, window_id):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['topology'] = _get_topology_info(topology_id)
@@ -556,13 +572,13 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
           data['components'] = st_ui._get_components(topology_id, component_id, 0)
           
-          if (data['components']['componentType'] == "bolt"):
+          if data['components']['componentType'] == "bolt":
             data['jComponents'] = utils._get_dumps(data['components']["boltStats"])
           else:
             data['jComponents'] = utils._get_dumps(data['components']["spoutSummary"])
@@ -637,7 +653,7 @@ def _get_spouts_dashboard(request, topology_id):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         topology = st_ui._get_topology(topology_id, 0, False, "")
@@ -682,7 +698,7 @@ def _get_bolts_dashboard(request, topology_id):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         topology = st_ui._get_topology(topology_id, 0, False, "")
@@ -726,7 +742,7 @@ def _get_cluster_summary(request):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['cluster'] = st_ui._get_cluster()
@@ -760,7 +776,7 @@ def _get_nimbus_configuration(request):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['configuration'] = st_ui._get_configuration()
@@ -798,7 +814,7 @@ def _get_topology(request, topology_id, window_id):
       topologyStats = topology['topologyStats']
 
       for element in topologyStats:
-        if (element["window"] == window_id):
+        if element["window"] == window_id:
             data['stats'] = element   
 
       data['topology'] = _get_topology_info(topology_id)
@@ -845,7 +861,7 @@ def _get_components(request, topology_id, component_id, system_id):
       data = {}
       data['storm_ui'] = utils.STORM_UI
 
-      if (_get_error(st_ui._get_topologies())):
+      if _get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
@@ -967,13 +983,10 @@ def changeTopologyStatus(request):
       
             iResult =  post_response.status_code               
     except requests.exceptions.URLRequired as e:
-        print "URLERROR: ",e
         iResult = e
     except requests.exceptions.HTTPError as e:
-        print "HTTPERROR: ",e
         iResult = e
     except requests.exceptions.RequestException as e:
-        print "RequestERROR: ",e
         iResult = e
     except:
         iResult = 1
@@ -1013,10 +1026,10 @@ def set_topology_status(request):
     if request.method == 'POST':
         sAction = request.POST['psAction']             
           
-        if (sAction == "rebalance"):                   
+        if sAction == "rebalance":                   
             sNameTopology = request.POST['psNameTopology'] 
-            iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] <> "") else 0                        
-            iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] <> "") else 0                        
+            iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] != "") else 0                        
+            iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] != "") else 0                        
             aComponent = request.POST.getlist('paComponents[]')
             
             if (iWaitSecs > 0):
@@ -1027,7 +1040,7 @@ def set_topology_status(request):
             
             iMod = 0
             
-            if (aComponent <> []):    
+            if aComponent != []:    
                 while (iMod < len(aComponent)):
                     if(iMod%2 == 0):     
                         sOptions += " -e " + aComponent[iMod] + "="
@@ -1038,20 +1051,20 @@ def set_topology_status(request):
                 
             sExecute = sScript + " " + sAction + " " + sNameTopology + " " + sOptions                                
                     
-        if (sAction == "submitTopology"):            
+        if sAction == "submitTopology":            
             sURL = request.POST['psURL']
             form = UploadFileForm(request.POST, request.FILES)
 
             if form.is_valid():                                            
                 sServer = conf.STORM_UI_SERVER.get()                       
-                sClass = request.POST['class_name'] if (request.POST['class_name'] <> "") else ""
-                sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] <> "") else ""
+                sClass = request.POST['class_name'] if (request.POST['class_name'] != "") else ""
+                sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] != "") else ""
                 sFile = request.FILES['file']
                 sFileName = sFile.name                                                        
                 sClass = request.POST['class_name']  
                 sPath = settings.UPLOAD_ROOT + '/' + sFileName
                     
-                if not (os.path.isfile(sPath)):
+                if not os.path.isfile(sPath):
                     path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
                     sPath = os.path.join(settings.UPLOAD_ROOT, path)
                     
@@ -1064,7 +1077,7 @@ def set_topology_status(request):
                 response['error'] = form.errors
                 response['status'] = -1
               
-        if (sAction == "saveTopology"):
+        if sAction == "saveTopology":
             sURL = request.POST['psURL']
             form = UploadFileFormHDFS(request.POST, request.FILES)
             
@@ -1077,7 +1090,7 @@ def set_topology_status(request):
                 sFileHDFS = ""
             
             try:    
-                if (sFileHDFS <> ""):
+                if sFileHDFS != "":
                     username = request.user.username
                     sFileNameHDFS = sFileHDFS.name
                     sPathHDFS = "/user/" + username                 
@@ -1110,20 +1123,20 @@ def set_topology_status(request):
   
     response['output'] = output
             
-    if (sAction == "submitTopology"):
+    if sAction == "submitTopology":
         try:
             os.remove(sPath)
         except:
             msg += "Exception raised while deleting temp file.\n"
         pass
 
-        if (("Finished submitting topology: " + sTopologyName) in response['output']):
+        if ("Finished submitting topology: " + sTopologyName) in response['output']:
             output = None
             
-        if ((output is None) and (response['status'] == 0)):
+        if (output is None) and (response['status'] == 0):
             return HttpResponseRedirect(sURL)
         else:
-            if (output is None):
+            if output is None:
                 msg += "Topology submitted OK.\n"
             else:
                 msg += "Error submitting topology.\n"
@@ -1149,7 +1162,7 @@ def set_topology_status(request):
 #
 def _get_error(psList):
     try:        
-        bOk = psList['errorMessage'] <> ""
+        bOk = psList['errorMessage'] != ""
     except:
         bOk = False
 
