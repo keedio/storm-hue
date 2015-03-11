@@ -24,6 +24,9 @@ except ImportError:
 
 from storm import conf
 
+COMMAND = "storm"
+COMMAND_JAR = "storm jar "
+COMMAND_SUBMIT = "storm"
 SYSTEM_STATS = "?sys=1"
 WINDOW_ID = "?window="
 COMPONENTS = "/component/"

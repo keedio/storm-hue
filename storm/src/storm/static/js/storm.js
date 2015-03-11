@@ -4,8 +4,8 @@ function changeDisplay(id1, id2) {
    document.getElementById(id2).style.display = "none";            
 };
    
-function changeTopologyStatus(psId, psAction, pbWait, piWait) {            
-   $.post("/storm/changeTopologyStatus/", { sId: psId,
+function post_topology_status(psId, psAction, pbWait, piWait) {            
+   $.post("/storm/post_topology_status/", { sId: psId,
                                                sAction: psAction,
    	                                           bWait: pbWait,
 	                                             iWait: piWait

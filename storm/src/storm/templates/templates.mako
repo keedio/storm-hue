@@ -393,7 +393,7 @@
                </div>
                <div class="modal-footer">      
                   <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
+                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
                </div>
             </div>   
       </div>
@@ -414,7 +414,7 @@
                </div>
                <div class="modal-footer">      
                   <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
+                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
                </div>
             </div>   
       </div>
@@ -435,7 +435,7 @@
                </div>
                <div class="modal-footer">      
                   <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
+                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
                </div>
             </div>   
       </div>
@@ -459,7 +459,7 @@
                      <span class="label label-important"> ${ _('ERROR killing this topology') } </span>
                   </div>
                   <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
+                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
                </div>
             </div>   
       </div>

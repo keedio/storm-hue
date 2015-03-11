@@ -937,7 +937,7 @@ def _get_failed(request, topology_id, component_id, system_id):
 #
 # failed ******************************************************************************************************************
 
-# changeTopologyStatus ****************************************************************************************************
+# post_topology_status ****************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-25 Jose Juan
@@ -950,7 +950,7 @@ def _get_failed(request, topology_id, component_id, system_id):
 # @return -
 # @remarks -
 #
-def changeTopologyStatus(request):
+def post_topology_status(request):
     iResult = -1
     sId = ""
     sAction = ""
@@ -982,7 +982,7 @@ def changeTopologyStatus(request):
     
     return HttpResponse(iResult, mimetype = "application/javascript") 
 #
-# changeTopologyStatus ****************************************************************************************************
+# post_topology_status ****************************************************************************************************
     
 # set_topology_status *****************************************************************************************************
 # Rev Date       Author
@@ -1008,8 +1008,7 @@ def set_topology_status(request):
     sNumExecutors = ""
     msg = ""
     sTopologyName = ""
-    response = {'status': -1, 'output': -1}  
-    sScript = "storm"                           
+    response = {'status': -1, 'output': -1}                             
 
     if request.method == 'POST':
         sAction = request.POST['psAction']             
@@ -1037,14 +1036,13 @@ def set_topology_status(request):
                         
                     iMod+=1
                 
-            sExecute = sScript + " " + sAction + " " + sNameTopology + " " + sOptions
+            sExecute = utils.COMMAND + " " + sAction + " " + sNameTopology + " " + sOptions
                     
         if sAction == "submitTopology":            
             sURL = request.POST['psURL']
             form = UploadFileForm(request.POST, request.FILES)
 
             if form.is_valid():                                            
-                sServer = conf.STORM_UI_SERVER.get()                       
                 sClass = request.POST['class_name'] if (request.POST['class_name'] != "") else ""
                 sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] != "") else ""
                 sFile = request.FILES['file']
@@ -1056,7 +1054,7 @@ def set_topology_status(request):
                     path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
                     sPath = os.path.join(settings.UPLOAD_ROOT, path)
                     
-                sExecute = sScript + " " + "jar -c nimbus.host=" + sServer + " " + sPath + " " + sClass + " " + sTopologyName
+                sExecute = utils.COMMAND_JAR + sPath + " " + sClass + " " + sTopologyName
                         
             else:
                 #raise PopupException(_("Error in upload form: %s") % (form.errors,))
