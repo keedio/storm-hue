@@ -17,11 +17,6 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-try:
-  import simplejson as json
-except ImportError:
-  import json
-
 import os, commands, requests
 from django.template import RequestContext
 from django.core.files.base import ContentFile
@@ -1130,7 +1125,7 @@ def set_topology_status(request):
                     
             raise PopupException(msg)
 
-    return HttpResponse(json.dumps(response), content_type="text/plain")            
+    return HttpResponse(utils._get_dumps(response), content_type="text/plain")            
 #
 # set_topology_status ***************************************************************************************************** 
 
@@ -1147,8 +1142,7 @@ def set_topology_status(request):
 # @return Array with topology status.
 # @remarks -
 #
-def _get_topology_info(topology_id):  
-    print "TOPOLOGY: ",topology_id  
+def _get_topology_info(topology_id):   
     try:
       st_ui, data = _get_init()
       topology = st_ui._get_topology(topology_id, 0, False)

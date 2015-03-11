@@ -101,12 +101,12 @@ class StormREST(object):
 			resp = req.json()
 			return resp
 		except requests.exceptions.URLRequired as e:
-			raise STORMREST.NotFound(uri)
+			raise STORMREST.NotFound(e)
 		except requests.exceptions.HTTPError as e:
 			if e.code == 404:
-				raise StormREST.NotFound(uri)
+				raise StormREST.NotFound(e)
 			raise
 		except requests.exceptions.RequestException as e:
-			raise StormREST.NotFound(url)
+			raise StormREST.NotFound(e)
 		except:
 			raise StormREST.NotFound(url)
