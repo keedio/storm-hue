@@ -22,35 +22,17 @@ try:
 except ImportError:
   import json
 
-import os
-import commands
-import requests
+import os, commands, requests
 from django.template import RequestContext
 from django.core.files.base import ContentFile
-from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse, HttpResponseRedirect
 from desktop.lib.django_util import render  
 from desktop.lib.exceptions_renderable import PopupException
-from storm import settings
-from storm import conf
-from storm import utils
+from storm import settings, conf, utils
 from storm.storm_ui import StormREST
 from storm.forms import UploadFileForm, UploadFileFormHDFS 
-
-SYSTEM_STATS = "?sys=1"
-API_URL = "/api/v1"
-LOG_URL_PATH = "/log?file=worker-"
-STORM_UI_SERVER = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_PORT.get()
-STORM_UI = STORM_UI_SERVER + API_URL
-TOPOLOGIES_URL = STORM_UI + conf.STORM_UI_TOPOLOGIES.get()
-TOPOLOGY_URL = STORM_UI + conf.STORM_UI_TOPOLOGY.get()
-CLUSTER_URL = STORM_UI + conf.STORM_UI_CLUSTER.get()
-SUPERVISOR_URL = STORM_UI + conf.STORM_UI_SUPERVISOR.get()
-CONFIGURATION_URL = STORM_UI + conf.STORM_UI_CONFIGURATION.get()
-LOG_URL = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_LOG_PORT.get() + LOG_URL_PATH
 
 # *************************************************************************************************************************
 # **********                                                                                                     **********
@@ -292,6 +274,29 @@ def failed(request, topology_id, component_id, system_id):
 # **********                                                                                                     **********
 # *************************************************************************************************************************
 
+# _get_init ***************************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-11 Jose Juan
+#
+# Init data.
+#
+# @author Jose Juan
+# @date 2015-03-11
+# @param request, HTTPRequest.
+# @param -
+# @return -
+# @remarks -
+#
+def _get_init():
+  sr = StormREST(utils.STORM_UI)
+  d = {}
+  d['storm_ui'] = utils.STORM_UI
+
+  return sr, d
+#
+# _get_init ***************************************************************************************************************
+
 # _get_storm_dashboard ****************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
@@ -313,22 +318,16 @@ def _get_storm_dashboard(request):
     iTasks = 0
 
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
-            
-      if _get_error(st_ui._get_topologies()):
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
           data['topologies'] = st_ui._get_topologies()
           for topology in data['topologies']['topologies']:
               topology.update({'seconds': utils._get_seconds_from_strdate(topology["uptime"]) })
-
-              if topology["status"] == "ACTIVE":
-                iActive += 1
-              else:   
-                iInactive += 1
-           
+              iActive += 1 if topology["status"] == "ACTIVE" else 0
+              iInactive += 1 if topology["status"] != "ACTIVE" else 0
               iExecutors += topology["executorsTotal"]
               iWorkers += topology["workersTotal"]
               iTasks += topology["tasksTotal"] 
@@ -357,6 +356,77 @@ def _get_storm_dashboard(request):
 #   
 # _get_storm_dashboard ****************************************************************************************************
 
+# _get_detail_values ******************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-11 Jose Juan
+#
+# Get resume of values of Emitted, Transferred, Acked and Failed.
+#
+# @author Jose Juan
+# @date 2015-03-11
+# @param topology_id, topology id.
+# @param system_id, show/hide system stats.
+# @return -
+# @remarks -
+#
+def _get_detail_values(stats, spouts, bolts):
+    aEmitted = []
+    aTransferred = []
+    aAcked = []
+    aFailed = []
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0    
+    aData = []
+
+    for stat in stats:
+      iEmitted+=stat["emitted"] if stat["emitted"] is not None else 0
+      iTransferred+=stat["transferred"] if stat["transferred"] is not None else 0
+      iAcked+=stat["acked"] if stat["acked"] is not None else 0
+      iFailed+=stat["failed"] if stat["failed"] is not None else 0
+         
+    aEmitted.append(iEmitted)     
+    aTransferred.append(iTransferred)     
+    aAcked.append(iAcked)     
+    aFailed.append(iFailed)     
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0
+         
+    for spout in spouts:
+      iEmitted+=spout["emitted"] if spout["emitted"] is not None else 0
+      iTransferred+=spout["transferred"] if spout["transferred"] is not None else 0
+      iAcked+=spout["acked"] if spout["acked"] is not None else 0
+      iFailed+=spout["failed"] if spout["failed"] is not None else 0
+         
+    aEmitted.append(iEmitted)     
+    aTransferred.append(iTransferred)     
+    aAcked.append(iAcked)     
+    aFailed.append(iFailed)
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0
+         
+    for bolt in bolts:
+      iEmitted+=bolt["emitted"] if bolt["emitted"] is not None else 0
+      iTransferred+=bolt["transferred"] if bolt["transferred"] is not None else 0
+      iAcked+=bolt["acked"] if bolt["acked"] is not None else 0
+      iFailed+=bolt["failed"] if bolt["failed"] is not None else 0
+           
+    aEmitted.append(iEmitted)     
+    aTransferred.append(iTransferred)     
+    aAcked.append(iAcked)     
+    aFailed.append(iFailed)                
+    aData = [aEmitted, aTransferred, aAcked, aFailed]
+
+    return aData
+#
+# _get_detail_values ******************************************************************************************************  
+
 # _get_detail_dashboard ***************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
@@ -376,24 +446,15 @@ def _get_detail_dashboard(request, topology_id, system_id):
     aTopology = []
     aStats = []
     aSpouts = []
-    aBolts = []
-    aEmitted = []
-    aTransferred = []
-    aAcked = []
-    aFailed = []
-    iEmitted = 0
-    iTransferred = 0
-    iAcked = 0
-    iFailed = 0    
+    aBolts = []    
     iSystem = int(system_id) if system_id is not None else 0
     aCheck = []
+    aValues = []
 
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
       
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['topology'] = _get_topology_info(topology_id)
@@ -405,67 +466,14 @@ def _get_detail_dashboard(request, topology_id, system_id):
         data['jStats'] = utils._get_dumps(topology['topologyStats'])
         data['jSpouts'] = utils._get_dumps(topology['spouts'])
         data['jBolts'] = utils._get_dumps(topology['bolts'])
-        visualization = st_ui._get_topology(topology_id, 0, True, "")
+        visualization = st_ui._get_topology(topology_id, 0, True, "")        
+        aCheck = utils._get_visualization_data(visualization)
         data['visualization'] = utils._get_dumps(visualization)
-
-        for default in visualization:
-          if len(visualization[default][':inputs']):
-            if not (visualization[default][':inputs'][0][':stream'].startswith("__")):
-              aCheck.append({'id': visualization[default][':inputs'][0][':sani-stream'], 
-                             'name': visualization[default][':inputs'][0][':stream'], 
-                             'check': "checked"});
-              
-        for check in visualization['__acker'][':inputs']:
-          aCheck.append({'id': check[':sani-stream'], 'name': check[':stream'], 'check': ""});
-        
-        #For each element(d) in aCheck Dict, delete repeat elements.
-        aCheck = [dict(t) for t in set([tuple(d.items()) for d in aCheck])]
-
-        for stat in data['stats']:
-            iEmitted+=stat["emitted"] if stat["emitted"] is not None else 0
-            iTransferred+=stat["transferred"] if stat["transferred"] is not None else 0
-            iAcked+=stat["acked"] if stat["acked"] is not None else 0
-            iFailed+=stat["failed"] if stat["failed"] is not None else 0
-         
-        aEmitted.append(iEmitted)     
-        aTransferred.append(iTransferred)     
-        aAcked.append(iAcked)     
-        aFailed.append(iFailed)     
-        iEmitted = 0
-        iTransferred = 0
-        iAcked = 0
-        iFailed = 0
-         
-        for spout in data['spouts']:
-            iEmitted+=spout["emitted"] if spout["emitted"] is not None else 0
-            iTransferred+=spout["transferred"] if spout["transferred"] is not None else 0
-            iAcked+=spout["acked"] if spout["acked"] is not None else 0
-            iFailed+=spout["failed"] if spout["failed"] is not None else 0
-         
-        aEmitted.append(iEmitted)     
-        aTransferred.append(iTransferred)     
-        aAcked.append(iAcked)     
-        aFailed.append(iFailed)
-        iEmitted = 0
-        iTransferred = 0
-        iAcked = 0
-        iFailed = 0
-         
-        for bolt in data['bolts']:
-            iEmitted+=bolt["emitted"] if bolt["emitted"] is not None else 0
-            iTransferred+=bolt["transferred"] if bolt["transferred"] is not None else 0
-            iAcked+=bolt["acked"] if bolt["acked"] is not None else 0
-            iFailed+=bolt["failed"] if bolt["failed"] is not None else 0
-           
-        aEmitted.append(iEmitted)     
-        aTransferred.append(iTransferred)     
-        aAcked.append(iAcked)     
-        aFailed.append(iFailed)                
-
-        data['emitted'] = aEmitted     
-        data['transferred'] = aTransferred
-        data['acked'] = aAcked
-        data['failed'] = aFailed
+        aValues = _get_detail_values(data['stats'], data['spouts'], data['bolts'])
+        data['emitted'] = aValues[0]    
+        data['transferred'] = aValues[1]
+        data['acked'] = aValues[2]
+        data['failed'] = aValues[3]
         data['aCheck'] = aCheck
         data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
         data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
@@ -513,11 +521,9 @@ def _get_topology_dashboard(request, topology_id, window_id):
     aTopology = []
 
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['topology'] = _get_topology_info(topology_id)
@@ -568,11 +574,9 @@ def _get_topology_dashboard(request, topology_id, window_id):
 def _get_components_dashboard(request, topology_id, component_id, system_id):
     iSystem = int(system_id) if system_id is not None else 0
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
@@ -604,10 +608,8 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
             data['errors'] = utils._get_dumps(data['components']['componentErrors'])
           except:  
             data['errors'] = []    
-
           data['jSpouts'] = utils._get_dumps(topology['spouts'])
           data['jBolts'] = utils._get_dumps(topology['bolts'])
-
           data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
           data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
           data['error'] = 0
@@ -649,11 +651,9 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
 #
 def _get_spouts_dashboard(request, topology_id):
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         topology = st_ui._get_topology(topology_id, 0, False, "")
@@ -694,11 +694,9 @@ def _get_spouts_dashboard(request, topology_id):
 #
 def _get_bolts_dashboard(request, topology_id):
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         topology = st_ui._get_topology(topology_id, 0, False, "")
@@ -738,11 +736,9 @@ def _get_bolts_dashboard(request, topology_id):
 #
 def _get_cluster_summary(request):
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['cluster'] = st_ui._get_cluster()
@@ -772,11 +768,9 @@ def _get_cluster_summary(request):
 #
 def _get_nimbus_configuration(request):
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
         data['configuration'] = st_ui._get_configuration()
@@ -807,9 +801,7 @@ def _get_nimbus_configuration(request):
 #
 def _get_topology(request, topology_id, window_id):
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
       topology = st_ui._get_topology(topology_id, 0, False, window_id)  
       topologyStats = topology['topologyStats']
 
@@ -857,11 +849,9 @@ def _get_topology(request, topology_id, window_id):
 def _get_components(request, topology_id, component_id, system_id): 
     iSystem = int(system_id) if system_id is not None else 0
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
-      data['storm_ui'] = utils.STORM_UI
+      st_ui, data = _get_init()
 
-      if _get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topologies()):
         raise StormREST.NotFound
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
@@ -926,8 +916,7 @@ def _get_components(request, topology_id, component_id, system_id):
 #
 def _get_failed(request, topology_id, component_id, system_id): 
     try:
-      st_ui = StormREST(utils.STORM_UI)      
-      data = {}
+      st_ui, data = _get_init()
       iSystem = int(system_id) if system_id is not None else 0
       topology = st_ui._get_topology(topology_id, iSystem, False, "")
       data['topology'] = _get_topology_info(topology_id)
@@ -970,17 +959,18 @@ def changeTopologyStatus(request):
   
     try:
         if request.method == 'POST':
-            sId = request.POST['sId']      
+            sId = request.POST['sId']
             sAction = request.POST['sAction']
             bWait = request.POST['bWait']
             iWait = request.POST['iWait']
-     
+
             if bWait == "true":
-                post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)            
+                post_response = requests.post(utils.STORM_UI + utils.TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)            
             else:
-                post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction)                                    
+                post_response = requests.post(utils.STORM_UI + utils.TOPOLOGY_URL + sId + '/' + sAction)                                    
       
             iResult =  post_response.status_code               
+
     except requests.exceptions.URLRequired as e:
         iResult = e
     except requests.exceptions.HTTPError as e:
@@ -989,7 +979,7 @@ def changeTopologyStatus(request):
         iResult = e
     except:
         iResult = 1
-       
+    
     return HttpResponse(iResult, mimetype = "application/javascript") 
 #
 # changeTopologyStatus ****************************************************************************************************
@@ -1143,29 +1133,6 @@ def set_topology_status(request):
 #
 # set_topology_status ***************************************************************************************************** 
 
-# _get_error **************************************************************************************************************
-# Rev Date       Author
-# --- ---------- ----------------------------------------------------------------------------------------------------------
-# 001 2015-03-06 Jose Juan
-#
-# Check if exists error in requests to Storm-UI.
-#
-# @author Jose Juan
-# @date 2015-03-06
-# @param psObject, form.
-# @return New class form.
-# @remarks -
-#
-def _get_error(psList):
-    try:        
-        bOk = psList['errorMessage'] != ""
-    except:
-        bOk = False
-
-    return bOk
-#
-# _get_error **************************************************************************************************************
-
 # _get_topology_info ******************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
@@ -1181,8 +1148,7 @@ def _get_error(psList):
 #
 def _get_topology_info(topology_id):    
     try:
-      st_ui = StormREST(utils.STORM_UI)
-      data = {}
+      st_ui, data = _get_init()
       topology = st_ui._get_topology(topology_id, 0, False)
       data['name'] = topology["name"]
       data['id'] = topology["id"]
@@ -1193,7 +1159,8 @@ def _get_topology_info(topology_id):
       data['tasks'] = topology["tasksTotal"]
       data['error'] = 0
     except:
-      data = {'name': "",
+      data = {'storm_ui': utils.STORM_UI,
+              'name': "",
               'id': "",
               'status': "",
               'uptime': "",

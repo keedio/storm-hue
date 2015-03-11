@@ -1,6 +1,3 @@
-function reloadDiv(id) {
-   window.location.reload();
-};
 
 function changeDisplay(id1, id2) {
    document.getElementById(id1).style.display = "";
@@ -12,13 +9,12 @@ function changeTopologyStatus(psId, psAction, pbWait, piWait) {
                                                sAction: psAction,
    	                                           bWait: pbWait,
 	                                             iWait: piWait
-                                             }, function(data){                                                 
+                                             }, function(data){
                                                    if (data == 200) {
                                                       window.location.reload();
                                                    }
                                                    else {
-                                                      console.log("ERROR");
-                                                      
+                                                      $("#divErrorKill").show();
                                                    }
                                                 }, "text");         
 };
@@ -51,61 +47,21 @@ function StormViewModel() {
       }            
       
       $.post("/storm/set_topology_status/", { psAction: sAction,
-        	 									 psNameTopology: sNameTopology,
-		         		                         piNumWorkers: iNumWorkers,
-		            		                     piWaitSecs: iWaitSecs,
-		                    		             paComponents: aComponents
-                                                }, 
-                                                function(data){
+        	 									                  psNameTopology: sNameTopology,
+		         		                              piNumWorkers: iNumWorkers,
+		            		                          piWaitSecs: iWaitSecs,
+		                    		                  paComponents: aComponents
+                                            }, function(data){
 						      						                      jsonResult = JSON.parse(data)
-						                                        console.log(jsonResult.status);
                                                     if (jsonResult.status == 0) {                                                         
                                                          window.location.reload();
                                                     }
                                                     else {                                               
-						         						                         $("#divError").show();
-
+						         						                         $("#divErrorRebalance").show();
 						      						                      }
                                                     $("#btnCancel").show();
                                                     $("#btnSubmit").show();
                                                     $("#imgLoading").hide();
-                                                }, "text");         
+                                               }, "text");         
    };   
-   
-   self.getData = function() {  
-       var sUrl = "/api/v1/cluster/summary";              
-       
-       $.ajaxSetup({
-             "error": function(jqXHR, textStatus, response) {
-                         console.log("jqXHR: " + jqXHR);
-			 console.log("textStatus: " + textStatus);    
-			 console.log("Response: " + response);    
-                      }
-       });
-       
-       $.getJSON(sUrl, function(response,status,jqXHR) {
-          alert(response); 
-       });
-   
-
-       /*
-       $.ajax({
-           url: sUrl,           
-           dataType: 'jsonp',   
-           success: function(response) {
-                       console.log('Data OK ... ');
-                    },
-           error: function(xhr, status, error) {
-                      console.log('Status: ' + status);
-		      console.log('ERROR: ' + error);
-                      console.log('InText: ' + xhr.responseText);		      		      
-                  }	   
-       });
-       */      
-       
-    }; 
 };
-
-//ko.applyBindings(new StormViewModel());
-//var StormModel = new StormViewModel();
-//ko.applyBindings(StormModel);

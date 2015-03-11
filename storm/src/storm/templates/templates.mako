@@ -314,7 +314,7 @@
                   </table>               
                </div>
                <div class="modal-footer">      
-                  <div id="divError" class="hide" style="position: absolute; left: 10px;">
+                  <div id="divErrorRebalance" class="hide" style="position: absolute; left: 10px;">
                      <span class="label label-important"> ${ _('ERROR rebalancing this topology') } </span>
                   </div>
                   <input type="hidden" id="sAction" value="rebalance">
@@ -455,8 +455,11 @@
                   ${ _('Are you sure you want to do this action: KILL? ') }
                </div>
                <div class="modal-footer">      
+                  <div id="divErrorKill" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR killing this topology') } </span>
+                  </div>
                   <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>            
+                  <button type="button" class="btn btn-primary" onclick="changeTopologyStatus('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
                </div>
             </div>   
       </div>

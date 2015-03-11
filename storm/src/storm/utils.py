@@ -39,6 +39,39 @@ SUPERVISOR_URL = conf.STORM_UI_SUPERVISOR.get()
 CONFIGURATION_URL = conf.STORM_UI_CONFIGURATION.get()
 LOG_URL = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_LOG_PORT.get() + LOG_URL_PATH
 
+# _get_visualization_data *************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-11 Jose Juan
+#
+# Return data for Topology Visualization.
+#
+# @author Jose Juan
+# @date 2015-03-11
+# @param visualization, JSon with data.
+# @param system_id, show/hide system stats.
+# @return -
+# @remarks -
+#
+def _get_visualization_data(visualization):
+  data = []
+  for default in visualization:
+    if len(visualization[default][':inputs']):
+      if not visualization[default][':inputs'][0][':stream'].startswith("__"):
+        data.append({'id': visualization[default][':inputs'][0][':sani-stream'], 
+                     'name': visualization[default][':inputs'][0][':stream'], 
+                     'check': "checked"})
+              
+  for check in visualization['__acker'][':inputs']:
+    data.append({'id': check[':sani-stream'], 'name': check[':stream'], 'check': ""});
+        
+  #For each element(d) in data Dict, delete repeat elements.
+  data = [dict(t) for t in set([tuple(d.items()) for d in data])]
+    
+  return data
+#   
+# _get_visualization_data *************************************************************************************************
+
 # _get_newform ************************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
@@ -134,3 +167,26 @@ def _get_seconds_from_strdate(psDate):
 	return iSeconds
 #  
 # _get_seconds_from_strdate ************************************************************************************************
+
+# _get_error **************************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-06 Jose Juan
+#
+# Check if exists error in requests to Storm-UI.
+#
+# @author Jose Juan
+# @date 2015-03-06
+# @param psObject, form.
+# @return New class form.
+# @remarks -
+#
+def _get_error(psList):
+    try:        
+        bOk = psList['errorMessage'] != ""
+    except:
+        bOk = False
+
+    return bOk
+#
+# _get_error **************************************************************************************************************

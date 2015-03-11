@@ -174,7 +174,7 @@ ${ graphsHUE.import_charts() }
                                            .groupSpacing(0.1)    //Distance between each group of bars.                                                 
                                            .showControls(true);
                                   
-                                  graphBolts.legend.margin({top: 5, right:0, left:0, bottom: 20});
+                                  graphBolts.legend.margin({top: 5, right:0, left:24, bottom: 20});
                                   graphBolts.multibar.stacked(false);             
                                   graphBolts.yAxis
                                             .tickFormat(d3.format('d'));
@@ -570,14 +570,7 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <span class="pull-left">
-                                        <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }
-                                     </span>
-                                     <span class="pull-right">
-                                        <a id="lnkRefresh" href="#" onclick="reloadDiv('visualization-container');return false;">
-                                          <i class="fa fa-refresh fa-fw"></i></span>
-                                        </a>  
-                                     <div class="clearfix"></div>
+                                     <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }                                     
                                   </div>
                                   <div class="panel-body">
                                      <!-- <input type="button" id="show-hide-visualization" value="Show Visualization"/> -->
