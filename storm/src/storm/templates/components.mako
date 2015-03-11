@@ -72,14 +72,6 @@ ${ JavaScript.import_js() }
    });      
 </script>
 
-<%
-  _breadcrumbs = [
-    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Topology ') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
-    [Data['components']['componentType'] + " Id. " + Data['component_id'] + _(' Explain'), url('storm:components', topology_id = Data['topology']['id'], component_id = Data['component_id'], system_id = 0)]
-  ]
-%>
-
 ${ storm.menubar(section = 'Components Explain')}
 
 % if Data['error'] == 1:
@@ -94,6 +86,14 @@ ${ storm.menubar(section = 'Components Explain')}
     </div>
   </div>  
 % else:
+  <%
+     _breadcrumbs = [
+       [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+       [_('Topology ') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
+       [Data['components']['componentType'] + " Id. " + Data['component_id'] + _(' Explain'), url('storm:components', topology_id = Data['topology']['id'], component_id = Data['component_id'], system_id = 0)]
+     ]
+  %>
+
   ${ storm.header(_breadcrumbs) }
 
   <div id="divPrincipal" class="container-fluid">

@@ -57,12 +57,6 @@ ${ JavaScript.import_js() }
    });
 </script>
 
-<%
-  _breadcrumbs = [
-    [_('Storm Dashboard'), url('storm:storm_dashboard')]
-  ]
-%>
-
 ${ storm.menubar(section = 'Failed')}
 
 % if Data['error'] == 1:
@@ -77,7 +71,12 @@ ${ storm.menubar(section = 'Failed')}
     </div>
   </div>  
 % else:
-${ storm.header(_breadcrumbs) }
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')]
+      ] 
+  %>
+  ${ storm.header(_breadcrumbs) }
 
 <div class="container-fluid">
    <div class="card">        

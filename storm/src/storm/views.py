@@ -583,6 +583,7 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
           data['components'] = st_ui._get_components(topology_id, component_id, 0)
           
           if data['components']['componentType'] == "bolt":
+            data['isBolt'] = 1
             data['jComponents'] = utils._get_dumps(data['components']["boltStats"])
           else:
             data['jComponents'] = utils._get_dumps(data['components']["spoutSummary"])
@@ -624,11 +625,13 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
               'bolts': [], 
               'input': [],
               'output': [],
+              'executor': [],
               'errors': [], 
               'jSpouts': [], 
               'jBolts': [],   
               'frmNewTopology':utils._get_newform(request, UploadFileForm),
               'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'isBolt': -1,
               'error': 1}
 
     return data
@@ -1144,7 +1147,8 @@ def set_topology_status(request):
 # @return Array with topology status.
 # @remarks -
 #
-def _get_topology_info(topology_id):    
+def _get_topology_info(topology_id):  
+    print "TOPOLOGY: ",topology_id  
     try:
       st_ui, data = _get_init()
       topology = st_ui._get_topology(topology_id, 0, False)

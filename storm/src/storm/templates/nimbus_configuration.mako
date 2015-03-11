@@ -43,16 +43,7 @@ ${ JavaScript.import_js() }
    });
 </script>
 
-<%
-  _breadcrumbs = [
-    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Nimbus Configuration'), url('storm:nimbus_configuration')]
-  ]
-%>
-
 ${ storm.menubar(section = 'Nimbus Configuration')}
-${Templates.tblSubmitTopology(Data['frmNewTopology'])}
-${Templates.tblSaveTopology(Data['frmHDFS'])}
 
 % if Data['error'] == 1:
   <div class="container-fluid">
@@ -66,6 +57,15 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
     </div>
   </div>  
 % else:
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+        [_('Nimbus Configuration'), url('storm:nimbus_configuration')]
+      ]
+  %>
+
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
   ${ storm.header(_breadcrumbs) }
 
   <div class="container-fluid">

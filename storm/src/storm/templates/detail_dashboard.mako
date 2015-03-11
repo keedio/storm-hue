@@ -189,8 +189,6 @@ ${ graphsHUE.import_charts() }
 </script>
 
 ${ storm.menubar(section = 'Detail Dashboard')}
-${Templates.tblSubmitTopology(Data['frmNewTopology'])}
-${Templates.tblSaveTopology(Data['frmHDFS'])}
 
 % if Data['error'] == 1:
   <div class="container-fluid">
@@ -211,6 +209,8 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
     ]
   %>
 
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
   ${ storm.header(_breadcrumbs) }
 
   <div id="divPrincipal" class="container-fluid">

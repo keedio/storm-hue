@@ -48,16 +48,7 @@ ${ JavaScript.import_js() }
    });
 </script>
 
-<%
-  _breadcrumbs = [
-    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Cluster Summary'), url('storm:cluster_summary')]
-  ]
-%>
-
 ${ storm.menubar(section = 'Cluster Summary')}
-${Templates.tblSubmitTopology(Data['frmNewTopology'])}
-${Templates.tblSaveTopology(Data['frmHDFS'])}
 
 % if Data['error'] == 1:
   <div class="container-fluid">
@@ -71,6 +62,15 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
     </div>
   </div>  
 % else:
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+        [_('Cluster Summary'), url('storm:cluster_summary')]
+      ]
+  %>
+  
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
   ${ storm.header(_breadcrumbs) }
 
   <div class="container-fluid">

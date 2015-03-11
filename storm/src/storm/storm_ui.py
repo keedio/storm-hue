@@ -32,9 +32,6 @@ class StormREST(object):
 	class NotFound(Error):
 		pass
 
-	class RESTError(Error):	
-		pass
-
 	def __init__(self, url='http://localhost:8080/api/v1'):
 		self._base = url
 
@@ -110,4 +107,6 @@ class StormREST(object):
 				raise StormREST.NotFound(uri)
 			raise
 		except requests.exceptions.RequestException as e:
+			raise StormREST.NotFound(url)
+		except:
 			raise StormREST.NotFound(url)

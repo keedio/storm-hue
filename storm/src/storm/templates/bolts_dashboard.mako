@@ -109,17 +109,7 @@ ${ JavaScript.import_js() }
    });
 </script>
 
-<%
-  _breadcrumbs = [
-    [_('Storm Dashboard'), url('storm:storm_dashboard')],    
-    [_('Topology') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
-    [_('Bolts Detail'), url('storm:bolts_dashboard', topology_id = Data['topology']['id'])]
-  ]
-%>
-
 ${ storm.menubar(section = 'Bolts Detail')}
-${Templates.tblSubmitTopology(Data['frmNewTopology'])}
-${Templates.tblSaveTopology(Data['frmHDFS'])}
 
 % if Data['error'] == 1:
   <div class="container-fluid">
@@ -133,7 +123,17 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
     </div>
   </div>  
 % else:
-${ storm.header(_breadcrumbs) }
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+        [_('Topology') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
+        [_('Bolts Detail'), url('storm:bolts_dashboard', topology_id = Data['topology']['id'])]
+      ]
+  %>
+
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
+  ${ storm.header(_breadcrumbs) }
 
 <div id="divPrincipal" class="container-fluid">
   <div class="card">        

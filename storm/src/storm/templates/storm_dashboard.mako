@@ -93,15 +93,7 @@ ${ JavaScript.import_js() }
    });            
 </script>
 
-<%
-  _breadcrumbs = [
-    [_('Storm Dashboard'), url('storm:storm_dashboard')]
-  ]
-%>
-
 ${ storm.menubar(section = 'Storm Dashboard')}
-${Templates.tblSubmitTopology(Data['frmNewTopology'])}
-${Templates.tblSaveTopology(Data['frmHDFS'])}
 
 % if Data['error'] == 1:
   <div class="container-fluid">
@@ -115,6 +107,14 @@ ${Templates.tblSaveTopology(Data['frmHDFS'])}
     </div>
   </div>  
 % else:
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')]
+      ]
+  %>
+  
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
   ${ storm.header(_breadcrumbs) }
 
   % if not Data['topologies']['topologies']: 
