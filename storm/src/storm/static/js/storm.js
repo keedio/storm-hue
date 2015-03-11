@@ -32,6 +32,10 @@ function StormViewModel() {
       var aComponents = [];
       var aList = [];
       
+      $("#btnCancel").hide();
+      $("#btnSubmit").hide();
+      $("#imgLoading").show();
+
       var sAction = document.getElementById("sAction").value;
       var sNameTopology = document.getElementById("sNameTopology").value;
       var iNumWorkers = document.getElementById("iNumWorkers").value;
@@ -53,14 +57,18 @@ function StormViewModel() {
 		                    		             paComponents: aComponents
                                                 }, 
                                                 function(data){
-						      						jsonResult = JSON.parse(data)
-						      
-                                                    if (jsonResult.output == 'None') {
+						      						                      jsonResult = JSON.parse(data)
+						                                        console.log(jsonResult.status);
+                                                    if (jsonResult.status == 0) {                                                         
                                                          window.location.reload();
                                                     }
                                                     else {                                               
 						         						                         $("#divError").show();
-						      						}
+
+						      						                      }
+                                                    $("#btnCancel").show();
+                                                    $("#btnSubmit").show();
+                                                    $("#imgLoading").hide();
                                                 }, "text");         
    };   
    

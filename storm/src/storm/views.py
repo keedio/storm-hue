@@ -961,7 +961,6 @@ def _get_failed(request, topology_id, component_id, system_id):
 # @return -
 # @remarks -
 #
-@csrf_exempt
 def changeTopologyStatus(request):
     iResult = -1
     sId = ""
@@ -976,7 +975,7 @@ def changeTopologyStatus(request):
             bWait = request.POST['bWait']
             iWait = request.POST['iWait']
      
-            if (bWait == "true"):
+            if bWait == "true":
                 post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)            
             else:
                 post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction)                                    
@@ -1009,7 +1008,6 @@ def changeTopologyStatus(request):
 # @return -
 # @remarks -
 #
-@csrf_exempt
 def set_topology_status(request):  
     sAction = ""   
     sExecute = ""
@@ -1020,7 +1018,7 @@ def set_topology_status(request):
     sNumExecutors = ""
     msg = ""
     sTopologyName = ""
-    response = {'status': -1, 'output': -1, 'data': ''}  
+    response = {'status': -1, 'output': -1}  
     sScript = "storm"                           
 
     if request.method == 'POST':
@@ -1032,24 +1030,24 @@ def set_topology_status(request):
             iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] != "") else 0                        
             aComponent = request.POST.getlist('paComponents[]')
             
-            if (iWaitSecs > 0):
+            if iWaitSecs > 0:
                 sOptions += " -w " + iWaitSecs        
 	  
-            if (iNumWorkers > 0):
+            if iNumWorkers > 0:
                 sOptions += " -n " + iNumWorkers
             
             iMod = 0
             
             if aComponent != []:    
-                while (iMod < len(aComponent)):
-                    if(iMod%2 == 0):     
+                while iMod < len(aComponent):
+                    if iMod%2 == 0:     
                         sOptions += " -e " + aComponent[iMod] + "="
                     else:                           
                         sOptions+=aComponent[iMod]
                         
                     iMod+=1
                 
-            sExecute = sScript + " " + sAction + " " + sNameTopology + " " + sOptions                                
+            sExecute = sScript + " " + sAction + " " + sNameTopology + " " + sOptions
                     
         if sAction == "submitTopology":            
             sURL = request.POST['psURL']
@@ -1069,13 +1067,10 @@ def set_topology_status(request):
                     sPath = os.path.join(settings.UPLOAD_ROOT, path)
                     
                 sExecute = sScript + " " + "jar -c nimbus.host=" + sServer + " " + sPath + " " + sClass + " " + sTopologyName
-                response['status'] = 0
                         
             else:
                 #raise PopupException(_("Error in upload form: %s") % (form.errors,))
                 msg = _("Error in upload form: %s.\n") % form.errors
-                response['error'] = form.errors
-                response['status'] = -1
               
         if sAction == "saveTopology":
             sURL = request.POST['psURL']
@@ -1119,10 +1114,11 @@ def set_topology_status(request):
                 
                 raise PopupException(msg)
                           
-    status, output = commands.getstatusoutput(sExecute)      
-  
+    status, output = commands.getstatusoutput(sExecute)
+
     response['output'] = output
-            
+    response['status'] = status
+
     if sAction == "submitTopology":
         try:
             os.remove(sPath)
@@ -1130,19 +1126,19 @@ def set_topology_status(request):
             msg += "Exception raised while deleting temp file.\n"
         pass
 
-        if ("Finished submitting topology: " + sTopologyName) in response['output']:
-            output = None
+        if "Finished submitting topology: " + sTopologyName in response['output']:
+            response['output'] = None
             
-        if (output is None) and (response['status'] == 0):
+        if response['output'] is None and response['status'] == 0:
             return HttpResponseRedirect(sURL)
         else:
-            if output is None:
+            if response['output'] is None:
                 msg += "Topology submitted OK.\n"
             else:
                 msg += "Error submitting topology.\n"
                     
             raise PopupException(msg)
-            
+
     return HttpResponse(json.dumps(response), content_type="text/plain")            
 #
 # set_topology_status ***************************************************************************************************** 
