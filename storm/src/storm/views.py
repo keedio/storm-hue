@@ -449,7 +449,7 @@ def _get_detail_dashboard(request, topology_id, system_id):
     try:
       st_ui, data = _get_init()
       
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topology(topology_id)):
         raise StormREST.NotFound
       else:
         data['topology'] = _get_topology_info(topology_id)
@@ -518,7 +518,7 @@ def _get_topology_dashboard(request, topology_id, window_id):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topology(topology_id)):
         raise StormREST.NotFound
       else:
         data['topology'] = _get_topology_info(topology_id)
@@ -571,7 +571,7 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topology(topology_id)):
         raise StormREST.NotFound
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
@@ -651,7 +651,7 @@ def _get_spouts_dashboard(request, topology_id):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topology(topology_id)):
         raise StormREST.NotFound
       else:
         topology = st_ui._get_topology(topology_id, 0, False, "")
@@ -694,7 +694,7 @@ def _get_bolts_dashboard(request, topology_id):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topology(topology_id)):
         raise StormREST.NotFound
       else:
         topology = st_ui._get_topology(topology_id, 0, False, "")
@@ -736,7 +736,7 @@ def _get_cluster_summary(request):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_cluster()) or utils._get_error(st_ui._get_supervisor()):
         raise StormREST.NotFound
       else:
         data['cluster'] = st_ui._get_cluster()
@@ -768,7 +768,7 @@ def _get_nimbus_configuration(request):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_configuration()):
         raise StormREST.NotFound
       else:
         data['configuration'] = st_ui._get_configuration()
@@ -849,7 +849,7 @@ def _get_components(request, topology_id, component_id, system_id):
     try:
       st_ui, data = _get_init()
 
-      if utils._get_error(st_ui._get_topologies()):
+      if utils._get_error(st_ui._get_topology(topology_id)):
         raise StormREST.NotFound
       else:
           topology = st_ui._get_topology(topology_id, iSystem, False, "")
@@ -915,14 +915,18 @@ def _get_components(request, topology_id, component_id, system_id):
 def _get_failed(request, topology_id, component_id, system_id): 
     try:
       st_ui, data = _get_init()
-      iSystem = int(system_id) if system_id is not None else 0
-      topology = st_ui._get_topology(topology_id, iSystem, False, "")
-      data['topology'] = _get_topology_info(topology_id)
-      data['spouts'] = topology['spouts']
-      data['bolts'] = topology['bolts']
-      data['stats'] = topology['topologyStats']
-      data['component_id'] = component_id
-      data['error'] = 0
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+        iSystem = int(system_id) if system_id is not None else 0
+        topology = st_ui._get_topology(topology_id, iSystem, False, "")
+        data['topology'] = _get_topology_info(topology_id)
+        data['spouts'] = topology['spouts']
+        data['bolts'] = topology['bolts']
+        data['stats'] = topology['topologyStats']
+        data['component_id'] = component_id
+        data['error'] = 0
     except StormREST.NotFound:
       data = {'storm_ui': utils.STORM_UI,
               'topology':_get_topology_info(topology_id),
