@@ -30,6 +30,7 @@ function StormViewModel() {
       
       $("#btnCancel").hide();
       $("#btnSubmit").hide();
+      $("#divErrorRebalance").hide();
       $("#imgLoading").show();
 
       var sAction = document.getElementById("sAction").value;

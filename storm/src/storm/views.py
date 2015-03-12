@@ -1016,24 +1016,19 @@ def set_topology_status(request):
             iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] != "") else 0                        
             iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] != "") else 0                        
             aComponent = request.POST.getlist('paComponents[]')
+
+            sOptions += " -w " + iWaitSecs if iWaitSecs > 0 else ""
+            sOptions += " -n " + iNumWorkers if iNumWorkers > 0 else ""
+            iMod = 0            
             
-            if iWaitSecs > 0:
-                sOptions += " -w " + iWaitSecs        
-	  
-            if iNumWorkers > 0:
-                sOptions += " -n " + iNumWorkers
+            while iMod < len(aComponent):
+              if iMod%2 == 0:
+                sOptions += " -e " + aComponent[iMod] + "="
+              else:
+                sOptions+=aComponent[iMod] if aComponent[iMod] != "" else "0"
+                          
+              iMod+=1
             
-            iMod = 0
-            
-            if aComponent != []:    
-                while iMod < len(aComponent):
-                    if iMod%2 == 0:     
-                        sOptions += " -e " + aComponent[iMod] + "="
-                    else:                           
-                        sOptions+=aComponent[iMod]
-                        
-                    iMod+=1
-                
             sExecute = utils.COMMAND + " " + sAction + " " + sNameTopology + " " + sOptions
                     
         if sAction == "submitTopology":            
@@ -1125,7 +1120,7 @@ def set_topology_status(request):
                     
             raise PopupException(msg)
 
-    return HttpResponse(utils._get_dumps(response), content_type="text/plain")            
+    return HttpResponse(utils._get_dumps_without(response), content_type="text/plain")            
 #
 # set_topology_status ***************************************************************************************************** 
 
