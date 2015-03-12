@@ -33,7 +33,10 @@ def is_selected(section, matcher):
     <div class="card card-small">
       <h1 class="card-heading simple">
       <div class="btn-group pull-right">                        
-         <button id="btnNewTopology" data-target="#tblSubmitTopology" class="btn" data-toggle="modal"><i class="fa fa-arrow-circle-o-up"></i> ${ _('Submit Topology') } </button>         
+         <button id="btnNewTopology" data-target="#tblSubmitTopology" class="btn" data-toggle="modal">
+            <i class="fa fa-arrow-circle-o-up"></i>
+            ${ _('Submit Topology') } 
+         </button>         
       </div>       
       <!--
       <div class="btn-group pull-right" style="display: inline; align: left">

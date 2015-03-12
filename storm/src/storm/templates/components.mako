@@ -37,37 +37,127 @@ ${ JavaScript.import_js() }
       $('#tblTopologyComponent').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	      "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+         "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
 	    } );
 	    
       $('#tblTopologyStats').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	      "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+         "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }
 	    } );
 	    
       $('#tblTopologyInput').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	      "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+         "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }
 	    } );
 
       $('#tblTopologyOutput').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	      "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+         "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }
 	    } );
 
       $('#tblTopologyExecutors').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+           "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
 	    } );
 	    
       $('#tblTopologyErrors').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+           "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
 	    } );
    });      
 </script>

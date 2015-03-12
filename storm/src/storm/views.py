@@ -1053,9 +1053,8 @@ def set_topology_status(request):
                     
                 sExecute = utils.COMMAND_JAR + sPath + " " + sClass + " " + sTopologyName
                         
-            else:
-                #raise PopupException(_("Error in upload form: %s") % (form.errors,))
-                msg = _("Error in upload form: %s.\n") % form.errors
+            else:                
+                msg = _("Error in upload form.")
               
         if sAction == "saveTopology":
             sURL = request.POST['psURL']
