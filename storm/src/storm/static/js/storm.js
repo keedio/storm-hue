@@ -4,7 +4,11 @@ function changeDisplay(id1, id2) {
    document.getElementById(id2).style.display = "none";            
 };
    
-function post_topology_status(psId, psAction, pbWait, piWait) {            
+function post_topology_status(psId, psAction, pbWait, piWait) {    
+   $("#btnNo"+psAction).hide();
+   $("#btnYes"+psAction).hide();
+   $("#divError"+psAction).hide();
+   $("#imgLoading"+psAction).show();        
    $.post("/storm/post_topology_status/", { sId: psId,
                                                sAction: psAction,
    	                                           bWait: pbWait,
@@ -14,8 +18,11 @@ function post_topology_status(psId, psAction, pbWait, piWait) {
                                                       window.location.reload();
                                                    }
                                                    else {
-                                                      $("#divErrorKill").show();
+                                                      $("#divError"+psAction).show();
                                                    }
+                                                   $("#btnNo"+psAction).show();
+                                                   $("#btnYes"+psAction).show();
+                                                   $("#imgLoading"+psAction).hide();
                                                 }, "text");         
 };
 

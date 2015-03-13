@@ -391,9 +391,13 @@
                <div class="modal-body controls">
                   ${ _('Are you sure you want to do this action: ACTIVE? ') }
                </div>
-               <div class="modal-footer">      
-                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
+               <div class="modal-footer">  
+                  <div id="divErroractivate" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR activating this topology') } </span>
+                  </div>    
+                  <button type="button" id="btnNoactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
+                  <img id="imgLoadingactivate" src="/static/art/spinner.gif" class="hide"/>
                </div>
             </div>   
       </div>
@@ -412,9 +416,13 @@
                <div class="modal-body controls">
                   ${ _('Are you sure you want to do this action: Deactivate? ') }
                </div>
-               <div class="modal-footer">      
-                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
+               <div class="modal-footer"> 
+                  <div id="divErrordeactivate" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR deactivating this topology') } </span>
+                  </div>     
+                  <button type="button" id="btnNodeactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
+                  <img id="imgLoadingdeactivate" src="/static/art/spinner.gif" class="hide"/>
                </div>
             </div>   
       </div>
@@ -434,8 +442,12 @@
                   ${ _('Are you sure you want to do this action: REBALANCE? ') }
                </div>
                <div class="modal-footer">      
-                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
+                  <div id="divErrorrebalance" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR rebalancing this topology') } </span>
+                  </div>
+                  <button type="button" id="btnNorebalance" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYesrebalance" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
+                  <img id="imgLoadingrebalance" src="/static/art/spinner.gif" class="hide"/>
                </div>
             </div>   
       </div>
@@ -455,11 +467,12 @@
                   ${ _('Are you sure you want to do this action: KILL? ') }
                </div>
                <div class="modal-footer">      
-                  <div id="divErrorKill" class="hide" style="position: absolute; left: 10px;">
+                  <div id="divErrorkill" class="hide" style="position: absolute; left: 10px;">
                      <span class="label label-important"> ${ _('ERROR killing this topology') } </span>
                   </div>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
+                  <button type="button" id="btnNokill" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYeskill" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
+                  <img id="imgLoadingkill" src="/static/art/spinner.gif" class="hide"/>
                </div>
             </div>   
       </div>

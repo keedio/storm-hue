@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hue VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-03-12 12:27+0100\n"
+"POT-Creation-Date: 2015-03-13 11:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,19 +34,23 @@ msgid "File to Upload"
 msgstr ""
 
 #: src/storm/views.py:1057
+msgid "Error saving JAR File.\n"
+msgstr ""
+
+#: src/storm/views.py:1061
 msgid "Error in upload form."
 msgstr ""
 
-#: src/storm/views.py:1082
+#: src/storm/views.py:1086
 msgid "HDFS File must not be empty.\n"
 msgstr ""
 
-#: src/storm/views.py:1095
+#: src/storm/views.py:1099
 #, python-format
 msgid "Destination %(name)s already exists.\n"
 msgstr ""
 
-#: src/storm/views.py:1097
+#: src/storm/views.py:1101
 #, python-format
 msgid "Copy to %(name)s failed: %(error)s.\n"
 msgstr ""
@@ -477,7 +481,7 @@ msgstr ""
 #: src/storm/templates/components.mako:403
 #: src/storm/templates/components.mako:463
 #: src/storm/templates/components_dashboard.mako:362
-#: src/storm/templates/components_dashboard.mako:419
+#: src/storm/templates/components_dashboard.mako:425
 #: src/storm/templates/detail_dashboard.mako:355
 #: src/storm/templates/detail_dashboard.mako:419
 #: src/storm/templates/failed.mako:196 src/storm/templates/failed.mako:262
@@ -648,7 +652,7 @@ msgstr ""
 
 #: src/storm/templates/components.mako:230
 #: src/storm/templates/components.mako:278
-#: src/storm/templates/components_dashboard.mako:385
+#: src/storm/templates/components_dashboard.mako:391
 #: src/storm/templates/detail_dashboard.mako:588
 #: src/storm/templates/spouts_dashboard.mako:171
 msgid "Stats"
@@ -743,15 +747,15 @@ msgstr ""
 msgid "Id"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:404
+#: src/storm/templates/components_dashboard.mako:410
 msgid "Times"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:445
+#: src/storm/templates/components_dashboard.mako:451
 msgid "Input"
 msgstr ""
 
-#: src/storm/templates/components_dashboard.mako:468
+#: src/storm/templates/components_dashboard.mako:474
 msgid "Output"
 msgstr ""
 
@@ -1058,6 +1062,7 @@ msgid "Set Num. Executors"
 msgstr ""
 
 #: src/storm/templates/templates.mako:318
+#: src/storm/templates/templates.mako:446
 msgid "ERROR rebalancing this topology"
 msgstr ""
 
@@ -1085,9 +1090,9 @@ msgid "Save"
 msgstr ""
 
 #: src/storm/templates/templates.mako:389
-#: src/storm/templates/templates.mako:410
-#: src/storm/templates/templates.mako:431
-#: src/storm/templates/templates.mako:452
+#: src/storm/templates/templates.mako:414
+#: src/storm/templates/templates.mako:439
+#: src/storm/templates/templates.mako:464
 msgid "Confirm action"
 msgstr ""
 
@@ -1095,37 +1100,45 @@ msgstr ""
 msgid "Are you sure you want to do this action: ACTIVE? "
 msgstr ""
 
-#: src/storm/templates/templates.mako:395
-#: src/storm/templates/templates.mako:416
-#: src/storm/templates/templates.mako:437
-#: src/storm/templates/templates.mako:461
+#: src/storm/templates/templates.mako:396
+msgid "ERROR activating this topology"
+msgstr ""
+
+#: src/storm/templates/templates.mako:398
+#: src/storm/templates/templates.mako:423
+#: src/storm/templates/templates.mako:448
+#: src/storm/templates/templates.mako:473
 msgid "No"
 msgstr ""
 
-#: src/storm/templates/templates.mako:396
-#: src/storm/templates/templates.mako:417
-#: src/storm/templates/templates.mako:438
-#: src/storm/templates/templates.mako:462
+#: src/storm/templates/templates.mako:399
+#: src/storm/templates/templates.mako:424
+#: src/storm/templates/templates.mako:449
+#: src/storm/templates/templates.mako:474
 msgid "Yes"
 msgstr ""
 
-#: src/storm/templates/templates.mako:413
+#: src/storm/templates/templates.mako:417
 msgid "Are you sure you want to do this action: Deactivate? "
 msgstr ""
 
-#: src/storm/templates/templates.mako:434
+#: src/storm/templates/templates.mako:421
+msgid "ERROR deactivating this topology"
+msgstr ""
+
+#: src/storm/templates/templates.mako:442
 msgid "Are you sure you want to do this action: REBALANCE? "
 msgstr ""
 
-#: src/storm/templates/templates.mako:455
+#: src/storm/templates/templates.mako:467
 msgid "Are you sure you want to do this action: KILL? "
 msgstr ""
 
-#: src/storm/templates/templates.mako:459
+#: src/storm/templates/templates.mako:471
 msgid "ERROR killing this topology"
 msgstr ""
 
-#: src/storm/templates/templates.mako:477
+#: src/storm/templates/templates.mako:490
 msgid "Last error:"
 msgstr ""
 
@@ -1145,19 +1158,15 @@ msgstr ""
 msgid "Spouts Stats"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:438
-msgid "Spouts (Times)"
-msgstr ""
-
-#: src/storm/templates/topology_dashboard.mako:453
+#: src/storm/templates/topology_dashboard.mako:439
 msgid "Bolts (Tasks/Executors)"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:465
+#: src/storm/templates/topology_dashboard.mako:451
 msgid "Bolts Stats"
 msgstr ""
 
-#: src/storm/templates/topology_dashboard.mako:477
+#: src/storm/templates/topology_dashboard.mako:463
 msgid "Bolts (Times)"
 msgstr ""
 
