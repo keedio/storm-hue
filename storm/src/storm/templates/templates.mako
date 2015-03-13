@@ -59,7 +59,7 @@
             <button id="btnKill" data-target="#tblKill" class="btn" data-toggle="modal"><i class="fa fa-trash-o"></i> ${ _('Kill') } </button>         
          </span>  
       </td>
-      <td align="right">      
+      <td align="right" colspan="2">      
          <span class="btn-group">            
             % if (sURL == "detail_dashboard"):
                % if Data['system'] == 0:

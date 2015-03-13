@@ -429,21 +429,7 @@ ${ storm.menubar(section = 'Topology Stats Detail')}
                       </div>                        
                    </div>
                 </div>
-             </td>
-             <!--
-             <td>
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-pie-chart fa-fw"></i> ${ _('Spouts (Times)') }
-                      </div>
-                      <div class="panel-body">
-                         <div id="pieSpouts2"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                      </div>                        
-                   </div>
-                </div>
-             </td>
-             -->
+             </td>             
           </tr>
           <tr>
              <td width="25%">
