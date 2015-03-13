@@ -21,7 +21,7 @@ Installation
 ------------
 To get the Storm-HUE app integrated and running in your HUE deployment:
 
-    $ git clone http://github.com/keedio/storm-hue.git
+    $ git clone https://github.com/keedio/storm-hue.git
     $ mv storm-hue/storm $HUE_HOME/apps
     $ cd $HUE_HOME/apps
     $ sudo ../tools/app_reg/app_reg.py --install storm --relative-paths
