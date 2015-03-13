@@ -378,7 +378,13 @@ ${ storm.menubar(section = 'Components Dashboard')}
                </td>             
             </tr>
             <tr valign="top">
-               <td width="55%">
+               <%
+                  if Data['isBolt'] == 1:
+                    iCols = 0
+                  else:
+                    iCols = 2
+               %>               
+               <td width="55%" colspan="${iCols}">
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
@@ -438,7 +444,7 @@ ${ storm.menubar(section = 'Components Dashboard')}
             </tr>
             <tr valign="top">             
                % if Data['input']:
-               <td>
+               <td colspan="${iCols}">
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
@@ -461,7 +467,7 @@ ${ storm.menubar(section = 'Components Dashboard')}
                </td>
                % endif
                % if Data['output']:
-               <td>
+               <td colspan="${iCols}">
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">

@@ -581,6 +581,7 @@ def _get_components_dashboard(request, topology_id, component_id, system_id):
             data['isBolt'] = 1
             data['jComponents'] = utils._get_dumps(data['components']["boltStats"])
           else:
+            data['isBolt'] = 0
             data['jComponents'] = utils._get_dumps(data['components']["spoutSummary"])
 
           data['system'] = 1 if (iSystem == 0) else 0
