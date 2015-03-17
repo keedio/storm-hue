@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hue VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-03-13 11:16+0100\n"
+"POT-Creation-Date: 2015-03-17 17:09+0100\n"
 "PO-Revision-Date: 2015-02-23 15:45+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -1169,7 +1169,4 @@ msgstr ""
 #: src/storm/templates/topology_dashboard.mako:463
 msgid "Bolts (Times)"
 msgstr ""
-
-#~ msgid "Spouts (Times)"
-#~ msgstr ""
 

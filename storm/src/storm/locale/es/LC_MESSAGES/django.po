@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hue VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-03-13 11:16+0100\n"
+"POT-Creation-Date: 2015-03-17 17:09+0100\n"
 "PO-Revision-Date: 2015-03-12 11:42+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: es <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgstr "Fichero a subir"
 
 #: src/storm/views.py:1057
 msgid "Error saving JAR File.\n"
-msgstr ""
+msgstr "Error al guardar el fichero JAR.\n"
 
 #: src/storm/views.py:1061
 msgid "Error in upload form."
@@ -43,7 +43,7 @@ msgstr "Error en el formulario de subida"
 
 #: src/storm/views.py:1086
 msgid "HDFS File must not be empty.\n"
-msgstr "El ficgero HDFS no puede estar vacío."
+msgstr "El fichero HDFS no puede estar vacío."
 
 #: src/storm/views.py:1099
 #, python-format
@@ -1173,7 +1173,4 @@ msgstr "Estadísticas de Bolts"
 #: src/storm/templates/topology_dashboard.mako:463
 msgid "Bolts (Times)"
 msgstr "Bolts (Tiempos)"
-
-#~ msgid "Spouts (Times)"
-#~ msgstr "Spouts (Tiempos)"
 
