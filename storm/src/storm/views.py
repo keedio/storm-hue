@@ -1047,12 +1047,15 @@ def set_topology_status(request):
                 sFileName = sFile.name                                                        
                 sClass = request.POST['class_name']  
                 sPath = settings.UPLOAD_ROOT + '/' + sFileName
-                    
-                if not os.path.isfile(sPath):
+                
+                try:
+                  if not os.path.isfile(sPath):
                     path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
                     sPath = os.path.join(settings.UPLOAD_ROOT, path)
-                    
-                sExecute = utils.COMMAND_JAR + sPath + " " + sClass + " " + sTopologyName
+                    sExecute = utils.COMMAND_JAR + sPath + " " + sClass + " " + sTopologyName
+                except:
+                  msg = _('Error saving JAR File.\n')
+                  raise PopupException(msg)                
                         
             else:                
                 msg = _("Error in upload form.")
