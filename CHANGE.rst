@@ -1,13 +1,25 @@
 Changelog
 =========
 
-1.1.2 (TBD)
+1.2.0 (07-04-2015)
 ----------------
 
 Bug Handling
 ************
 
 - Issue #14: App Icon
+- Issue #15: Fix dataTables CSS
+- Issue #16: Fix compile locales
+- Issue #17: In PieChart in bolts_dashboard.mako repeat Executors and Tasks
+- Issue #18: Not show "Font Awesome" Icons
+- Issue #19: Control error if there isn't conection with Storm UI
+- Issue #20: Error when create streams
+- Issue #21: Error when access "Failed.mako"
+- Issue #22: Unexpected token in components_dashboard
+- Issue #23: Error in Custom Rebalance 
+- Issue #25: In components_dashboard, columns order
+- Issue #26: Incorrect position Dashboard Button
+- Issue #27: Permission error
 
 1.1.1 (12-02-2015)
 ----------------
