@@ -392,8 +392,9 @@ function show_visualization(sys, topology_id, jsonVisualization) {
     should_update = true;
     var update_freq_ms = 10000;
     var update = function(should_rechoose) {
+    
       if(should_update) {
-	topology_data = jsonVisualization;		
+	    topology_data = jsonVisualization;		
 	
         update_data(topology_data, sys);
         sys.renderer.signal_update();
@@ -404,7 +405,7 @@ function show_visualization(sys, topology_id, jsonVisualization) {
            $(".stream-box").each(function () {
              rechoose(topology_data, sys, this);
            });
-	
+
 	/*
         $.ajax({
             url: "/api/v1/topology/"+topology_id+"/visualization",

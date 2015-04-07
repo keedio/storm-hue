@@ -28,43 +28,41 @@ ${commonheader("Storm Dashboard", app_name, user) | n,unicode}
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
 
-<style>
-   .dataTables_length {
-      width: 50%;
-      float: left;
-      text-align: left;
-      vertical-align:top;
-   } 
-   .dataTables_filter {
-      width: 50%;
-      float: right;
-      text-align: right;
-      vertical-align:top;
-   }   
-</style>
-
 ${ graphsHUE.import_charts() }
 ${ JavaScript.import_js() }
 
 <script type='text/javascript'>    
-   $(document).ready(function() {                      
-      //ko.applyBindings(new StormViewModel());       
+   $(document).ready(function() {                           
       var StormModel = new StormViewModel();
       ko.applyBindings(StormModel);
       
-      $('#tblTopology').dataTable( {
+      $('#tblTopology').dataTable({
                 "sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
 	    	"autoWidth": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
-	    } );
-   });
-   
-   var dataTopologyStats = [ { "label": "Active",                               
-                               "value" : "${Active}"
+	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
+	    });
+
+   var dataTopologyStats = [ { "label": "${ _('Actives') }",                               
+                               "value" : "${Data['actives']}"
                              },
-                             { "label": "Inactive",                               
-                               "value" : "${Inactive}"
+                             { "label": "${ _('Inactives') }",                               
+                               "value" : "${Data['inactives']}"
                              }
                            ];
                   
@@ -75,7 +73,6 @@ ${ JavaScript.import_js() }
                                        .valueFormat(d3.format(".0f"))
                                        .color(['#468847', '#f89406'])
                                        .showLabels(false);
-
                   d3.select("#pieTopologyStats svg")
                     .datum(dataTopologyStats)
                     .transition().duration(350)
@@ -84,14 +81,14 @@ ${ JavaScript.import_js() }
                   return chart;
    });
 
-   var dataExecWorkers = [ { "label": "Executors",
-                             "value" : "${Executors}"
+   var dataExecWorkers = [ { "label": "${ _('Executors') }",
+                             "value" : "${Data['executors']}"
                            },
-                           { "label": "Workers",
-                             "value" : "${Workers}"
+                           { "label": "${ _('Workers') }",
+                             "value" : "${Data['workers']}"
                            },
-                           { "label": "Tasks",
-                             "value" : "${Tasks}"
+                           { "label": "${ _('Tasks') }",
+                             "value" : "${Data['tasks']}"
                            }
                          ];
                            
@@ -101,7 +98,6 @@ ${ JavaScript.import_js() }
                                        .y(function(d) { return d.value })
                                        .valueFormat(d3.format(".0f"))
                                        .showLabels(false);
-
                   d3.select("#pieExecWorkers svg")
                     .datum(dataExecWorkers)
                     .transition().duration(350)
@@ -109,24 +105,37 @@ ${ JavaScript.import_js() }
  
                   return chart;
    });
-               
+   });            
 </script>
-
-<%
-  _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')]
-  ]
-%>
-
-${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Storm Dashboard')}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')]
+      ]
+  %>
   
-% if (len(Topologies) > 0):
-   <div class="container-fluid">
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
+  ${ storm.header(_breadcrumbs) }
+
+  % if not Data['topologies']['topologies']: 
+    ${Templates.divWithoutData()}
+  %else:
+    <div class="container-fluid">
      <div class="card">        
        <div class="card-body">              
           <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">             
@@ -135,7 +144,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                    <div class="col-lg-4">
                       <div class="panel panel-default">
                          <div class="panel-heading">
-                            <i class="fa fa-pie-chart fa-fw"></i> Topologies Status
+                            <i class="fa fa-database fa-fw"></i> ${ _('Topologies Stats') }
                          </div>
                          <div class="panel-body">
                             <div id="pieTopologyStats"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -147,7 +156,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                    <div class="col-lg-4">
                       <div class="panel panel-default">
                          <div class="panel-heading">
-                            <i class="fa fa-pie-chart fa-fw"></i> Topologies Stats
+                            <i class="fa fa-database fa-fw"></i> ${ _('Topologies: Executors/Tasks') }
                          </div>
                          <div class="panel-body">
                             <div id="pieExecWorkers"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -157,39 +166,35 @@ ${Templates.tblSaveTopology(frmHDFS)}
                 </td>                                
                 <td width="34%">
                    <%
-                      iMax = 0
-                      iMin = 0
-                      iTemp = 0
-                      sNameMin = ""
-                      sNameMax = ""
-                      sIdMax = ""
-                      sIdMin = ""
-                      sUptimeMin = ""
-                      sUptimeMax = ""
-                      iCount = 0     
-          
-                      while (iCount < len(Topologies)):
-                         iTemp = Topologies[iCount]['seconds']
-                         
-                         if (iTemp >= iMax):	                 	                                  
-                            iMax = iTemp                              
-                            sUptimeMax = Topologies[iCount]["uptime"]
-                            sNameMax = Topologies[iCount]["name"]
-                            sIdMax = Topologies[iCount]["id"]
-                            
-                            if (iMin == 0):
-   	                       iMin = iMax                  
-                               sUptimeMin = sUptimeMax
-                               sNameMin = sNameMax
-                               sIdMin = sIdMax                            
-                         else:                            
-                            if (iTemp < iMin):
-                               iMin = iTemp
-                               sUptimeMin = Topologies[iCount]["uptime"]
-                               sNameMin = Topologies[iCount]["name"]
-                               sIdMin = Topologies[iCount]["id"]                                           
-                            
-                         iCount+=1                                                                                
+                   iMax = 0
+                   iMin = 0
+                   iTemp = 0
+                   sNameMin = ""
+                   sNameMax = ""
+                   sIdMax = ""
+                   sIdMin = ""
+                   sUptimeMin = ""
+                   sUptimeMax = ""
+                   iCount = 0
+                   while (iCount < len(Data['topologies']['topologies'])):
+                    iTemp = Data['topologies']['topologies'][iCount]['seconds']
+                    if (iTemp >= iMax):
+                      iMax = iTemp
+                      sUptimeMax = Data['topologies']['topologies'][iCount]["uptime"]
+                      sNameMax = Data['topologies']['topologies'][iCount]["name"]
+                      sIdMax = Data['topologies']['topologies'][iCount]["id"]
+                      if (iMin == 0):
+                        iMin = iMax
+                        sUptimeMin = sUptimeMax
+                        sNameMin = sNameMax
+                        sIdMin = sIdMax
+                      else:
+                        if (iTemp < iMin):
+                          iMin = iTemp
+                          sUptimeMin = Data['topologies']['topologies'][iCount]["uptime"]
+                          sNameMin = Data['topologies']['topologies'][iCount]["name"]
+                          sIdMin = Data['topologies']['topologies'][iCount]["id"]
+                      iCount+=1                                                                                
                    %>
                                                   
                    <div class="panel panel-primary">
@@ -200,7 +205,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             </div>
                             <div class="col-xs-9 text-right">
                                <div class="huge">${sUptimeMax}</div>
-                               <div>Max Uptime</div>
+                               <div>${ _('Max Uptime') }</div>
                             </div>
                          </div>
                       </div>
@@ -224,7 +229,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             </div>
                             <div class="col-xs-9 text-right">
                                <div class="huge">${sUptimeMin}</div>
-                               <div>Min Uptime</div>
+                               <div>${ _('Min Uptime') }</div>
                             </div>
                          </div>
                       </div>
@@ -247,14 +252,14 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                <i class="fa fa-check-circle fa-3x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                               <div class="huge">0 Failed</div>
-                               <div>Topology Stats</div>
+                               <div class="huge">0 ${ _('Failed') }</div>
+                               <div>${ _('Topology Stats') }</div>
                             </div>
                          </div>
                       </div>
                       <a href="#">                               
                          <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
+                            <span class="pull-left">${ _('View Details') }</span>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                             <div class="clearfix"></div>
                          </div>
@@ -267,23 +272,23 @@ ${Templates.tblSaveTopology(frmHDFS)}
                    <div class="col-lg-4">
                       <div class="panel panel-default">
                          <div class="panel-heading">
-                            <i class="fa fa-table fa-fw"></i> Topology Summary
+                            <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
                          </div>
                          <div class="panel-body">
                             <table class="table datatables table-striped table-hover table-condensed" id="tblTopology" data-tablescroller-disable="true">
                                <thead>
                                   <tr>
-                                     <th> Name </th>
-                                     <th> Id. </th>
-                                     <th> Status </th>
-                                     <th> Uptime </th>
-                                     <th> Num.Workers </th>
-                                     <th> Num.Executors </th>
-                                     <th> Num.Tasks </th>
+                                     <th> ${ _('Name') } </th>
+                                     <th> ${ _('Id.') } </th>
+                                     <th> ${ _('Status') } </th>
+                                     <th> ${ _('Uptime') } </th>
+                                     <th> ${ _('Num.Workers') } </th>
+                                     <th> ${ _('Num.Executors') } </th>
+                                     <th> ${ _('Num.Tasks') } </th>
                                   </tr>
                                </thead>        
                                <tbody> 
-                                  % for row in Topologies:                                  
+                                  % for row in Data['topologies']['topologies']:                                  
                                      <tr>
                                         <td>
                                            <a href="${url('storm:detail_dashboard', topology_id = row['id'], system_id = 0)}"> ${row["name"]} </a>   
@@ -312,9 +317,8 @@ ${Templates.tblSaveTopology(frmHDFS)}
           </table>
        </div>
      </div>
-   </div>
-% else:
-   ${Templates.divWithoutData()}   
+   </div> 
+  % endif
 % endif
 
 ${commonfooter(messages) | n,unicode}

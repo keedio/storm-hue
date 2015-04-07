@@ -31,81 +31,123 @@ ${commonheader("Topology Detail", app_name, user) | n,unicode}
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
 
-<style>
-   .dataTables_length {
-      width: 50%;
-      float: left;
-      text-align: left;
-      vertical-align:top;
-   } 
-   .dataTables_filter {
-      width: 50%;
-      float: right;
-      text-align: right;
-      vertical-align:top;
-   }   
-</style>
-
-
 ${ JavaScript.import_js() }
 ${ graphsHUE.import_charts() } 
 
 <script type="text/javascript"> 
    $(document).ready(function() {
-      //ko.applyBindings(new StormViewModel());
       var StormModel = new StormViewModel();
       ko.applyBindings(StormModel);
 
-      var sData = "${Visualization}";   
+      var sData = "${Data['visualization']}";  
       var swData = sData.replace(/&quot;/ig,'"')   
-      var jsonVisualization = JSON.parse(swData);            
-      
+      var jsonVisualization = JSON.parse(swData);    
       //Call without button.
-      show_visualization(null, "${Topology[0]}", jsonVisualization);
+      show_visualization(null, "${Data['topology']['id']}", jsonVisualization);
       //Call with button.
-      //$("#show-hide-visualization").click(function () { show_visualization(null, "${Topology[0]}", jsonVisualization) });
+      //$("#show-hide-visualization").click(function () { show_visualization(null, "${Data['topology']['id']}", jsonVisualization) });
 
       $('#tblTopologySummary').dataTable( {    
-	    	"sPaginationType": "bootstrap",
-	    	"bLengthChange": true,
-	    	"bAutoWidth": true,
-	        "sDom": ""        
-	    } );
+        "sPaginationType": "bootstrap",
+        "bLengthChange": true,
+        "bAutoWidth": true,
+          "sDom": "",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
+      } );
       
       $('#tblTopologyStats').dataTable( {
-	    	"sPaginationType": "bootstrap",
-	    	"bLengthChange": true,
-	    	"autoWidth": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
-	    } );
-	    
+        "sPaginationType": "bootstrap",
+        "bLengthChange": true,
+        "autoWidth": true,
+          "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
+      } );
+      
       $('#tblTopologySpouts').dataTable( {
-	    	"sPaginationType": "bootstrap",
-	    	"bLengthChange": true,
-	    	"bAutoWidth": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
-	    } );
-	    
+        "sPaginationType": "bootstrap",
+        "bLengthChange": true,
+        "bAutoWidth": true,
+          "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
+      } );
+      
       $('#tblTopologyBolts').dataTable( {
-	    	"sPaginationType": "bootstrap",
-	    	"bLengthChange": true,
-	    	"bAutoWidth": true,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
-	    } );    
-   });         
+        "sPaginationType": "bootstrap",
+        "bLengthChange": true,
+        "bAutoWidth": true,
+          "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
+      } );    
+   
    
    var margin = {top: 50, right: 50, bottom: 120, left: 70};
    var dataBarStats = [];
    
-   var sData = "${jStats}";   
+   var sData = "${Data['jStats']}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonStats = JSON.parse(swData);   
-   
+
    for (var i=0; i<Object.keys(jsonStats).length; i++) {      
-      dataBarStats.push({"key": jsonStats[i].windowPretty, "values": [ {"x": "Emitted", "y": jsonStats[i].emitted},
-                                                                       {"x": "Transferred", "y": jsonStats[i].transferred},
-                                                                       {"x": "Acked", "y": jsonStats[i].acked},
-                                                                       {"x": "Failed", "y": jsonStats[i].failed}
+      dataBarStats.push({"key": jsonStats[i].windowPretty, "values": [ {"x": "${ _('Emitted') }", "y": jsonStats[i].emitted},
+                                                                       {"x": "${ _('Transferred') }", "y": jsonStats[i].transferred},
+                                                                       {"x": "${ _('Acked') }", "y": jsonStats[i].acked},
+                                                                       {"x": "${ _('Failed') }", "y": jsonStats[i].failed}
                                                                      ]
                          });
       
@@ -119,7 +161,7 @@ ${ graphsHUE.import_charts() }
                                            .groupSpacing(0.1)     //Distance between each group of bars.    
                                            .showControls(true);
                                   
-                                  graphStats.legend.margin({top: 15, right:0, left:0, bottom: 0});                                  
+                                  graphStats.legend.margin({top: 5, right:0, left:0, bottom: 20});                                  
                                   graphStats.multibar.stacked(false);                                           
                                   graphStats.yAxis
                                             .tickFormat(d3.format('d'));
@@ -128,23 +170,21 @@ ${ graphsHUE.import_charts() }
                                     .datum(dataBarStats)
                                     .call(graphStats)
                                     .attr('transform', 'translate(-10,-270)');
-
                                   nv.utils.windowResize(graphStats.update);
-
                                   return graphStats;
    });
    
    var dataBarSpouts = [];
    
-   var sData = "${jSpouts}";   
+   var sData = "${Data['jSpouts']}";   
    var swData = sData.replace(/&quot;/ig,'"')   
    var jsonSpouts = JSON.parse(swData);
    
    for (var i=0; i<Object.keys(jsonSpouts).length; i++) {      
-      dataBarSpouts.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "Emitted", "y": jsonSpouts[i].emitted},
-                                                                    {"x": "Transferred", "y": jsonSpouts[i].transferred},
-                                                                    {"x": "Acked", "y": jsonSpouts[i].acked},
-                                                                    {"x": "Failed", "y": jsonSpouts[i].failed}
+      dataBarSpouts.push({"key": jsonSpouts[i].spoutId, "values": [ {"x": "${ _('Emitted') }", "y": jsonSpouts[i].emitted},
+                                                                    {"x": "${ _('Transferred') }", "y": jsonSpouts[i].transferred},
+                                                                    {"x": "${ _('Acked') }", "y": jsonSpouts[i].acked},
+                                                                    {"x": "${ _('Failed') }", "y": jsonSpouts[i].failed}
                                                                   ]
                          });
       
@@ -158,7 +198,7 @@ ${ graphsHUE.import_charts() }
                                            .groupSpacing(0.1)    //Distance between each group of bars.                                
                                            .showControls(true);
                                   
-                                  graphSpouts.legend.margin({top: 15, right:0, left:20, bottom: 0});
+                                  graphSpouts.legend.margin({top: 5, right:0, left:0, bottom: 20});
                                   graphSpouts.multibar.stacked(false);             
                                   graphSpouts.yAxis
                                             .tickFormat(d3.format('d'));
@@ -166,23 +206,21 @@ ${ graphsHUE.import_charts() }
                                   d3.select('#barSpouts svg')
                                     .datum(dataBarSpouts)
                                     .call(graphSpouts);
-
                                   nv.utils.windowResize(graphSpouts.update);
-
                                   return graphSpouts;
    });
    
    var dataBarBolts = [];        
-   var sData = "${jBolts}";      
+   var sData = "${Data['jBolts']}";      
    var swData = sData.replace(/&quot;/ig,'"');            
    var jsonBolts = JSON.parse(swData);
    
    for (var i=0; i<Object.keys(jsonBolts).length; i++) {         
-      dataBarBolts.push({"key": jsonBolts[i].boltId, "values": [ {"x": "Emitted", "y": jsonBolts[i].emitted},
-                                                                   {"x": "Transferred", "y": jsonBolts[i].transferred},
-                                                                   {"x": "Executed", "y": jsonBolts[i].executed},
-                                                                   {"x": "Acked", "y": jsonBolts[i].acked},
-                                                                   {"x": "Failed", "y": jsonBolts[i].failed}
+      dataBarBolts.push({"key": jsonBolts[i].boltId, "values": [ {"x": "${ _('Emitted') }", "y": jsonBolts[i].emitted},
+                                                                   {"x": "${ _('Transferred') }", "y": jsonBolts[i].transferred},
+                                                                   {"x": "${ _('Executed') }", "y": jsonBolts[i].executed},
+                                                                   {"x": "${ _('Acked') }", "y": jsonBolts[i].acked},
+                                                                   {"x": "${ _('Failed') }", "y": jsonBolts[i].failed}
                                                                  ]
                           });
       
@@ -196,7 +234,7 @@ ${ graphsHUE.import_charts() }
                                            .groupSpacing(0.1)    //Distance between each group of bars.                                                 
                                            .showControls(true);
                                   
-                                  graphBolts.legend.margin({top: 15, right:0, left:20, bottom: 0});
+                                  graphBolts.legend.margin({top: 5, right:0, left:24, bottom: 20});
                                   graphBolts.multibar.stacked(false);             
                                   graphBolts.yAxis
                                             .tickFormat(d3.format('d'));
@@ -204,41 +242,54 @@ ${ graphsHUE.import_charts() }
                                    d3.select('#barBolts svg')
                                     .datum(dataBarBolts)
                                     .call(graphBolts);
-
                                   nv.utils.windowResize(graphBolts.update);
-
                                   return graphBolts;
-   });               
+   });
+   });             
 </script>
-
-<%
-  _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)]
-  ]
-%>
-
-${ storm.header(_breadcrumbs) }
 
 ${ storm.menubar(section = 'Detail Dashboard')}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+  <%
+    _breadcrumbs = [
+      [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+      [_('Topology ') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)]
+    ]
+  %>
 
-<div id="divPrincipal" class="container-fluid">
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
+  ${ storm.header(_breadcrumbs) }
+
+  <div id="divPrincipal" class="container-fluid">
   <div class="card">        
     <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                              
-          ${Templates.ControlPanelTopology("detail_dashboard")}          
+            ${Templates.ControlPanelTopology(Data['topology'], "detail_dashboard")} 
           <tr>
              <td colspan="2">
-                ${Templates.tblTopologySummary()}
-                ${Templates.tblRebalanceTopology(Topology[1])}
+                ${Templates.tblTopologySummary(Data['topology'])}
+                ${Templates.tblRebalanceTopology(Data['topology'])}
+                ${Templates.tblAutomaticRebalance(Data['topology'])}
+                ${Templates.tblKill(Data['topology'])}
+                ${Templates.tblActivate(Data['topology'])}
+                ${Templates.tblDeactivate(Data['topology'])}
              </td>
           </tr>         
           <tr>
              <td colspan="2">
-             <!-- ***************************************************************************************************************************** -->             
              <div id="divTables" style="display: none">                 
                 <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                                                        
                    <tr>
@@ -246,26 +297,26 @@ ${Templates.tblSaveTopology(frmHDFS)}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> Topology Stats
+                                  <i class="fa fa-table fa-fw"></i> ${ _('Topology Stats') }
                                </div>
                                <div class="panel-body">
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
                                      <thead>
                                         <tr>
-                                           <th> Window </th>
-                                           <th> Emitted </th>
-                                           <th> Transferred </th>
-                                           <th> Complete Latency (ms) </th>
-                                           <th> Acked </th>
-                                           <th> Failed </th>                         
+                                           <th> ${ _('Window') } </th>
+                                           <th> ${ _('Emitted') } </th>
+                                           <th> ${ _('Transferred') } </th>
+                                           <th> ${ _('Complete Latency (ms)') } </th>
+                                           <th> ${ _('Acked') } </th>
+                                           <th> ${ _('Failed') } </th>                         
                                         </tr>
                                      </thead>
                                      <tbody>
-                                        % for row in Stats:
+                                        % for row in Data['stats']:
                                            <tr>
                                               <td>
-                                                 <a class="fa fa-tachometer" title="Topology Stats Dashboard" href="${url('storm:topology_dashboard', topology_id = Topology[0], window_id = row['window'])}"></a>
-                                                 <a title="Topology Stats Detail" href="${url('storm:topology', topology_id = Topology[0], window_id = row['window'])}"> ${row["windowPretty"]} </a>
+                                                 <a class="fa fa-tachometer" title="${ _('Topology Stats Dashboard') }" href="${url('storm:topology_dashboard', topology_id = Data['topology']['id'], window_id = row['window'])}"></a>
+                                                 <a title="${ _('Topology Stats Detail') }" href="${url('storm:topology', topology_id = Data['topology']['id'], window_id = row['window'])}"> ${row["windowPretty"]} </a>
                                               </td>
                                               <td>${row["emitted"]}</td>                                                        
                                               <td>${row["transferred"]}</td>
@@ -294,29 +345,29 @@ ${Templates.tblSaveTopology(frmHDFS)}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> Spouts (All Time)
+                                  <i class="fa fa-table fa-fw"></i> ${ _('Spouts (All Time)') }
                                </div>
                                <div class="panel-body">                         
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
                                      <thead>
                                         <tr>
-                                           <th> Id. </th>
-                                           <th> Executors </th>
-                                           <th> Tasks </th>
-                                           <th> Emitted </th>
-                                           <th> Transferred </th>
-                                           <th> Complete Latency (ms) </th>                         
-                                           <th> Acked </th>
-                                           <th> Failed </th>
-                                           <th> Last Error </th>
+                                           <th> ${ _('Id.') } </th>
+                                           <th> ${ _('Executors') } </th>
+                                           <th> ${ _('Tasks') } </th>
+                                           <th> ${ _('Emitted') } </th>
+                                           <th> ${ _('Transferred') } </th>
+                                           <th> ${ _('Complete Latency (ms)') } </th>                         
+                                           <th> ${ _('Acked') } </th>
+                                           <th> ${ _('Failed') } </th>
+                                           <th> ${ _('Last Error') } </th>
                                         </tr>
                                      </thead>
                                      <tbody>
-                                        % for row in Spouts:
+                                        % for row in Data['spouts']:
                                            <tr>                                     
                                               <td>
-                                                 <a class="fa fa-tachometer" title="Spout Dashboard" href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = row["spoutId"], system_id = 0)}"></a>                                                 
-                                                 <a title="Spout Detail" href="${url('storm:components', topology_id = Topology[0], component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
+                                                 <a class="fa fa-tachometer" title="${ _('Spout Dashboard') }" href="${url('storm:components_dashboard', topology_id = Data['topology']['id'], component_id = row["spoutId"], system_id = 0)}"></a>                                                 
+                                                 <a title="${ _('Spout Detail') }" href="${url('storm:components', topology_id = Data['topology']['id'], component_id = row["spoutId"], system_id = 0)}"> ${row["spoutId"]} </a>
                                               </td>
                                               <td>${row["executors"]}</td>                                                        
                                               <td>${row["tasks"]}</td>
@@ -338,7 +389,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                                  <td>
                                                     <span class="label label-important">
                                                        <a href="#" data-target="#divERROR" data-toggle="modal">                                                          
-                                                          ERROR
+                                                          ${ _('ERROR') }
                                                        </a>
                                                     </span>                                                                                                        
                                                     ${Templates.divERROR(row["lastError"])}
@@ -358,32 +409,32 @@ ${Templates.tblSaveTopology(frmHDFS)}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> Bolts (All Time)
+                                  <i class="fa fa-table fa-fw"></i> ${ _('Bolts (All Time)') }
                                </div>
                                <div class="panel-body">                  
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyBolts" data-tablescroller-disable="true">
                                      <thead>
                                         <tr>
-                                           <th> Id. </th>
-                                           <th> Executors </th>
-                                           <th> Tasks </th>
-                                           <th> Emitted </th>
-                                           <th> Transferred </th>
-                                           <th> Capacity (last 10m) </th>                         
-                                           <th> Execute latency (ms) </th>
-                                           <th> Executed </th>
-                                           <th> Process latency (ms) </th>
-                                           <th> Acked </th>
-                                           <th> Failed </th>
-                                           <th> Last error </th>
+                                           <th> ${ _('Id.') } </th>
+                                           <th> ${ _('Executors') } </th>
+                                           <th> ${ _('Tasks') } </th>
+                                           <th> ${ _('Emitted') } </th>
+                                           <th> ${ _('Transferred') } </th>
+                                           <th> ${ _('Capacity (last 10m)') } </th>                         
+                                           <th> ${ _('Execute latency (ms)') } </th>
+                                           <th> ${ _('Executed') } </th>
+                                           <th> ${ _('Process latency (ms)') } </th>
+                                           <th> ${ _('Acked') } </th>
+                                           <th> ${ _('Failed') } </th>
+                                           <th> ${ _('Last error') } </th>
                                         </tr>
                                      </thead>
                                      <tbody>
-                                        % for row in Bolts:
+                                        % for row in Data['bolts']:
                                            <tr>                                     
                                               <td>
-                                                 <a class="fa fa-tachometer" title="Bolt Dashboard" href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = row["boltId"], system_id = 0)}"></a>
-                                                 <a title="Bolt Detail" href="${url('storm:components', topology_id = Topology[0], component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
+                                                 <a class="fa fa-tachometer" title="${ _('Bolt Dashboard') }" href="${url('storm:components_dashboard', topology_id = Data['topology']['id'], component_id = row["boltId"], system_id = 0)}"></a>
+                                                 <a title="${ _('Bolt Detail') }" href="${url('storm:components', topology_id = Data['topology']['id'], component_id = row["boltId"], system_id = 0)}"> ${row["boltId"]} </a>                                                 
                                               </td>
                                               <td>${row["executors"]}</td>                                                        
                                               <td>${row["tasks"]}</td>
@@ -409,7 +460,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                                  <td>
                                                     <span class="label label-important">
                                                        <a href="#" data-target="#divERROR" data-toggle="modal">                                                          
-                                                          ERROR
+                                                          ${ _('ERROR') }
                                                        </a>
                                                     </span>                                                                                                        
                                                     ${Templates.divERROR(row["lastError"])}
@@ -437,7 +488,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                    <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
                       <tr valign="top">
                          <td width="33%">
-                            % if Failed[0] <> 0:
+                            % if Data['failed'][0] <> 0:
                             <div class="panel panel-red">
                             % else:
                             <div class="panel panel-green">
@@ -445,21 +496,21 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                <div class="panel-heading">
                                   <div class="row">
                                      <div class="col-xs-3">
-                                        % if Failed[0] <> 0:
+                                        % if Data['failed'][0] <> 0:
                                         <i class="fa fa-warning fa-2x"></i>
                                         % else:
                                         <i class="fa fa-check-circle fa-2x"></i>
                                         % endif
                                      </div>
                                      <div class="col-xs-9 text-right">
-                                        <div class="huge">${Failed[0]} Failed</div>
-                                        <div>Topology Stats</div>
+                                        <div class="huge">${Data['failed'][0]} ${ _('Failed') }</div>
+                                        <div>${ _('Topology Stats') }</div>
                                      </div>
                                   </div>
                                </div>
-                               <a href="/storm/failed/${Topology[0]}/1/0">                               
+                               <a href="/storm/failed/${Data['topology']['id']}/1/0">                               
                                   <div class="panel-footer">
-                                     <span class="pull-left">View Details</span>
+                                     <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                      <div class="clearfix"></div>
                                   </div>
@@ -467,7 +518,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             </div>
                          </td>
                          <td width="34%">
-                            % if Failed[1] <> 0:
+                            % if Data['failed'][1] <> 0:
                             <div class="panel panel-red">
                             % else:
                             <div class="panel panel-green">
@@ -475,21 +526,21 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                <div class="panel-heading">
                                   <div class="row">
                                      <div class="col-xs-3">
-                                        % if Failed[1] <> 0:
+                                        % if Data['failed'][1] <> 0:
                                         <i class="fa fa-warning fa-2x"></i>
                                         % else:
                                         <i class="fa fa-check-circle fa-2x"></i>
                                         % endif
                                      </div>
                                      <div class="col-xs-9 text-right">
-                                        <div class="huge">${Failed[1]} Failed</div>
-                                        <div>Spouts</div>
+                                        <div class="huge">${Data['failed'][1]} ${ _('Failed') }</div>
+                                        <div>${ _('Spouts') }</div>
                                      </div>
                                   </div>
                                </div>
-                               <a href="/storm/failed/${Topology[0]}/2/0">                               
+                               <a href="/storm/failed/${Data['topology']['id']}/2/0">                               
                                   <div class="panel-footer">
-                                     <span class="pull-left">View Details</span>
+                                     <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                      <div class="clearfix"></div>
                                   </div>
@@ -497,7 +548,7 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             </div>
                          </td>
                          <td width="33%">
-                            % if Failed[1] <> 0:
+                            % if Data['failed'][2] <> 0:
                             <div class="panel panel-red">
                             % else:
                             <div class="panel panel-green">
@@ -505,21 +556,21 @@ ${Templates.tblSaveTopology(frmHDFS)}
                                <div class="panel-heading">
                                   <div class="row">
                                      <div class="col-xs-3">
-                                        % if Failed[2] <> 0:
+                                        % if Data['failed'][2] <> 0:
                                         <i class="fa fa-warning fa-2x"></i>
                                         % else:
                                         <i class="fa fa-check-circle fa-2x"></i>
                                         % endif
                                      </div>
                                      <div class="col-xs-9 text-right">
-                                        <div class="huge">${Failed[2]} Failed</div>
-                                        <div>Bolts</div>
+                                        <div class="huge">${Data['failed'][2]} ${ _('Failed') }</div>
+                                        <div>${ _('Bolts') }</div>
                                      </div>
                                   </div>
                                </div>
-                               <a href="/storm/failed/${Topology[0]}/3/0">                               
+                               <a href="/storm/failed/${Data['topology']['id']}/3/0">                               
                                   <div class="panel-footer">
-                                     <span class="pull-left">View Details</span>
+                                     <span class="pull-left">${ _('View Details') }</span>
                                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                      <div class="clearfix"></div>
                                   </div>
@@ -531,10 +582,10 @@ ${Templates.tblSaveTopology(frmHDFS)}
                          <td width="33%">
                             <div class="col-lg-4">
                                <div class="panel panel-default">
-                                  <div class="panel-heading">                                     
-                                     <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)}" title="Topology Stats Detail"> 
-                                        <i class="fa fa-table fa-fw"></i>
-                                        Stats 
+                                  <div class="panel-heading">
+                                     <a href="${url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)}" title="${ _('Topology Stats Detail') }">
+                                        <i class="fa fa-trello fa-fw"></i>
+                                        ${ _('Stats') }
                                      </a>
                                   </div>
                                   <div class="panel-body">
@@ -547,9 +598,9 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <a href="${url('storm:spouts_dashboard', topology_id = Topology[0])}" title="Spouts Detail"> 
-                                        <i class="fa fa-table fa-fw"></i>
-                                        Spouts
+                                     <a href="${url('storm:spouts_dashboard', topology_id = Data['topology']['id'])}" title="${ _('Spouts Detail') }"> 
+                                        <i class="fa fa-trello fa-fw"></i>
+                                        ${ _('Spouts') }
                                      </a>                                     
                                   </div>
                                   <div class="panel-body">
@@ -562,9 +613,9 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <a href="${url('storm:bolts_dashboard', topology_id = Topology[0])}" title="Bolts Detail"> 
-                                        <i class="fa fa-table fa-fw"></i>
-                                        Bolts
+                                     <a href="${url('storm:bolts_dashboard', topology_id = Data['topology']['id'])}" title="${ _('Bolts Detail') }"> 
+                                        <i class="fa fa-trello fa-fw"></i>
+                                        ${ _('Bolts') }
                                      </a>                                     
                                   </div>
                                   <div class="panel-body">
@@ -579,34 +630,28 @@ ${Templates.tblSaveTopology(frmHDFS)}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <i class="fa fa-table fa-fw"></i> Topology Visualization
+                                     <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }                                     
                                   </div>
                                   <div class="panel-body">
                                      <!-- <input type="button" id="show-hide-visualization" value="Show Visualization"/> -->
                                      <div id="topology-visualization"> </div>
-                                        <div id="visualization-container">
+                                        <div id="visualization-container">                                                                                    
                                            <p>
-                                              <table class="zebra-striped">
+                                              <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
                                                  <thead>
                                                     <tr>
                                                         <th align="left" class="header" colspan=4>
-                                                           Streams
+                                                           ${ _('Streams') }
                                                         </th>
                                                     </tr>
                                                  </thead>          
-                                                 <tr>                                        
-                                                    <td>
-                                                       <input type="checkbox" id="default1544803905" class="stream-box" checked /> default              
-                                                    </td>
-                                                    <td>
-                                                       <input type="checkbox" id="s__ack_ack1278315507" class="stream-box"/> __ack_ack             
-                                                    </td>
-                                                    <td>
-                                                       <input type="checkbox" id="s__ack_init973324006" class="stream-box"/> __ack_init    
-                                                    </td>
-                                                    <td>
-                                                       <input type="checkbox" id="s__ack_fail973222132" class="stream-box"/> __ack_fail   
-                                                    </td>
+                                                 <tr>                                                    
+                                                    % for element in Data['aCheck']:
+                                                      <td>
+                                                        <input type="checkbox" id="${element['id']}" class="stream-box" ${element['check']}/> 
+                                                        ${element['name']}
+                                                      </td>                                          
+                                                    % endfor
                                                  </tr>          
                                               </table>
                                            </p>
@@ -627,5 +672,5 @@ ${Templates.tblSaveTopology(frmHDFS)}
     </div>
   </div>
 </div>
-
+% endif
 ${commonfooter(messages) | n,unicode}

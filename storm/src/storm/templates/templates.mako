@@ -24,8 +24,10 @@
 <%def name="divWithoutData()">
    <div class="container-fluid">
       <div class="card">        
-         <div class="card-body">
-            No active topologies available
+         <div class="card-body">            
+            <div class="alert alert-warning">            
+               <h3>${ _('No active topologies available') }</h3>
+            </div>
          </div>
       </div>
    </div> 
@@ -33,60 +35,60 @@
 <!-- ************************************************************************************************************************************* -->
 
 <!-- Control Panel Topology. Control buttons of a topology. Direct access to dashboards. -->
-<%def name="ControlPanelTopology(sURL)">
+<%def name="ControlPanelTopology(paTopology, sURL)">
    <tr>                          
       <td align="left">                               
          <span class="btn-group">            
-            % if Topology[2] == "INACTIVE":
-               <button id="btnActivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'activate', false, 0)" ><i class="fa fa-play"></i> Activate </button>                                            
+            % if paTopology['status'] == "INACTIVE":
+               <button id="btnActivate" data-target="#tblActivate" class="btn" data-toggle="modal"><i class="fa fa-play"></i> ${ _('Activate') } </button>
             % else:
-               <button id="btnDeactivate" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'deactivate', false, 0)"><i class="fa fa-stop"></i> Deactivate</button>
+               <button id="btnDeactivate" data-target="#tblDeactivate" class="btn" data-toggle="modal"><i class="fa fa-stop"></i> ${ _('Deactivate') } </button>
             % endif            
             <div class="btn-toolbar" style="display: inline; vertical-align: middle">
                <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
-                  <a href="#" class="btn upload-link dropdown-toggle" title="Rebalance" data-toggle="dropdown">
-                     <i class="fa fa-refresh"></i> Rebalance
+                  <a href="#" class="btn upload-link dropdown-toggle" title="${ _('Rebalance') }" data-toggle="dropdown">
+                     <i class="fa fa-refresh"></i> ${ _('Rebalance') }
                      <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                     <li><a href="#" onclick="changeTopologyStatus('${Topology[0]}', 'rebalance', true, 5)" class="btn" title="Automatic"><i class="fa fa-refresh"></i> Automatic</a></li>                     
-                     <li><a href="#" data-target="#tblRebalanceTopology" class="btn" data-toggle="modal" ><i class="fa fa-cog"></i> Custom</a></li>                     
+                     <li><a href="#" data-target="#tblAutomaticRebalance" class="btn" data-toggle="modal"><i class="fa fa-refresh"></i> ${ _('Automatic') } </a></li>                                          
+                     <li><a href="#" data-target="#tblRebalanceTopology" class="btn" data-toggle="modal"><i class="fa fa-cog"></i> ${ _('Custom') } </a></li>                     
                   </ul>
                </div>
             </div> 
-            <button id="btnKill" class="btn" onclick="changeTopologyStatus('${Topology[0]}', 'kill', true, 5)"><i class="fa fa-trash-o"></i> Kill </button>            
+            <button id="btnKill" data-target="#tblKill" class="btn" data-toggle="modal"><i class="fa fa-trash-o"></i> ${ _('Kill') } </button>         
          </span>  
       </td>
-      <td align="right">      
+      <td align="right" colspan="2">      
          <span class="btn-group">            
             % if (sURL == "detail_dashboard"):
-               % if ShowSystem == 0:
-                  <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="Hide System Stats"><i class="fa fa-check-square-o"></i> Hide System Stats </a>                   
+               % if Data['system'] == 0:
+                  <a href="${url('storm:detail_dashboard', topology_id = paTopology['id'], system_id = Data['system'])}" class="btn" title="${ _('Hide System Stats') }"><i class="fa fa-check-square-o"></i> ${ _('Hide System Stats') } </a>                   
                % else:
-                  <a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = ShowSystem)}" class="btn" title="Show System Stats"><i class="fa fa-square-o"></i> Show System Stats </a>                   
+                  <a href="${url('storm:detail_dashboard', topology_id = paTopology['id'], system_id = Data['system'])}" class="btn" title="${ _('Show System Stats') }"><i class="fa fa-square-o"></i> ${ _('Show System Stats') } </a>                   
                % endif
             
-               <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> Tables </button>
+               <button id="btnTables" class="btn" onclick="changeDisplay('divTables', 'divDashboard')"><i class="fa fa-table"></i> ${ _('Tables') } </button>
             % endif                                                                      
             
             % if (sURL == "components"):
-               % if ShowSystem == 0:
-                  <a href="${url('storm:components', topology_id = Topology[0], component_id = idComponent, system_id = ShowSystem)}" class="btn" title="Hide System Stats"><i class="fa fa-check-square-o"></i> Hide System Stats </a>                   
+               % if Data['system'] == 0:
+                  <a href="${url('storm:components', topology_id = paTopology['id'], component_id = idComponent, system_id = Data['system'])}" class="btn" title="${ _('Hide System Stats') }"><i class="fa fa-check-square-o"></i> ${ _('Hide System Stats') } </a>                   
                % else:
-                  <a href="${url('storm:components_dashboard', topology_id = Topology[0], component_id = idComponent, system_id = ShowSystem)}" class="btn" title="Show System Stats"><i class="fa fa-square-o"></i> Show System Stats </a>                   
+                  <a href="${url('storm:components_dashboard', topology_id = paTopology['id'], component_id = idComponent, system_id = Data['system'])}" class="btn" title="${ _('Show System Stats') }"><i class="fa fa-square-o"></i> ${ _('Show System Stats') } </a>                   
                % endif
             % endif
             
             <div class="btn-toolbar" style="display: inline; vertical-align: middle">
                <div id="upload-dropdown" class="btn-group" style="vertical-align: middle">
-                  <a href="#" class="btn upload-link dropdown-toggle" title="Dashboard" data-toggle="dropdown">
-                     <i class="fa fa-tachometer"></i> Dashboard
+                  <a href="#" class="btn upload-link dropdown-toggle" title="${ _('Dashboard') }" data-toggle="dropdown">
+                     <i class="fa fa-tachometer"></i> ${ _('Dashboard') }
                      <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                     <li><a href="${url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)}" class="btn" title="Detail"><i class="fa fa-tachometer"></i>  Detail </a></li>
-                     <li><a href="${url('storm:spouts_dashboard', topology_id = Topology[0])}" class="btn" title="Spouts"><i class="fa fa-tachometer"></i> Spouts </a></li>
-                     <li><a href="${url('storm:bolts_dashboard', topology_id = Topology[0])}" class="btn" title="Bolts"><i class="fa fa-tachometer"></i> Bolts </a></li>
+                     <li><a href="${url('storm:detail_dashboard', topology_id = paTopology['id'], system_id = 0)}" class="btn" title="${ _('Detail') }"><i class="fa fa-tachometer"></i> ${ _('Detail') } </a></li>
+                     <li><a href="${url('storm:spouts_dashboard', topology_id = paTopology['id'])}" class="btn" title="${ _('Spouts') }"><i class="fa fa-tachometer"></i> ${ _('Spouts') } </a></li>
+                     <li><a href="${url('storm:bolts_dashboard', topology_id = paTopology['id'])}" class="btn" title="${ _('Bolts') }"><i class="fa fa-tachometer"></i> ${ _('Bolts') } </a></li>
                   </ul>
                </div>
             </div>          
@@ -101,21 +103,21 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Supervisor Summary
+            <i class="fa fa-table fa-fw"></i> ${ _('Supervisor Summary') }
          </div>
          <div class="panel-body">                      
             <table class="table datatables table-striped table-hover table-condensed" id="tblSupervisor" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th>Id.</th> 
-                     <th>Host</th>
-                     <th>Uptime</th>
-                     <th>Slots</th>
-                     <th>Used slots</th>
+                     <th>${ _('Id.') }</th> 
+                     <th>${ _('Host') }</th>
+                     <th>${ _('Uptime') }</th>
+                     <th>${ _('Slots') }</th>
+                     <th>${ _('Used slots') }</th>
                   </tr>
                </thead>
                <tbody>
-                  % for row in Supervisor:
+                  % for row in Data["supervisor"]["supervisors"]:
                      <tr>
                         <td>${row["id"]}</td>
                         <td>${row["host"]}</td>
@@ -137,32 +139,32 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Cluster Summary
+            <i class="fa fa-table fa-fw"></i> ${ _('Cluster Summary') }
          </div>
          <div class="panel-body">
             <table class="table datatables table-striped table-hover table-condensed" id="tblCluster" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th>Version</th> 
-                     <th>Nimbus uptime</th>
-                     <th>supervisors</th>
-                     <th>Used slots</th>
-                     <th>Free slots</th> 
-                     <th>Total slots</th>
-                     <th>Executors</th>
-                     <th>Tasks</th>
+                     <th>${ _('Version') }</th> 
+                     <th>${ _('Nimbus uptime') }</th>
+                     <th>${ _('supervisors') }</th>
+                     <th>${ _('Used slots') }</th>
+                     <th>${ _('Free slots') }</th> 
+                     <th>${ _('Total slots') }</th>
+                     <th>${ _('Executors') }</th>
+                     <th>${ _('Tasks') }</th>
                   </tr>
                </thead>
                <tbody>                      
                   <tr>
-                     <td>${Cluster["stormVersion"]}</td>
-                     <td>${Cluster["nimbusUptime"]}</td>
-                     <td>${Cluster["supervisors"]}</td>
-                     <td>${Cluster["slotsUsed"]}</td>
-                     <td>${Cluster["slotsFree"]}</td>
-                     <td>${Cluster["slotsTotal"]}</td>
-                     <td>${Cluster["executorsTotal"]}</td>
-                     <td>${Cluster["tasksTotal"]}</td>
+                     <td>${Data["cluster"]["stormVersion"]}</td>
+                     <td>${Data["cluster"]["nimbusUptime"]}</td>
+                     <td>${Data["cluster"]["supervisors"]}</td>
+                     <td>${Data["cluster"]["slotsUsed"]}</td>
+                     <td>${Data["cluster"]["slotsFree"]}</td>
+                     <td>${Data["cluster"]["slotsTotal"]}</td>
+                     <td>${Data["cluster"]["executorsTotal"]}</td>
+                     <td>${Data["cluster"]["tasksTotal"]}</td>
                   </tr>                       
                </tbody>
             </table>                                
@@ -177,21 +179,21 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Nimbus Configuration
+            <i class="fa fa-table fa-fw"></i> ${ _('Nimbus Configuration') }
          </div>
          <div class="panel-body">                 
             <table class="table datatables table-striped table-hover table-condensed" id="tblConfiguration" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th> Key </th>
-                     <th> Value </th>                         
+                     <th> ${ _('Key') } </th>
+                     <th> ${ _('Value') } </th>                         
                   </tr>
                </thead>
                <tbody>
-                  % for row in Conf:
+                  % for row in Data['configuration']:
                      <tr>
-                        <td>${row["key"]}</td>
-                        <td>${row["value"]}</td>                                                                                    
+                        <td>${row}</td>
+                        <td>${Data['configuration'][row]}</td>
                      </tr>   
                   % endfor
                </tbody>
@@ -203,40 +205,40 @@
 <!-- ************************************************************************************************************************************* -->                
 
 <!-- Topology Summary. -->
-<%def name="tblTopologySummary()">
+<%def name="tblTopologySummary(paTopology)">
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> Topology Summary
+            <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
          </div>
          <div class="panel-body">
             <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySummary" data-tablescroller-disable="true">
                <thead>
                   <tr>
-                     <th> Name </th>
-                     <th> Id. </th>
-                     <th> Status </th>
-                     <th> Uptime </th>
-                     <th> Num.Workers </th>
-                     <th> Num.Executors </th>
-                     <th> Num.Tasks </th>
+                     <th> ${ _('Name') } </th>
+                     <th> ${ _('Id.') } </th>
+                     <th> ${ _('Status') } </th>
+                     <th> ${ _('Uptime') } </th>
+                     <th> ${ _('Num.Workers') } </th>
+                     <th> ${ _('Num.Executors') } </th>
+                     <th> ${ _('Num.Tasks') } </th>
                   </tr>
                </thead>
                <tbody>
                   <tr>
-                     <td>${Topology[1]}</td>
-                     <td>${Topology[0]}</td>                                                        
+                     <td>${paTopology['name']}</td>
+                     <td>${paTopology['id']}</td>                                                        
                      <td>
-                        % if Topology[2] == "ACTIVE":
-                           <span class="label label-success"> ${Topology[2]} </span>
+                        % if paTopology['status'] == "ACTIVE":
+                           <span class="label label-success"> ${paTopology['status']} </span>
                         % else:
-                           <span class="label label-warning"> ${Topology[2]} </span>
+                           <span class="label label-warning"> ${paTopology['status']} </span>
                         % endif
                      </td>
-                     <td>${Topology[3]}</td>
-                     <td>${Topology[4]}</td>
-                     <td>${Topology[5]}</td>
-                     <td>${Topology[6]}</td>
+                     <td>${paTopology['uptime']}</td>
+                     <td>${paTopology['workers']}</td>
+                     <td>${paTopology['executors']}</td>
+                     <td>${paTopology['tasks']}</td>
                   </tr>                       
                </tbody>
             </table>
@@ -247,28 +249,28 @@
 <!-- ************************************************************************************************************************************* -->                                
 
 <!-- New Window Modal. Rebalance Topology -->
-<%def name="tblRebalanceTopology(psName)">
+<%def name="tblRebalanceTopology(paTopology)">
    <div class="modal hide fade" id="tblRebalanceTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
          <form id="frmRebalanceTopology" method="post">
             <div class="modal-content">
                <div class="modal-header">
-                  <h3>Custom Rebalance: <b>${psName}</b></h3>
+                  <h3> ${ _('Custom Rebalance:') } <b>${paTopology['name']}</b></h3>
                </div>
                <div class="modal-body controls">               
                   <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="6">
                      <tr>
                         <td width="25%">
-                           <label>Set Workers</label><input type="number" id="iNumWorkers" min="1" value=1 style="width: 75%"/>                     
+                           <label>${ _('Set Workers') }</label><input type="number" id="iNumWorkers" min="1" value=1 style="width: 75%"/>                     
                         </td>
                         <td width="25%">
-                           <label>Set Wait Secs.</label><input type="number" id="iWaitSecs" min="30" value=30 style="width: 75%"/>                     
+                           <label>${ _('Set Wait Secs.') }</label><input type="number" id="iWaitSecs" min="30" value=30 style="width: 75%"/>                     
                         </td>
                         <td width="25%">
-                           <label>Topology Workers</label><input type="number" name="numTopologyWorkers" min="0" value="${Topology[4]}" disabled style="width: 75%"/>
+                           <label>${ _('Topology Workers') }</label><input type="number" name="numTopologyWorkers" min="0" value="${paTopology['workers']}" disabled style="width: 75%"/>
                         </td>
                         <td width="25%">
-                           <label>Topology Executors</label><input type="number" name="numTopologyExecutors" min="0" value="${Topology[5]}" disabled style="width: 75%"/>
+                           <label>${ _('Topology Executors') }</label><input type="number" name="numTopologyExecutors" min="0" value="${paTopology['executors']}" disabled style="width: 75%"/>
                         </td>
                      </tr>
                      <tr valign="top">
@@ -279,12 +281,12 @@
                                     <div class="col-lg-4">
                                        <div class="panel panel-default">
                                           <div class="panel-heading">
-                                             <i class="fa fa-table fa-fw"></i> Spouts
+                                             <i class="fa fa-table fa-fw"></i> ${ _('Spouts') }
                                           </div>
                                           <div class="panel-body">
-                                             % for row in Spouts:
+                                             % for row in Data['spouts']:
                                                 <input type="checkbox" name="cp_${row['spoutId']}" id="cp_${row['spoutId']}"/>${row["spoutId"]} 
-                                                <input type="number" id="numExecutors_${row['spoutId']}" min="0" placeholder="Set Num. Executors" style="width: 96%"/>                                       
+                                                <input type="number" id="numExecutors_${row['spoutId']}" min="0" placeholder="${ _('Set Num. Executors') }" style="width: 96%"/>                                       
                                              % endfor
                                           </div>
                                        </div>
@@ -294,12 +296,12 @@
                                     <div class="col-lg-4">
                                        <div class="panel panel-default">
                                           <div class="panel-heading">
-                                             <i class="fa fa-table fa-fw"></i> Bolts
+                                             <i class="fa fa-table fa-fw"></i> ${ _('Bolts') }
                                           </div>
                                           <div class="panel-body">
-                                             % for row in Bolts:
+                                             % for row in Data['bolts']:
                                                 <input type="checkbox" name="cp_${row['boltId']}" id="cp_${row['boltId']}"/>${row["boltId"]} 
-                                                <input type="number" id="numExecutors_${row['boltId']}" min="0" placeholder="Set Num. Executors" style="width: 96%"/>                                       
+                                                <input type="number" id="numExecutors_${row['boltId']}" min="0" placeholder="${ _('Set Num. Executors') }" style="width: 96%"/>                                       
                                              % endfor
                                           </div>
                                        </div>
@@ -312,13 +314,14 @@
                   </table>               
                </div>
                <div class="modal-footer">      
-                  <div id="divError" class="hide" style="position: absolute; left: 10px;">
-                     <span class="label label-important"> ERROR rebalancing this topology </span>
+                  <div id="divErrorRebalance" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR rebalancing this topology') } </span>
                   </div>
                   <input type="hidden" id="sAction" value="rebalance">
-                  <input type="hidden" id="sNameTopology" value="${psName}">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                                    
-                  <button type="button" class="btn btn-primary" data-bind="click: set_topology_status">Submit</button>
+                  <input type="hidden" id="sNameTopology" value="${paTopology['name']}">
+                  <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>
+                  <button type="button" id="btnSubmit" class="btn btn-primary" data-bind="click: set_topology_status">${ _('Submit') }</button>
+                  <img id="imgLoading" src="/static/art/spinner.gif" class="hide"/>
                </div>
             </div>   
          </form>      
@@ -334,7 +337,7 @@
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
             <div class="modal-content">
                <div class="modal-header">
-                  <h3>Create New Topology </b></h3>
+                  <h3>${ _('Create New Topology') } </b></h3>
                </div>
                <div class="modal-body controls">
                   ${pfForm1.as_p()|n}                  
@@ -342,8 +345,8 @@
                <div class="modal-footer">      
                   <input type="hidden" name="psAction" value="submitTopology">
                   <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
-                  <input type="submit" class="btn btn-primary" value="Submit"/>            
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>                  
+                  <input type="submit" class="btn btn-primary" value="${ _('Submit') }"/>            
                </div>
             </div>   
          </form>      
@@ -359,7 +362,7 @@
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
             <div class="modal-content">
                <div class="modal-header">
-                  <h3>Save Topology to HDFS </b></h3>
+                  <h3>${ _('Save Topology to HDFS') } </b></h3>
                </div>
                <div class="modal-body controls">
                   ${pfForm1.as_p()|n}                  
@@ -367,11 +370,111 @@
                <div class="modal-footer">      
                   <input type="hidden" name="psAction" value="saveTopology">
                   <input type="hidden" name="psURL" value="${request.get_full_path()}">                  
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                  
-                  <input type="submit" class="btn btn-primary" value="Save"/>            
+                  <button type="button" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>                  
+                  <input type="submit" class="btn btn-primary" value="${ _('Save') }"/>            
                </div>
             </div>   
          </form>      
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Active Topology -->
+<%def name="tblActivate(paTopology)">
+   <div class="modal hide fade" id="tblActivate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: ACTIVE? ') }
+               </div>
+               <div class="modal-footer">  
+                  <div id="divErroractivate" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR activating this topology') } </span>
+                  </div>    
+                  <button type="button" id="btnNoactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
+                  <img id="imgLoadingactivate" src="/static/art/spinner.gif" class="hide"/>
+               </div>
+            </div>   
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Inactive Topology -->
+<%def name="tblDeactivate(paTopology)">
+   <div class="modal hide fade" id="tblDeactivate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: Deactivate? ') }
+               </div>
+               <div class="modal-footer"> 
+                  <div id="divErrordeactivate" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR deactivating this topology') } </span>
+                  </div>     
+                  <button type="button" id="btnNodeactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
+                  <img id="imgLoadingdeactivate" src="/static/art/spinner.gif" class="hide"/>
+               </div>
+            </div>   
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Automatic Rebalance Topology -->
+<%def name="tblAutomaticRebalance(paTopology)">
+   <div class="modal hide fade" id="tblAutomaticRebalance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: REBALANCE? ') }
+               </div>
+               <div class="modal-footer">      
+                  <div id="divErrorrebalance" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR rebalancing this topology') } </span>
+                  </div>
+                  <button type="button" id="btnNorebalance" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYesrebalance" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
+                  <img id="imgLoadingrebalance" src="/static/art/spinner.gif" class="hide"/>
+               </div>
+            </div>   
+      </div>
+   </div>
+</%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- New Window Modal. Kill Topology -->
+<%def name="tblKill(paTopology)">
+   <div class="modal hide fade" id="tblKill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">         
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h3>${ _('Confirm action') } </b></h3>
+               </div>
+               <div class="modal-body controls">
+                  ${ _('Are you sure you want to do this action: KILL? ') }
+               </div>
+               <div class="modal-footer">      
+                  <div id="divErrorkill" class="hide" style="position: absolute; left: 10px;">
+                     <span class="label label-important"> ${ _('ERROR killing this topology') } </span>
+                  </div>
+                  <button type="button" id="btnNokill" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
+                  <button type="button" id="btnYeskill" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
+                  <img id="imgLoadingkill" src="/static/art/spinner.gif" class="hide"/>
+               </div>
+            </div>   
       </div>
    </div>
 </%def>
@@ -384,7 +487,7 @@
          <div class="modal-content">
             <div class="modal-header">
                <button class="close" data-dismiss="modal" aria-hidden="true">X</button>
-               <h3 class="modal-title">Last error:</h3>
+               <h3 class="modal-title">${ _('Last error:') }</h3>
             </div>
             ${psError}
          </div>

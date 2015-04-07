@@ -48,7 +48,7 @@ class UploadFileFormHDFS(forms.Form):
      dict = self.cleaned_data
      hdfs_file = dict.get('hdfs_file')     
 
-     if (len(hdfs_file) == 0):
+     if len(hdfs_file) == 0:
         raise forms.ValidationError("HDFS File must not be empty")
  
      return hdfs_file
@@ -65,7 +65,7 @@ class UploadFileForm(forms.Form):
      dict = self.cleaned_data
      topology_name = dict.get('topology_name')     
 
-     if (len(topology_name) < 5) or (len(topology_name) > 100):
+     if len(topology_name) < 5 or len(topology_name) > 100:
         raise forms.ValidationError("Topology Name between 5 and 100 characters")
  
      return topology_name
@@ -75,7 +75,7 @@ class UploadFileForm(forms.Form):
      dict = self.cleaned_data
      class_name = dict.get('class_name')
 
-     if (len(class_name) < 5) or (len(class_name) > 100):
+     if len(class_name) < 5 or len(class_name) > 100:
         raise forms.ValidationError("Class Name between 5 and 100 characters")
  
      return class_name

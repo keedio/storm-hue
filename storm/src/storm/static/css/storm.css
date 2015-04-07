@@ -16,7 +16,21 @@
 	* don't use ids - there may be more than one of your apps open; use classes!
 	* the toolbar element is absolutely positioned and 100% wide (and therefor 0px high);
 	  any elements inside it should also be absolutely positioned
-*/
+*/  
+
+.dataTables_length {
+      width: 50%;
+      float: left;
+      text-align: left;
+      vertical-align:top;
+} 
+
+.dataTables_filter {
+      width: 50%;
+      float: right;
+      text-align: right;
+      vertical-align:top;
+} 
 
 .modalmask {
 	position: fixed;

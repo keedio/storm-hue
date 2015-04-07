@@ -42,6 +42,6 @@ urlpatterns = patterns('storm.views',
   #Failed Summary.  
   url('failed/(?P<topology_id>.+)/(?P<component_id>.+)/(?P<system_id>.+)/$', 'failed', name = "failed"),  
   #Change status of a topology.
-  url(r'^changeTopologyStatus/$','changeTopologyStatus', name= "changeTopologyStatus"),
+  url(r'^post_topology_status/$','post_topology_status', name= "post_topology_status"),
   url(r'^set_topology_status/$','set_topology_status', name= "set_topology_status"),    
 )

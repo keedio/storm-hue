@@ -14,7 +14,10 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-<%!from desktop.views import commonheader, commonfooter %>
+<%!
+from desktop.views import commonheader, commonfooter 
+from django.utils.translation import ugettext as _
+%>
 
 ${commonheader("Nimbus Configuration", app_name, user) | n,unicode}
 
@@ -27,21 +30,6 @@ ${commonheader("Nimbus Configuration", app_name, user) | n,unicode}
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
 
-<style>
-   .dataTables_length {
-      width: 50%;
-      float: left;
-      text-align: left;
-      vertical-align:top;
-   } 
-   .dataTables_filter {
-      width: 50%;
-      float: right;
-      text-align: right;
-      vertical-align:top;
-   }   
-</style>
-
 ${ JavaScript.import_js() }
 
 <script type='text/javascript'>    
@@ -50,37 +38,72 @@ ${ JavaScript.import_js() }
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
 	    	"bPaginate": false,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
 	    } );
    });
 </script>
 
-<%
-  _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Nimbus Configuration", url('storm:nimbus_configuration')]
-  ]
-%>
-
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Nimbus Configuration')}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+  <%
+      _breadcrumbs = [
+        [_('Storm Dashboard'), url('storm:storm_dashboard')],    
+        [_('Nimbus Configuration'), url('storm:nimbus_configuration')]
+      ]
+  %>
 
-<div class="container-fluid">
-  <div class="card">
-    <div class="card-body">
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
+  ${ storm.header(_breadcrumbs) }
+
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
        <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
           <tr>
-             <td>                
-                ${Templates.tblConfiguration()}                                                
+             <td>
+                % if not Data['configuration']:
+                  <div class="alert alert-error">
+                    ${ _('There are currently no settings to show in Storm UI Server: ') }<b>${Data['storm_ui']}</b>
+                    </br>
+                    ${ _('Please contact your administrator to solve this.') }
+                  </div>
+                % else:
+                  ${Templates.tblConfiguration()}
+                % endif                 
              </td>
           </tr>
        </table>
+      </div>
     </div>
   </div>
-</div>
+% endif
 
 ${commonfooter(messages) | n,unicode}

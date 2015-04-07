@@ -31,21 +31,6 @@ ${commonheader("Components Dashboard", app_name, user) | n,unicode}
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
 
-<style>
-   .dataTables_length {
-      width: 50%;
-      float: left;
-      text-align: left;
-      vertical-align:top;
-   } 
-   .dataTables_filter {
-      width: 50%;
-      float: right;
-      text-align: right;
-      vertical-align:top;
-   }   
-</style>
-
 ${ graphsHUE.import_charts() }
 ${ JavaScript.import_js() }
 
@@ -55,421 +40,456 @@ ${ JavaScript.import_js() }
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": false,
 	    	"bFilter": false,
-	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>"        
+	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",
+          "oLanguage":{
+              "sLengthMenu":"${_('Show _MENU_ entries')}",
+              "sSearch":"${_('Search')}",
+              "sEmptyTable":"${_('No data available')}",
+              "sInfo":"${_('Showing _START_ to _END_ of _TOTAL_ entries')}",
+              "sInfoEmpty":"${_('Showing 0 to 0 of 0 entries')}",
+              "sInfoFiltered":"${_('(filtered from _MAX_ total entries)')}",
+              "sZeroRecords":"${_('No matching records')}",
+              "oPaginate":{
+                  "sFirst":"${_('First')}",
+                  "sLast":"${_('Last')}",
+                  "sNext":"${_('Next')}",
+                  "sPrevious":"${_('Previous')}"
+              }
+        }        
 	    } );
-   });
-   
-   var dataBarComponentsStats = [];
-   var dataBarComponentsTimes = [];
-   
-   var sData = "${Components}";   
-   var swData = sData.replace(/&quot;/ig,'"')   
-   var jsonComponents = JSON.parse(swData);
-   
-   for (var i=0; i<Object.keys(jsonComponents).length; i++) {           
-      dataBarComponentsStats.push({"key": jsonComponents[i].windowPretty, 
-                                   "values": [ {"x": "Emitted", "y": jsonComponents[i].emitted},
-                                               {"x": "Transferred", "y": jsonComponents[i].transferred},                                                                   
-                                               {"x": "Acked", "y": jsonComponents[i].acked},
-                                               {"x": "Failed", "y": jsonComponents[i].failed}
-                                             ]
-                          });
-      dataBarComponentsTimes.push({"key": jsonComponents[i].windowPretty, 
-                                   "values": [ {"x": "Execute Latency (ms)", "y": jsonComponents[i].executeLatency},
-                                               {"x": "Process Latency (ms)", "y": jsonComponents[i].processLatency}
-                                             ]
-                          });                     
-   };
-   
-   nv.addGraph(function() {
-                 var graphComponentsStats = nv.models.multiBarChart()
-                                           .transitionDuration(350)
-                                           .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                           .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                           .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                           .showControls(true);
-                                  
-                                  graphComponentsStats.multibar.stacked(false);         
-    
-                                  graphComponentsStats.yAxis
-                                                  .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barComponentsStats svg')
-                                    .datum(dataBarComponentsStats)
-                                    .call(graphComponentsStats);
 
-                                  nv.utils.windowResize(graphComponentsStats.update);
+       if ("${Data['error']}" != "-1") {
+           var dataBarComponentsStats = [];
+           var dataBarComponentsTimes = [];
+           var sData = "${Data['jComponents']}";   
+           var swData = sData.replace(/&quot;/ig,'"')   
+           var jsonComponents = JSON.parse(swData);
 
-                                  return graphComponentsStats;
-   });
-   
-   nv.addGraph(function() {
-                 var graphComponentsTimes = nv.models.multiBarChart()
-                                           .transitionDuration(350)
-                                           .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                           .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                           .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                           .showControls(true);
-                                  
-                                  graphComponentsTimes.multibar.stacked(false);         
-    
-                                  graphComponentsTimes.yAxis
-                                                  .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barComponentsTimes svg')
-                                    .datum(dataBarComponentsTimes)
-                                    .call(graphComponentsTimes);
+           for (var i=0; i<Object.keys(jsonComponents).length; i++) {           
+              dataBarComponentsStats.push({"key": jsonComponents[i].windowPretty, 
+                                           "values": [ {"x": "${ _('Emitted') }", "y": jsonComponents[i].emitted},
+                                                       {"x": "${ _('Transferred') }", "y": jsonComponents[i].transferred},                                                                   
+                                                       {"x": "${ _('Acked') }", "y": jsonComponents[i].acked},
+                                                       {"x": "${ _('Failed') }", "y": jsonComponents[i].failed}
+                                                     ]
+                                  });
+              dataBarComponentsTimes.push({"key": jsonComponents[i].windowPretty, 
+                                           "values": [ {"x": "${ _('Execute Latency (ms)') }", "y": jsonComponents[i].executeLatency},
+                                                       {"x": "${ _('Process Latency (ms)') }", "y": jsonComponents[i].processLatency}
+                                                     ]
+                                  });                     
+           };
+           
+           nv.addGraph(function() {
+                         var graphComponentsStats = nv.models.multiBarChart()
+                                                   .transitionDuration(350)
+                                                   .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                   .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                   .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                   .showControls(true);
+                                          
+                                          graphComponentsStats.multibar.stacked(false);         
+            
+                                          graphComponentsStats.yAxis
+                                                          .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barComponentsStats svg')
+                                            .datum(dataBarComponentsStats)
+                                            .call(graphComponentsStats);
 
-                                  nv.utils.windowResize(graphComponentsTimes.update);
+                                          nv.utils.windowResize(graphComponentsStats.update);
 
-                                  return graphComponentsTimes;
-   });
-   
-   var dataBarInputStats = [];
-   var dataBarInputTimes = [];
-   
-   var sData = "${Input}";   
-   var swData = sData.replace(/&quot;/ig,'"')   
-   var jsonInput = JSON.parse(swData);
-   
-   for (var i=0; i<Object.keys(jsonInput).length; i++) {
-      dataBarInputStats.push({"key": jsonInput[i].stream, 
-                              "values": [ {"x": "Executed", "y": jsonInput[i].executed},                                                                        
-                                          {"x": "Acked", "y": jsonInput[i].acked},
-                                          {"x": "Failed", "y": jsonInput[i].failed}
-                                        ]
-                          });
-      dataBarInputTimes.push({"key": jsonInput[i].stream, 
-                              "values": [ {"x": "Execute Latency (ms)", "y": jsonInput[i].executeLatency},
-                                          {"x": "Process Latency (ms)", "y": jsonInput[i].processLatency}
-                                        ]
-                          });                     
-   };       
-   
-   nv.addGraph(function() {
-                 var graphInputStats = nv.models.multiBarChart()
-                                           .transitionDuration(350)
-                                           .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                           .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                           .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                           .showControls(true);
-                                  
-                                  graphInputStats.multibar.stacked(false);         
-    
-                                  graphInputStats.yAxis
-                                                  .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barInputStats svg')
-                                    .datum(dataBarInputStats)
-                                    .call(graphInputStats);
+                                          return graphComponentsStats;
+           });
+           
+           nv.addGraph(function() {
+                         var graphComponentsTimes = nv.models.multiBarChart()
+                                                   .transitionDuration(350)
+                                                   .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                   .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                   .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                   .showControls(true);
+                                          
+                                          graphComponentsTimes.multibar.stacked(false);         
+            
+                                          graphComponentsTimes.yAxis
+                                                          .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barComponentsTimes svg')
+                                            .datum(dataBarComponentsTimes)
+                                            .call(graphComponentsTimes);
 
-                                  nv.utils.windowResize(graphInputStats.update);
+                                          nv.utils.windowResize(graphComponentsTimes.update);
 
-                                  return graphInputStats;
-   });
-   
-   nv.addGraph(function() {
-                 var graphInputTimes = nv.models.multiBarChart()
-                                                .transitionDuration(350)
-                                                .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                                .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                                .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                                .showControls(true);
-                                  
-                                  graphInputTimes.multibar.stacked(false);         
-    
-                                  graphInputTimes.yAxis
-                                                 .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barInputTimes svg')
-                                    .datum(dataBarInputTimes)
-                                    .call(graphInputTimes);
+                                          return graphComponentsTimes;
+           });
+           
+           var dataBarInputStats = [];
+           var dataBarInputTimes = [];
+           var sData = "${Data['input']}";   
+           var swData = sData.replace(/&quot;/ig,'"')   
+           var jsonInput = JSON.parse(swData);
+           
+           for (var i=0; i<Object.keys(jsonInput).length; i++) {
+              dataBarInputStats.push({"key": jsonInput[i].stream, 
+                                      "values": [ {"x": "${ _('Executed') }", "y": jsonInput[i].executed},                                                                        
+                                                  {"x": "${ _('Acked') }", "y": jsonInput[i].acked},
+                                                  {"x": "${ _('Failed') }", "y": jsonInput[i].failed}
+                                                ]
+                                  });
+              dataBarInputTimes.push({"key": jsonInput[i].stream, 
+                                      "values": [ {"x": "${ _('Execute Latency (ms)') }", "y": jsonInput[i].executeLatency},
+                                                  {"x": "${ _('Process Latency (ms)') }", "y": jsonInput[i].processLatency}
+                                                ]
+                                  });                     
+           };       
+           
+           nv.addGraph(function() {
+                         var graphInputStats = nv.models.multiBarChart()
+                                                   .transitionDuration(350)
+                                                   .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                   .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                   .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                   .showControls(true);
+                                          
+                                          graphInputStats.legend.margin({top: 5, right:0, left:30, bottom: 20}); 
+                                          graphInputStats.multibar.stacked(false);         
+                                          graphInputStats.yAxis
+                                                          .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barInputStats svg')
+                                            .datum(dataBarInputStats)
+                                            .call(graphInputStats);
 
-                                  nv.utils.windowResize(graphInputTimes.update);
+                                          nv.utils.windowResize(graphInputStats.update);
 
-                                  return graphInputTimes;
-   });
-   
-   var dataBarOutputStats = [];
-   
-   var sData = "${Output}";   
-   var swData = sData.replace(/&quot;/ig,'"')   
-   var jsonOutput = JSON.parse(swData);
-   
-   for (var i=0; i<Object.keys(jsonOutput).length; i++) {
-      dataBarOutputStats.push({"key": jsonOutput[i].stream, 
-                               "values": [ {"x": "Emitted", "y": jsonOutput[i].emitted},
-                                           {"x": "Transferred", "y": jsonOutput[i].transferred},                                                                   
-                                           {"x": "Acked", "y": jsonOutput[i].acked},
-                                           {"x": "Failed", "y": jsonOutput[i].failed}
-                                         ]
-                          });
-   }; 
-   
-   nv.addGraph(function() {
-                 var graphOutputStats = nv.models.multiBarChart()
-                                                 .transitionDuration(350)
-                                                 .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                                 .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                                 .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                                 .showControls(true);
-                                  
-                                  graphOutputStats.multibar.stacked(false);         
-    
-                                  graphOutputStats.yAxis
-                                                  .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barOutputStats svg')
-                                    .datum(dataBarOutputStats)
-                                    .call(graphOutputStats);
+                                          return graphInputStats;
+           });
+           
+           nv.addGraph(function() {
+                         var graphInputTimes = nv.models.multiBarChart()
+                                                        .transitionDuration(350)
+                                                        .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                        .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                        .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                        .showControls(true);
+                                          
+                                          graphInputTimes.legend.margin({top: 5, right:0, left:30, bottom: 20}); 
+                                          graphInputTimes.multibar.stacked(false);         
+                                          graphInputTimes.yAxis
+                                                         .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barInputTimes svg')
+                                            .datum(dataBarInputTimes)
+                                            .call(graphInputTimes);
 
-                                  nv.utils.windowResize(graphOutputStats.update);
+                                          nv.utils.windowResize(graphInputTimes.update);
 
-                                  return graphOutputStats;
-   });
-   
-   var dataBarExecutorsStats = [];
-   var dataBarExecutorsTimes = [];
-   
-   var sData = "${Executors}";   
-   var swData = sData.replace(/&quot;/ig,'"')   
-   var jsonExecutors = JSON.parse(swData);
-   
-   for (var i=0; i<Object.keys(jsonExecutors).length; i++) {
-      if ("${isBolt}" == "1") {
-         dataBarExecutorsStats.push({"key": jsonExecutors[i].id, 
-                                     "values": [ {"x": "Emitted", "y": jsonExecutors[i].emitted},
-                                                 {"x": "Transferred", "y": jsonExecutors[i].transferred},                                                                   
-                                                 {"x": "Executed", "y": jsonExecutors[i].executed},
-                                                 {"x": "Acked", "y": jsonExecutors[i].acked},
-                                                 {"x": "Failed", "y": jsonExecutors[i].failed}
-                                               ]
-                             });
-         dataBarExecutorsTimes.push({"key": jsonExecutors[i].id, 
-                                     "values": [ {"x": "Execute Latency (ms)", "y": jsonExecutors[i].executeLatency},
-                                                 {"x": "Process Latency (ms)", "y": jsonExecutors[i].processLatency}
-                                        ]
-                          });                    
-      }
-      else {
-         dataBarExecutorsStats.push({"key": jsonExecutors[i].id, 
-                                     "values": [ {"x": "Emitted", "y": jsonExecutors[i].emitted},
-                                                 {"x": "Transferred", "y": jsonExecutors[i].transferred},                                                                   
-                                                 {"x": "Acked", "y": jsonExecutors[i].acked},
-                                                 {"x": "Failed", "y": jsonExecutors[i].failed}
-                                               ]
-                             });
-      };
-   }; 
-   
-   nv.addGraph(function() {
-                 var graphExecutors = nv.models.multiBarChart()
-                                               .transitionDuration(350)
-                                               .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                               .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                               .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                               .showControls(true);
-                                  
-                                  graphExecutors.multibar.stacked(false);         
-    
-                                  graphExecutors.yAxis
-                                                .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barExecutors svg')
-                                    .datum(dataBarExecutorsStats)
-                                    .call(graphExecutors);
+                                          return graphInputTimes;
+           });
+           
+           var dataBarOutputStats = [];
+           var sData = "${Data['output']}";   
+           var swData = sData.replace(/&quot;/ig,'"')   
+           var jsonOutput = JSON.parse(swData);
 
-                                  nv.utils.windowResize(graphExecutors.update);
+           for (var i=0; i<Object.keys(jsonOutput).length; i++) {
+              dataBarOutputStats.push({"key": jsonOutput[i].stream, 
+                                       "values": [ {"x": "${ _('Emitted') }", "y": jsonOutput[i].emitted},
+                                                   {"x": "${ _('Transferred') }", "y": jsonOutput[i].transferred},                                                                   
+                                                   {"x": "${ _('Acked') }", "y": jsonOutput[i].acked},
+                                                   {"x": "${ _('Failed') }", "y": jsonOutput[i].failed}
+                                                 ]
+                                  });
+           }; 
+           
+           nv.addGraph(function() {
+                         var graphOutputStats = nv.models.multiBarChart()
+                                                         .transitionDuration(350)
+                                                         .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                         .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                         .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                         .showControls(true);
+                                          
+                                          graphOutputStats.multibar.stacked(false);         
+            
+                                          graphOutputStats.yAxis
+                                                          .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barOutputStats svg')
+                                            .datum(dataBarOutputStats)
+                                            .call(graphOutputStats);
 
-                                  return graphExecutors;
-   });
-   
-    nv.addGraph(function() {
-                 var graphExecutorsTimes = nv.models.multiBarChart()
-                                                    .transitionDuration(350)
-                                                    .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
-                                                    .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
-                                                    .groupSpacing(0.1)    //Distance between each group of bars.                                
-                                                    .showControls(true);
-                                  
-                                  graphExecutorsTimes.multibar.stacked(false);         
-    
-                                  graphExecutorsTimes.yAxis
-                                                     .tickFormat(d3.format('d'));
-        
-                                  d3.select('#barExecutorsTimes svg')
-                                    .datum(dataBarExecutorsTimes)
-                                    .call(graphExecutorsTimes);
+                                          nv.utils.windowResize(graphOutputStats.update);
 
-                                  nv.utils.windowResize(graphExecutorsTimes.update);
+                                          return graphOutputStats;
+           });
+           
+           var dataBarExecutorsStats = [];
+           var dataBarExecutorsTimes = [];
+           
+           var sData = "${Data['executor']}";   
+           var swData = sData.replace(/&quot;/ig,'"')   
+           var jsonExecutors = JSON.parse(swData);
+           
+           for (var i=0; i<Object.keys(jsonExecutors).length; i++) {
+              if ("${Data['isBolt']}" == 1) {
+                 dataBarExecutorsStats.push({"key": jsonExecutors[i].id, 
+                                             "values": [ {"x": "${ _('Emitted') }", "y": jsonExecutors[i].emitted},
+                                                         {"x": "${ _('Transferred') }", "y": jsonExecutors[i].transferred},                                                                   
+                                                         {"x": "${ _('Executed') }", "y": jsonExecutors[i].executed},
+                                                         {"x": "${ _('Acked') }", "y": jsonExecutors[i].acked},
+                                                         {"x": "${ _('Failed') }", "y": jsonExecutors[i].failed}
+                                                       ]
+                                     });
+                 dataBarExecutorsTimes.push({"key": jsonExecutors[i].id, 
+                                             "values": [ {"x": "${ _('Execute Latency (ms)') }", "y": jsonExecutors[i].executeLatency},
+                                                         {"x": "${ _('Process Latency (ms)') }", "y": jsonExecutors[i].processLatency}
+                                                ]
+                                  });                    
+              }
+              else {
+                 dataBarExecutorsStats.push({"key": jsonExecutors[i].id, 
+                                             "values": [ {"x": "${ _('Emitted') }", "y": jsonExecutors[i].emitted},
+                                                         {"x": "${ _('Transferred') }", "y": jsonExecutors[i].transferred},                                                                   
+                                                         {"x": "${ _('Acked') }", "y": jsonExecutors[i].acked},
+                                                         {"x": "${ _('Failed') }", "y": jsonExecutors[i].failed}
+                                                       ]
+                                     });
+              };
+           }; 
+           
+           nv.addGraph(function() {
+                         var graphExecutors = nv.models.multiBarChart()
+                                                       .transitionDuration(350)
+                                                       .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                       .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                       .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                       .showControls(true);
+                                          
+                                          graphExecutors.multibar.stacked(false);         
+            
+                                          graphExecutors.yAxis
+                                                        .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barExecutors svg')
+                                            .datum(dataBarExecutorsStats)
+                                            .call(graphExecutors);
 
-                                  return graphExecutorsTimes;
+                                          nv.utils.windowResize(graphExecutors.update);
+
+                                          return graphExecutors;
+           });
+           
+            nv.addGraph(function() {
+                         var graphExecutorsTimes = nv.models.multiBarChart()
+                                                            .transitionDuration(350)
+                                                            .reduceXTicks(false)   //If 'false', every single x-axis tick label will be rendered.
+                                                            .rotateLabels(0)      //Angle to rotate x-axis labels.                                           
+                                                            .groupSpacing(0.1)    //Distance between each group of bars.                                
+                                                            .showControls(true);
+                                          
+                                          graphExecutorsTimes.multibar.stacked(false);         
+            
+                                          graphExecutorsTimes.yAxis
+                                                             .tickFormat(d3.format('d'));
+                
+                                          d3.select('#barExecutorsTimes svg')
+                                            .datum(dataBarExecutorsTimes)
+                                            .call(graphExecutorsTimes);
+
+                                          nv.utils.windowResize(graphExecutorsTimes.update);
+
+                                          return graphExecutorsTimes;
+           });
+        };    
    });
 </script>
 
-<%
-  _breadcrumbs = [
-    ["Storm Dashboard", url('storm:storm_dashboard')],    
-    ["Topology " + Topology[0] + " Detail", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)],
-    [Component[4] + " " + Component[0] + " Explain", url('storm:detail_dashboard', topology_id = Topology[0], system_id = 0)]
-  ]
-%>
-
-${ storm.header(_breadcrumbs) }
-
 ${ storm.menubar(section = 'Components Dashboard')}
 
-${Templates.tblSubmitTopology(frmNewTopology)}
-${Templates.tblSaveTopology(frmHDFS)}
+% if Data['error'] == 1:
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-error">
+          <h2>${ _('Error connecting to the Storm UI server:') } <b>${Data['storm_ui']}</b></h2>
+          <h3>${ _('Please contact your administrator to solve this.') }</h3>
+        </div>
+      </div>
+    </div>
+  </div>  
+% else:
+  <%
+    _breadcrumbs = [
+      [_('Storm Dashboard'), url('storm:storm_dashboard')],
+      [_('Topology ') + Data['topology']['id'] + _(' Detail'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)],
+      [Data['components']['componentType'] + " " + Data['component_id'] + _(' Explain'), url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)]
+      ]
+  %>
 
-<div id="divPrincipal" class="container-fluid">
-  <div class="card">        
-    <div class="card-body">
-       <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                              
-          ${Templates.ControlPanelTopology("components_dashboard")}
-          <tr>
-             <td colspan="2">                
-                ${Templates.tblRebalanceTopology(Topology[1])}
-             </td>
-          </tr>
-          <tr>                          
-             <td colspan="2">                
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> Component Summary
-                      </div>
-                      <div class="panel-body">
-                         <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyComponent" data-tablescroller-disable="true">
-                            <thead>
-                               <tr>
-                                  <th> Id </th>
-                                  <th> Topology </th>
-                                  <th> Executors </th>
-                                  <th> Tasks </th>                         
-                               </tr>
-                            </thead>
-                            <tbody>
-                               <tr>                         
-                                  <td>${Component[0]}</td>
-                                  <td>${Component[1]}</td>                                                        
-                                  <td>${Component[2]}</td>
-                                  <td>${Component[3]}</td>                                                 
-                               </tr>                      
-                            </tbody>
-                         </table>
-                      </div>
-                   </div>
-                </div>
-             </td>             
-          </tr>
-          <tr valign="top">
-             <td width="55%">
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Stats
-                      </div>
-                      <div class="panel-body">
-                         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
-                            <tr>
-                               <td>
-                                  <div id="barComponentsStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                               </td>
-                            </tr>
-                         </table>         
-                      </div>                        
-                   </div>
-                </div>
-             </td> 
-             % if (isBolt == 1):
-             <td width="45%">
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Times
-                      </div>                      
-                      <div class="panel-body">
-                         <div id="barComponentsTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                      </div>                      
-                   </div>
-                </div>
-             </td>
-             % endif
-          </tr>
-          <tr valign="top">
-             <td colspan="2">
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Executors
-                      </div>
-                      <div class="panel-body">                         
-                         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
-                            <tr>
-                               <td>
-                                  <div id="barExecutors"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                               </td>
-                               % if (isBolt == 1):
-                               <td>
-                                  <div id="barExecutorsTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                               </td>
-                               % endif
-                            </tr>                            
-                         </table>
-                      </div>                        
-                   </div>
-                </div>
-             </td>                
-          </tr>
-          <tr valign="top">             
-             % if Input:
-             <td>
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Input
-                      </div>
-                      <div class="panel-body">                      
-                         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
-                            <tr>
-                               <td>
-                                  <div id="barInputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                               </td>
-                               <td>
-                                  <div id="barInputTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                               </td>
-                            </tr>                            
-                         </table>   
-                      </div>                        
-                   </div>
-                </div>
-             </td>
-             % endif
-             % if Output:
-             <td>
-                <div class="col-lg-4">
-                   <div class="panel panel-default">
-                      <div class="panel-heading">
-                         <i class="fa fa-bar-chart fa-fw"></i> Output
-                      </div>
-                      <div class="panel-body">
-                         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
-                            <tr>
-                               <td>
-                                  <div id="barOutputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
-                               </td>
-                            </tr>
-                         </table>         
-                      </div>                        
-                   </div>
-                </div>
-             </td>
-             % endif
-          </tr>          
-       </table>             
+  ${Templates.tblSubmitTopology(Data['frmNewTopology'])}
+  ${Templates.tblSaveTopology(Data['frmHDFS'])}
+  ${ storm.header(_breadcrumbs) }
+
+  <div id="divPrincipal" class="container-fluid">
+    <div class="card">        
+      <div class="card-body">
+         <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">                              
+            ${Templates.ControlPanelTopology(Data['topology'], "components_dashboard")} 
+            <tr>
+               <td colspan="2">                
+                  ${Templates.tblRebalanceTopology(Data['topology'])}
+                  ${Templates.tblAutomaticRebalance(Data['topology'])}
+                  ${Templates.tblKill(Data['topology'])}
+                  ${Templates.tblActivate(Data['topology'])}
+                  ${Templates.tblDeactivate(Data['topology'])}
+               </td>
+            </tr>
+            <tr>                          
+               <td colspan="2">                
+                  <div class="col-lg-4">
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <i class="fa fa-table fa-fw"></i> ${ _('Component Summary') }
+                        </div>
+                        <div class="panel-body">
+                           <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyComponent" data-tablescroller-disable="true">
+                              <thead>
+                                 <tr>
+                                    <th> ${ _('Id') } </th>
+                                    <th> ${ _('Topology') } </th>
+                                    <th> ${ _('Executors') } </th>
+                                    <th> ${ _('Tasks') } </th>                         
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>                         
+                                    <td>${Data['component_id']}</td>
+                                    <td>${Data['components']['name']}</td>                                                        
+                                    <td>${Data['components']['executors']}</td>
+                                    <td>${Data['components']['tasks']}</td>                                                 
+                                 </tr>                      
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </td>             
+            </tr>
+            <tr valign="top">
+               <%
+                  if Data['isBolt'] == 1:
+                    iCols = 0
+                  else:
+                    iCols = 2
+               %>               
+               <td width="55%" colspan="${iCols}">
+                  <div class="col-lg-4">
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Stats') }
+                        </div>
+                        <div class="panel-body">
+                           <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+                              <tr>
+                                 <td>
+                                    <div id="barComponentsStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                                 </td>
+                              </tr>
+                           </table>         
+                        </div>                        
+                     </div>
+                  </div>
+               </td> 
+               % if (Data['isBolt'] == 1):
+               <td width="45%">
+                  <div class="col-lg-4">
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Times') }
+                        </div>                      
+                        <div class="panel-body">
+                           <div id="barComponentsTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                        </div>                      
+                     </div>
+                  </div>
+               </td>
+               % endif
+            </tr>
+            <tr valign="top">
+               <td colspan="2">
+                  <div class="col-lg-4">
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Executors') }
+                        </div>
+                        <div class="panel-body">                         
+                           <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+                              <tr>
+                                 <td>
+                                    <div id="barExecutors"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                                 </td>
+                                 % if (isBolt == 1):
+                                 <td>
+                                    <div id="barExecutorsTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                                 </td>
+                                 % endif
+                              </tr>                            
+                           </table>
+                        </div>                        
+                     </div>
+                  </div>
+               </td>                
+            </tr>
+            <tr valign="top">             
+               % if Data['input']:
+               <td colspan="${iCols}">
+                  <div class="col-lg-4">
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Input') }
+                        </div>
+                        <div class="panel-body">                      
+                           <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+                              <tr>
+                                 <td width="45%">
+                                    <div id="barInputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                                 </td>
+                                 <td width="55%">
+                                    <div id="barInputTimes"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                                 </td>
+                              </tr>                            
+                           </table>   
+                        </div>                        
+                     </div>
+                  </div>
+               </td>
+               % endif
+               % if Data['output']:
+               <td colspan="${iCols}">
+                  <div class="col-lg-4">
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <i class="fa fa-trello fa-fw"></i> ${ _('Output') }
+                        </div>
+                        <div class="panel-body">
+                           <table width="100%" height="100%" border="0" cellpadding="6" cellspacing="0">
+                              <tr>
+                                 <td>
+                                    <div id="barOutputStats"><svg style="min-height: 220px; margin: 10px auto"></svg></div>
+                                 </td>
+                              </tr>
+                           </table>         
+                        </div>                        
+                     </div>
+                  </div>
+               </td>
+               % endif
+            </tr>          
+         </table>             
+      </div>
     </div>
   </div>
-</div>
-
+% endif
 ${commonfooter(messages) | n,unicode}

@@ -17,39 +17,17 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
-    print ImportError
-
-import os
-import commands
-import requests
+import os, commands, requests
 from django.template import RequestContext
 from django.core.files.base import ContentFile
-from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse, HttpResponseRedirect
 from desktop.lib.django_util import render  
 from desktop.lib.exceptions_renderable import PopupException
-from storm import settings
-from storm import conf
+from storm import settings, conf, utils
+from storm.storm_ui import StormREST
 from storm.forms import UploadFileForm, UploadFileFormHDFS 
-
-SYSTEM_STATS = "?sys=1"
-API_URL = "/api/v1"
-LOG_URL_PATH = "/log?file=worker-"
-STORM_UI_SERVER = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_PORT.get()
-STORM_UI = STORM_UI_SERVER + API_URL
-TOPOLOGIES_URL = STORM_UI + conf.STORM_UI_TOPOLOGIES.get()
-TOPOLOGY_URL = STORM_UI + conf.STORM_UI_TOPOLOGY.get()
-CLUSTER_URL = STORM_UI + conf.STORM_UI_CLUSTER.get()
-SUPERVISOR_URL = STORM_UI + conf.STORM_UI_SUPERVISOR.get()
-CONFIGURATION_URL = STORM_UI + conf.STORM_UI_CONFIGURATION.get()
-LOG_URL = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_LOG_PORT.get() + LOG_URL_PATH
 
 # *************************************************************************************************************************
 # **********                                                                                                     **********
@@ -63,8 +41,9 @@ LOG_URL = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_LOG_PORT.
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-11 Jose Juan
+# 002 2015-03-04 Jose Juan Include StormRest Class.
 #
-# Index of application.
+# Index View.
 #
 # @author Jose Juan
 # @date 2014-11-11
@@ -73,49 +52,7 @@ LOG_URL = "http://" + conf.STORM_UI_SERVER.get() + ":" + conf.STORM_UI_LOG_PORT.
 # @remarks -
 #
 def storm_dashboard(request):
-    sStatus = ""  
-    iActive = 0
-    iInactive = 0
-    iExecutors = 0
-    iWorkers = 0
-    iTasks = 0      
-    form = ""
-    aData = []        
-  
-    jsonTopology = get_json(TOPOLOGIES_URL)    
-    
-    if (len(jsonTopology) > 0):
-  
-        try:
-            aData = jsonTopology["topologies"]        
-        except:
-            aData = []
-     
-        if (len(aData) > 0):                           
-            for row in aData:       
-                row.update({'seconds': get_seconds_from_strdate(row["uptime"]) })
-                sStatus = row["status"]
-                                        
-                if (sStatus == "ACTIVE"):
-                    iActive += 1
-                else:   
-                    iInactive += 1
-       
-                iExecutors += row["executorsTotal"]
-                iWorkers += row["workersTotal"]
-                iTasks += row["tasksTotal"]                                                              
-  
-  
-    return render('storm_dashboard.mako', request, {'user': request.user,
-                                                    'Topologies': aData,
-                                                    'Active': iActive,
-                                                    'Inactive': iInactive,
-                                                    'Executors': iExecutors,
-                                                    'Workers': iWorkers,
-                                                    'Tasks': iTasks,
-                                                    'frmNewTopology': get_newform(request, UploadFileForm),
-                                                    'frmHDFS': get_newform(request, UploadFileFormHDFS)                                                  
-                                                    })
+    return render('storm_dashboard.mako', request, {'Data': _get_storm_dashboard(request)})
 #
 # storm_dashboard *********************************************************************************************************
 
@@ -123,8 +60,9 @@ def storm_dashboard(request):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-19 Jose Juan
+# 002 2015-03-04 Jose Juan Include StormRest Class.
 #
-# Control Panel of a topology (Dashboard).
+# Control Panel View of a topology (Dashboard).
 #
 # @author Jose Juan
 # @date 2014-11-19
@@ -135,117 +73,7 @@ def storm_dashboard(request):
 # @remarks -
 #
 def detail_dashboard(request, topology_id, system_id):
-    aTopology = []
-    aStats = []
-    aSpouts = []
-    aBolts = []
-    aEmitted = []
-    aTransferred = []
-    aAcked = []
-    aFailed = []
-    iEmitted = 0
-    iTransferred = 0
-    iAcked = 0
-    iFailed = 0    
-    iSystem = int(system_id) if system_id is not None else 0
-  
-    jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)      
-  
-    iSystem = 1 if (iSystem == 0) else 0
-  
-    jsonTopologyVisualization = get_json(TOPOLOGY_URL + topology_id + '/visualization')
-    jsonVisualization = get_dumps(jsonTopologyVisualization)        
-  
-    if (len(jsonTopology) > 0):     
-        aTopology = get_topology(topology_id)
-     
-        try:
-            aStats = jsonTopology["topologyStats"]
-        
-            if (len(aStats) == 1):        
-                if (aStats[0]["failed"] is None):
-                    aStats = []        
-        except:
-            aStats = []
-     
-        try:   
-            aSpouts = jsonTopology["spouts"]
-            
-            if (aSpouts[0]["transferred"] is None):
-                aSpouts = []
-                    
-        except:
-            aSpouts = []
-        
-        try:
-            aBolts = jsonTopology["bolts"]
-            
-            if (aBolts[0]["transferred"] is None):
-                aBolts = []
-                              
-        except:
-            aBolts = []
-             
-        for p in aStats:       
-            iEmitted+=p["emitted"] if p["emitted"] is not None else 0
-            iTransferred+=p["transferred"] if p["transferred"] is not None else 0
-            iAcked+=p["acked"] if p["acked"] is not None else 0
-            iFailed+=p["failed"] if p["failed"] is not None else 0
-     
-        aEmitted.append(iEmitted)     
-        aTransferred.append(iTransferred)     
-        aAcked.append(iAcked)     
-        aFailed.append(iFailed)     
-          
-        iEmitted = 0
-        iTransferred = 0
-        iAcked = 0
-        iFailed = 0
-     
-        for p in aSpouts:       
-            iEmitted+=p["emitted"] if p["emitted"] is not None else 0
-            iTransferred+=p["transferred"] if p["transferred"] is not None else 0
-            iAcked+=p["acked"] if p["acked"] is not None else 0
-            iFailed+=p["failed"] if p["failed"] is not None else 0
-     
-        aEmitted.append(iEmitted)     
-        aTransferred.append(iTransferred)     
-        aAcked.append(iAcked)     
-        aFailed.append(iFailed)
-     
-        iEmitted = 0
-        iTransferred = 0
-        iAcked = 0
-        iFailed = 0
-     
-        for p in aBolts:       
-            iEmitted+=p["emitted"] if p["emitted"] is not None else 0
-            iTransferred+=p["transferred"] if p["transferred"] is not None else 0
-            iAcked+=p["acked"] if p["acked"] is not None else 0
-            iFailed+=p["failed"] if p["failed"] is not None else 0
-       
-        aEmitted.append(iEmitted)     
-        aTransferred.append(iTransferred)     
-        aAcked.append(iAcked)     
-        aFailed.append(iFailed)                
-    
-    return render('detail_dashboard.mako', request, {'user':request.user,
-                                                     'Topology': aTopology,
-					                                 'Visualization': jsonVisualization,
-                                                     'Stats': aStats,
-                                                     'Spouts': aSpouts,
-                                                     'Bolts': aBolts,
-                                                     'jStats': get_dumps(aStats),
-                                                     'jSpouts': get_dumps(aSpouts),
-                                                     'jBolts': get_dumps(aBolts),
-                                                     'Emitted': aEmitted,
-                                                     'Transferred': aTransferred,
-                                                     'Acked': aAcked,
-                                                     'Failed': aFailed,
-                                                     'ShowSystem': iSystem,
-                                                     'frmNewTopology': get_newform(request, UploadFileForm),
-                                                     'frmHDFS': get_newform(request, UploadFileFormHDFS)
-                                                     })
+    return render('detail_dashboard.mako', request, { 'Data': _get_detail_dashboard(request, topology_id, system_id)})
 #
 # detail_dashboard ********************************************************************************************************
 
@@ -253,8 +81,9 @@ def detail_dashboard(request, topology_id, system_id):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-12-03 Jose Juan
+# 002 2015-03-05 Jose Juan Include StormRest Class.
 #
-# Topology Stats Dashboard (bolts & spouts).
+# Topology Stats View Dashboard (bolts & spouts).
 #
 # @author Jose Juan
 # @date 2014-12-03
@@ -264,31 +93,8 @@ def detail_dashboard(request, topology_id, system_id):
 # @return -
 # @remarks -
 #
-def topology_dashboard(request, topology_id, window_id):
-    aTopology = []  
-  
-    jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
-    jsonTopology = get_json(TOPOLOGY_URL + topology_id)
-  
-    if (len(jsonStats) > 0):
-        jsonDumpsStats = get_dumps(jsonStats["topologyStats"])
-        jsonDumpsSpouts = get_dumps(jsonStats["spouts"])
-        jsonDumpsBolts = get_dumps(jsonStats["bolts"])
-        aTopology = get_topology(topology_id)                             
-     
-        aSpouts = jsonTopology["spouts"]
-        aBolts = jsonTopology["bolts"]
-     
-    return render('topology_dashboard.mako', request, {'jStats': jsonDumpsStats,
-                                                       'jSpouts': jsonDumpsSpouts,
-                                                       'jBolts': jsonDumpsBolts,
-                                                       'windowId': window_id,
-                                                       'Topology': aTopology,
-                                                       'Spouts': aSpouts,
-                                                       'Bolts': aBolts,
-                                                       'frmNewTopology': get_newform(request, UploadFileForm),
-                                                       'frmHDFS': get_newform(request, UploadFileFormHDFS)
-                                                       })
+def topology_dashboard(request, topology_id, window_id): 
+    return render('topology_dashboard.mako', request, {'Data': _get_topology_dashboard(request, topology_id, window_id)})
 #
 # topology_dashboard ******************************************************************************************************
 
@@ -296,6 +102,7 @@ def topology_dashboard(request, topology_id, window_id):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-12-03 Jose Juan
+# 002 2015-03-05 Jose Juan Include StormRest Class.
 #
 # Components Dashboard (bolt & spout).
 #
@@ -308,72 +115,8 @@ def topology_dashboard(request, topology_id, window_id):
 # @return -
 # @remarks -
 #
-def components_dashboard(request, topology_id, component_id, system_id):
-    aTopology = []
-    aComponent = []
-    aComponentStats = []
-    jsonDumpsOutput = []
-    jsonDumpsInput = []
-    jsonDumpsExecutors = []
-    jsonDumpsErrors = []
-    iBolt = -1
-    iSystem = int(system_id) if system_id is not None else 0     
-    
-    jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
-
-    iSystem = 1 if (iSystem == 0) else 0
-  
-    jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
-  
-    if (len(jsonTopology) > 0):
-        aTopology = get_topology(topology_id)
-  
-        aSpouts = jsonTopology["spouts"]
-        aBolts = jsonTopology["bolts"]
-     
-    if (len(jsonComponents) > 0):
-        aComponent = [component_id, 
-                      jsonComponents["name"], 
-                      jsonComponents["executors"], 
-                      jsonComponents["tasks"],
-                      jsonComponents["componentType"].upper()
-                      ]
-     
-        if (aComponent[4] == "BOLT"):     
-            aComponentStats = jsonComponents["boltStats"]        
-            iBolt = 1
-        else:
-            aComponentStats = jsonComponents["spoutSummary"]
-  
-        jsonDumpsComponentStats = get_dumps(aComponentStats)
-     
-        if ("outputStats") in jsonComponents:     
-            jsonDumpsOutput = get_dumps(jsonComponents["outputStats"])            
-     
-        if ("inputStats") in jsonComponents:     
-            jsonDumpsInput = get_dumps(jsonComponents["inputStats"])             
-        
-        if ("executorStats") in jsonComponents:     
-            jsonDumpsExecutors = get_dumps(jsonComponents["executorStats"])             
-     
-        if ("componentErrors") in jsonComponents:     
-            jsonDumpsErrors = get_dumps(jsonComponents["componentErrors"])
-     
-    return render('components_dashboard.mako', request, {'componentId': component_id,
-                                                         'ShowSystem': iSystem,
-                                                         'Topology': aTopology,
-                                                         'Component': aComponent,
-                                                         'Components': jsonDumpsComponentStats,
-                                                         'Output': jsonDumpsOutput,
-                                                         'Input': jsonDumpsInput,
-                                                         'Executors': jsonDumpsExecutors,
-                                                         'Errors': jsonDumpsErrors,
-                                                         'isBolt': iBolt,
-                                                         'Spouts': aSpouts,
-                                                         'Bolts': aBolts,
-                                                         'frmNewTopology': get_newform(request, UploadFileForm),
-                                                         'frmHDFS': get_newform(request, UploadFileFormHDFS)
-                                                         })
+def components_dashboard(request, topology_id, component_id, system_id):     
+    return render('components_dashboard.mako', request, {'Data': _get_components_dashboard(request, topology_id, component_id, system_id)})
 #
 # components_dashboard ****************************************************************************************************
 
@@ -381,6 +124,7 @@ def components_dashboard(request, topology_id, component_id, system_id):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-12-09 Jose Juan
+# 002 2015-03-05 Jose Juan Include StormRest Class.
 #
 # Control Panel of Spouts (Dashboard).
 #
@@ -392,24 +136,7 @@ def components_dashboard(request, topology_id, component_id, system_id):
 # @remarks -
 #
 def spouts_dashboard(request, topology_id):
-    aTopology = []
-    aSpouts = []
-  
-    jsonTopology = get_json(TOPOLOGY_URL + topology_id)
-  
-    if (len(jsonTopology) > 0):     
-        aTopology = get_topology(topology_id)
-        jsonDumpsSpouts = get_dumps(jsonTopology["spouts"])
-        aSpouts = jsonTopology["spouts"]
-        aBolts = jsonTopology["bolts"]
-  
-    return render('spouts_dashboard.mako', request, {'Topology': aTopology,
-                                                     'jSpouts': jsonDumpsSpouts,
-                                                     'Spouts': aSpouts,
-                                                     'Bolts': aBolts,
-                                                     'frmNewTopology': get_newform(request, UploadFileForm),
-                                                     'frmHDFS': get_newform(request, UploadFileFormHDFS)
-                                                     })
+    return render('spouts_dashboard.mako', request, {'Data': _get_spouts_dashboard(request, topology_id)})
 #
 # spouts_dashboard ********************************************************************************************************
 
@@ -417,6 +144,7 @@ def spouts_dashboard(request, topology_id):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-12-09 Jose Juan
+# 002 2015-03-05 Jose Juan Include StormRest Class.
 #
 # Control Panel of Bolts (Dashboard).
 #
@@ -428,24 +156,7 @@ def spouts_dashboard(request, topology_id):
 # @remarks -
 #
 def bolts_dashboard(request, topology_id):
-    aTopology = []
-    aBolts = []
-  
-    jsonTopology = get_json(TOPOLOGY_URL + topology_id)
-  
-    if (len(jsonTopology) > 0):            
-        aTopology = get_topology(topology_id)    
-        jsonDumpsBolts = get_dumps(jsonTopology["bolts"])
-        aBolts = jsonTopology["bolts"]
-        aSpouts = jsonTopology["spouts"]
-     
-    return render('bolts_dashboard.mako', request, {'Topology': aTopology,
-                                                    'jBolts': jsonDumpsBolts,
-                                                    'Bolts': aBolts,
-                                                    'Spouts': aSpouts,
-                                                    'frmNewTopology': get_newform(request, UploadFileForm),
-                                                    'frmHDFS': get_newform(request, UploadFileFormHDFS)
-                                                    })
+    return render('bolts_dashboard.mako', request, {'Data': _get_bolts_dashboard(request, topology_id)})
 #
 # bolts_dashboard *********************************************************************************************************
 
@@ -453,8 +164,9 @@ def bolts_dashboard(request, topology_id):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-19 Jose Juan
+# 002 2015-03-04 Jose Juan Include StormRest Class.
 #
-# Storm cluster summary
+# Storm cluster summary views.
 #
 # @author Jose Juan
 # @date 2014-11-19
@@ -462,20 +174,8 @@ def bolts_dashboard(request, topology_id):
 # @return -
 # @remarks -
 #
-def cluster_summary(request):  
-    aSupervisor = []
-  
-    jsonCluster = get_json(CLUSTER_URL)
-    jsonSupervisor = get_json(SUPERVISOR_URL)                  
-  
-    if (len(jsonSupervisor) > 0):        
-        aSupervisor = jsonSupervisor["supervisors"]
-    
-    return render('cluster_summary.mako', request, {'Cluster': jsonCluster,
-                                                    'Supervisor': aSupervisor,
-                                                    'frmNewTopology': get_newform(request, UploadFileForm),
-                                                    'frmHDFS': get_newform(request, UploadFileFormHDFS)
-                                                    })  
+def cluster_summary(request):
+  return render('cluster_summary.mako', request, {'Data': _get_cluster_summary(request)})  
 #
 # cluster_summary *********************************************************************************************************
 
@@ -483,8 +183,9 @@ def cluster_summary(request):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-19 Jose Juan
+# 002 2015-03-04 Jose Juan Include StormRest Class.
 #
-# Nimbus settings.
+# Nimbus settings views.
 #
 # @author Jose Juan
 # @date 2014-11-19
@@ -493,20 +194,7 @@ def cluster_summary(request):
 # @remarks -
 #
 def nimbus_configuration(request):
-    aConf = []
-  
-    jsonConf = get_json(CONFIGURATION_URL)
-  
-    if (len(jsonConf) > 0):        
-        for prop in jsonConf:                  
-            aConf.append({'key': prop,
-                          'value': jsonConf[prop]
-                          });             
-    
-    return render('nimbus_configuration.mako', request, {'Conf': aConf,
-                                                         'frmNewTopology': get_newform(request, UploadFileForm),
-                                                         'frmHDFS': get_newform(request, UploadFileFormHDFS) 
-                                                         })  
+  return render('nimbus_configuration.mako', request, {'Data': _get_nimbus_configuration(request)})  
 #
 # nimbus_configuration ****************************************************************************************************
 
@@ -514,6 +202,7 @@ def nimbus_configuration(request):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-26 Jose Juan
+# 002 2015-03-05 Jose Juan Include StormRest Class.
 #
 # Topology Stats Windows (bolts & spouts).
 #
@@ -526,31 +215,7 @@ def nimbus_configuration(request):
 # @remarks -
 #
 def topology(request, topology_id, window_id):
-    aTopology = []
-    aStat = []
-    aStats = []
-    aSpouts = []
-    aBolts = []  
-  
-    jsonStats = get_json(TOPOLOGY_URL + topology_id + '?window=' + window_id)
-    aTopology = get_topology(topology_id)
-  
-    if (len(jsonStats) > 0):         
-        aStats = jsonStats["topologyStats"]          
-     
-        for stat in aStats:
-            if (stat["window"] == window_id):
-	               aStat = stat               
-     
-        aSpouts = jsonStats["spouts"]
-        aBolts = jsonStats["bolts"]                    
-     
-    return render('topology.mako', request, {'Topology': aTopology,
-                                             'Stats': aStat,
-                                             'Spouts': aSpouts,
-                                             'Bolts': aBolts,
-                                             'ShowSystem': 0
-                                             })
+    return render('topology.mako', request, {'Data': _get_topology(request, topology_id, window_id)})
 #
 # topology ****************************************************************************************************************
 
@@ -558,6 +223,7 @@ def topology(request, topology_id, window_id):
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-26 Jose Juan
+# 002 2015-03-06 Jose Juan Include StormRest Class.
 #
 # Storm Topology's Components (bolts & spouts stats).
 #
@@ -569,61 +235,8 @@ def topology(request, topology_id, window_id):
 # @return -
 # @remarks -
 #
-def components(request, topology_id, component_id, system_id): 
-    aTopology = []
-    aComponent = []
-    aStats = []
-    aOutput = []
-    aInput = []
-    aExecutors = []
-    aErrors = []   
-    iBolt = -1    
-    iSystem = int(system_id) if system_id is not None else 0       
-  
-    jsonComponents = get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id + '/component/' + component_id)
-  
-    iSystem = 1 if (iSystem == 0) else 0
-  
-    aTopology = get_topology(topology_id)
-  
-    if (len(jsonComponents) > 0):
-        aComponent = [component_id, 
-                      jsonComponents["name"], 
-		              jsonComponents["executors"], 
-		              jsonComponents["tasks"],
-		              jsonComponents["componentType"].upper()
-		              ]
-     
-        if (aComponent[4] == "BOLT"):     
-            aStats = jsonComponents["boltStats"]
-            iBolt = 1
-        else:
-            aStats = jsonComponents["spoutSummary"]                     
-        
-        if ("outputStats") in jsonComponents:     
-            aOutput = jsonComponents["outputStats"]             
-     
-        if ("inputStats") in jsonComponents:     
-            aInput = jsonComponents["inputStats"]             
-        
-        if ("executorStats") in jsonComponents:     
-            aExecutors = jsonComponents["executorStats"]             
-     
-        if ("componentErrors") in jsonComponents:     
-            aErrors = jsonComponents["componentErrors"]                 
-  
-    return render('components.mako', request, {'Server_Log': LOG_URL,
-                                               'ShowSystem': iSystem,
-                                               'idComponent': component_id,
-                                               'Topology': aTopology,
-                                               'Component': aComponent,
-                                               'Stats': aStats,
-                                               'Output': aOutput,
-                                               'Input': aInput,
-                                               'Executors': aExecutors,
-                                               'Errors': aErrors,
-                                               'iBolt': iBolt
-                                               })
+def components(request, topology_id, component_id, system_id):   
+    return render('components.mako', request, {'Data': _get_components(request, topology_id, component_id, system_id)})
 #
 # components **************************************************************************************************************
 
@@ -644,24 +257,7 @@ def components(request, topology_id, component_id, system_id):
 # @remarks -
 #
 def failed(request, topology_id, component_id, system_id):    
-    aComponent = []  
-  
-    iSystem = int(system_id) if system_id is not None else 0  
-    jsonTopology = get_json(TOPOLOGY_URL + topology_id + SYSTEM_STATS) if (iSystem == 1) else get_json(TOPOLOGY_URL + topology_id)
-
-    if (int(component_id) == 1):
-        aComponent = jsonTopology["topologyStats"]
-     
-    if (int(component_id) == 2):
-        aComponent = jsonTopology["spouts"]
-     
-    if (int(component_id) == 3):
-        aComponent = jsonTopology["bolts"]    
-  
-    return render('failed.mako', request, {'Component': aComponent,
-                                           'idTopology': topology_id,
-                                           'idComponent': int(component_id)
-                                           })  
+    return render('failed.mako', request, {'Data': _get_failed(request, topology_id, component_id, system_id)})  
 #
 # failed ******************************************************************************************************************
 
@@ -673,108 +269,678 @@ def failed(request, topology_id, component_id, system_id):
 # **********                                                                                                     **********
 # *************************************************************************************************************************
 
-# get_json ****************************************************************************************************************
+# _get_init ***************************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
-# 001 2014-12-16 Jose Juan
+# 001 2015-03-11 Jose Juan
 #
-# Get JSON from a URL.
+# Init data.
 #
 # @author Jose Juan
-# @date 2014-12-16
-# @param psUrl, JSON's URL.
-# @return JSON Object.
+# @date 2015-03-11
+# @param request, HTTPRequest.
+# @param -
+# @return -
 # @remarks -
 #
-def get_json(psUrl):
-    rJSON = requests.get(psUrl)
-    jsonObject = rJSON.json()      
-  
-    if (len(jsonObject) > 0):     
-        return jsonObject      
-    else:     
-        return []    
-#
-# get_json ****************************************************************************************************************
+def _get_init():
+  sr = StormREST(utils.STORM_UI)
+  d = {}
+  d['storm_ui'] = utils.STORM_UI
 
-# get_dumps ***************************************************************************************************************
-# Rev Date       Author
-# --- ---------- ----------------------------------------------------------------------------------------------------------
-# 001 2014-12-23 Jose Juan
+  return sr, d
 #
-# Convert string literal to raw string literal.
-#
-# @author Jose Juan
-# @date 2014-12-23
-# @param psObject, string literal.
-# @return raw string literal.
-# @remarks -
-#
-def get_dumps(psObject):    
-    jsonDumps = json.dumps(psObject).replace("\\", "\\\\")
-  
-    return jsonDumps
-#
-# get_dumps ***************************************************************************************************************
+# _get_init ***************************************************************************************************************
 
-# get_topology ************************************************************************************************************
+# _get_storm_dashboard ****************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
-# 001 2014-12-03 Jose Juan
+# 001 2015-03-04 Jose Juan
 #
-# Storm Topology's.
+# Index of application.
 #
 # @author Jose Juan
-# @date 2014-12-03
-# @param topology_id, Topology Id.
-# @return Array with topology status.
+# @date 2015-03-04
+# @param request, HTTPRequest.
+# @return -
 # @remarks -
 #
-def get_topology(topology_id):  
-    aTopology = []  
-  
-    rTopology = requests.get(TOPOLOGY_URL + topology_id)
-    jsonTopology = rTopology.json()  
-  
-    if (len(jsonTopology) > 0):
-        nameTopology = jsonTopology["name"]
-        idTopology = jsonTopology["id"]
-        statusTopology = jsonTopology["status"]
-        uptimeTopology = jsonTopology["uptime"]
-        workersTopology = jsonTopology["workersTotal"]
-        executorsTopology = jsonTopology["executorsTotal"]
-        tasksTopology = jsonTopology["tasksTotal"]
+def _get_storm_dashboard(request):
+    iActive = 0
+    iInactive = 0
+    iExecutors = 0
+    iWorkers = 0
+    iTasks = 0
+
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topologies()):
+        raise StormREST.NotFound
+      else:
+          data['topologies'] = st_ui._get_topologies()
+          for topology in data['topologies']['topologies']:
+              topology.update({'seconds': utils._get_seconds_from_strdate(topology["uptime"]) })
+              iActive += 1 if topology["status"] == "ACTIVE" else 0
+              iInactive += 1 if topology["status"] != "ACTIVE" else 0
+              iExecutors += topology["executorsTotal"]
+              iWorkers += topology["workersTotal"]
+              iTasks += topology["tasksTotal"] 
+          
+          data['actives'] = iActive
+          data['inactives'] = iInactive
+          data['executors'] = iExecutors
+          data['workers'] = iWorkers
+          data['tasks'] = iTasks
+          data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+          data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+          data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'topologies': [], 
+              'actives': -1, 
+              'inactives': -1, 
+              'executors': -1, 
+              'workers': -1, 
+              'tasks': -1, 
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'error': 1}
+
+    return data
+#   
+# _get_storm_dashboard ****************************************************************************************************
+
+# _get_detail_values ******************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-11 Jose Juan
+#
+# Get resume of values of Emitted, Transferred, Acked and Failed.
+#
+# @author Jose Juan
+# @date 2015-03-11
+# @param topology_id, topology id.
+# @param system_id, show/hide system stats.
+# @return -
+# @remarks -
+#
+def _get_detail_values(stats, spouts, bolts):
+    aEmitted = []
+    aTransferred = []
+    aAcked = []
+    aFailed = []
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0    
+    aData = []
+
+    for stat in stats:
+      iEmitted+=stat["emitted"] if stat["emitted"] is not None else 0
+      iTransferred+=stat["transferred"] if stat["transferred"] is not None else 0
+      iAcked+=stat["acked"] if stat["acked"] is not None else 0
+      iFailed+=stat["failed"] if stat["failed"] is not None else 0
+         
+    aEmitted.append(iEmitted)     
+    aTransferred.append(iTransferred)     
+    aAcked.append(iAcked)     
+    aFailed.append(iFailed)     
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0
+         
+    for spout in spouts:
+      iEmitted+=spout["emitted"] if spout["emitted"] is not None else 0
+      iTransferred+=spout["transferred"] if spout["transferred"] is not None else 0
+      iAcked+=spout["acked"] if spout["acked"] is not None else 0
+      iFailed+=spout["failed"] if spout["failed"] is not None else 0
+         
+    aEmitted.append(iEmitted)     
+    aTransferred.append(iTransferred)     
+    aAcked.append(iAcked)     
+    aFailed.append(iFailed)
+    iEmitted = 0
+    iTransferred = 0
+    iAcked = 0
+    iFailed = 0
+         
+    for bolt in bolts:
+      iEmitted+=bolt["emitted"] if bolt["emitted"] is not None else 0
+      iTransferred+=bolt["transferred"] if bolt["transferred"] is not None else 0
+      iAcked+=bolt["acked"] if bolt["acked"] is not None else 0
+      iFailed+=bolt["failed"] if bolt["failed"] is not None else 0
+           
+    aEmitted.append(iEmitted)     
+    aTransferred.append(iTransferred)     
+    aAcked.append(iAcked)     
+    aFailed.append(iFailed)                
+    aData = [aEmitted, aTransferred, aAcked, aFailed]
+
+    return aData
+#
+# _get_detail_values ******************************************************************************************************  
+
+# _get_detail_dashboard ***************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-04 Jose Juan
+#
+# Get Data for a Control Panel of a topology (Dashboard).
+#
+# @author Jose Juan
+# @date 2015-03-04
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @param system_id, show/hide system stats.
+# @return -
+# @remarks -
+#
+def _get_detail_dashboard(request, topology_id, system_id):
+    aTopology = []
+    aStats = []
+    aSpouts = []
+    aBolts = []    
+    iSystem = int(system_id) if system_id is not None else 0
+    aCheck = []
+    aValues = []
+
+    try:
+      st_ui, data = _get_init()
+      
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+        data['topology'] = _get_topology_info(topology_id)
+        topology = st_ui._get_topology(topology_id, iSystem, False, "")
+        data['system'] = 1 if (iSystem == 0) else 0      
+        data['stats'] = topology['topologyStats']
+        data['spouts'] = topology['spouts']
+        data['bolts'] = topology['bolts']
+        data['jStats'] = utils._get_dumps(topology['topologyStats'])
+        data['jSpouts'] = utils._get_dumps(topology['spouts'])
+        data['jBolts'] = utils._get_dumps(topology['bolts'])
+        visualization = st_ui._get_topology(topology_id, 0, True, "")        
+        aCheck = utils._get_visualization_data(visualization)
+        data['visualization'] = utils._get_dumps(visualization)
+        aValues = _get_detail_values(data['stats'], data['spouts'], data['bolts'])
+        data['emitted'] = aValues[0]    
+        data['transferred'] = aValues[1]
+        data['acked'] = aValues[2]
+        data['failed'] = aValues[3]
+        data['aCheck'] = aCheck
+        data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+        data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+        data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'topology': _get_topology_info(topology_id), 
+              'system': -1, 
+              'stats': [], 
+              'spouts': [], 
+              'bolts': [], 
+              'jStats': [], 
+              'jSpouts': [], 
+              'jBolts': [], 
+              'visualization': [], 
+              'emitted': [], 
+              'transferred': [], 
+              'acked': [], 
+              'failed': [], 
+              'aCheck': [],
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'error': 1}
      
-        aTopology = [idTopology, nameTopology, statusTopology, uptimeTopology, workersTopology, executorsTopology, tasksTopology]
-     
-    return aTopology   
+    return data
 #
-# get_topology ************************************************************************************************************
+# _get_detail_dashboard ***************************************************************************************************
 
-# get_newform *************************************************************************************************************
+# _get_topology_dashboard *************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
-# 001 2014-12-29 Jose Juan
+# 001 2015-03-05 Jose Juan
 #
-# Get new form.
+# Get data of Topology Stats Dashboard (bolts & spouts).
 #
 # @author Jose Juan
-# @date 2014-12-29
-# @param psObject, form.
-# @return New class form.
+# @date 2015-03-05
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @param window, window stats (bolts & spouts).
+# @return -
 # @remarks -
 #
-def get_newform(request, pfForm):
-    if request.method == 'POST':
-        form = pfForm(request.POST, request.FILES)
-    else:   
-        form = pfForm()
-     
-    return form
-#
-# get_newform *************************************************************************************************************
+def _get_topology_dashboard(request, topology_id, window_id):
+    aTopology = []
 
-# changeTopologyStatus ****************************************************************************************************
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+        data['topology'] = _get_topology_info(topology_id)
+        topologyStats = st_ui._get_topology(topology_id, 0, False, window_id)  
+        topology = st_ui._get_topology(topology_id, 0, False, "")  
+        data['jStats'] = utils._get_dumps(topologyStats['topologyStats'])
+        data['jSpouts'] = utils._get_dumps(topologyStats['spouts'])
+        data['jBolts'] = utils._get_dumps(topologyStats['bolts'])
+        data['spouts'] = topology['spouts']
+        data['bolts'] = topology['bolts']
+        data['window_id'] = window_id
+        data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+        data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+        data['error'] = 0
+    except StormREST.NotFound:
+        data = {'storm_ui': utils.STORM_UI, 
+                'jStats': [], 
+                'jSpouts': [], 
+                'jBolts': [], 
+                'topology': _get_topology_info(topology_id),
+                'spouts': [],
+                'bolts': [],
+                'window_id': -1,    
+                'frmNewTopology':utils._get_newform(request, UploadFileForm),
+                'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+                'error': 1}
+
+    return data
+#
+# _get_topology_dashboard *************************************************************************************************
+
+# _get_components_dashboard ***********************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-05 Jose Juan
+#
+# Get data of Components Dashboard (bolt & spout).
+#
+# @author Jose Juan
+# @date 2015-03-05
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @param component_id, component id (bolt & spout).
+# @param system_id, show/hide system stats.
+# @return -
+# @remarks -
+#
+def _get_components_dashboard(request, topology_id, component_id, system_id):
+    iSystem = int(system_id) if system_id is not None else 0
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+          topology = st_ui._get_topology(topology_id, iSystem, False, "")
+          data['components'] = st_ui._get_components(topology_id, component_id, 0)
+          
+          if data['components']['componentType'] == "bolt":
+            data['isBolt'] = 1
+            data['jComponents'] = utils._get_dumps(data['components']["boltStats"])
+          else:
+            data['isBolt'] = 0
+            data['jComponents'] = utils._get_dumps(data['components']["spoutSummary"])
+
+          data['system'] = 1 if (iSystem == 0) else 0
+          data['topology'] = _get_topology_info(topology_id)
+          data['component_id'] = component_id
+          data['spouts'] = topology['spouts']
+          data['bolts'] = topology['bolts']
+          try:
+            data['input'] = utils._get_dumps(data['components']['inputStats'])
+          except:
+            data['input'] = []
+          try:
+            data['output'] = utils._get_dumps(data['components']['outputStats'])
+          except:  
+            data['output'] = []
+          try:
+            data['executor'] = utils._get_dumps(data['components']['executorStats'])
+          except:  
+            data['executor'] = []
+          try:
+            data['errors'] = utils._get_dumps(data['components']['componentErrors'])
+          except:  
+            data['errors'] = []    
+          data['jSpouts'] = utils._get_dumps(topology['spouts'])
+          data['jBolts'] = utils._get_dumps(topology['bolts'])
+          data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+          data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+          data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'components': [], 
+              'jComponents': [], 
+              'system': -1, 
+              'topology': _get_topology_info(topology_id),
+              'component_id': -1,  
+              'spouts': [], 
+              'bolts': [], 
+              'input': [],
+              'output': [],
+              'executor': [],
+              'errors': [], 
+              'jSpouts': [], 
+              'jBolts': [],   
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'isBolt': -1,
+              'error': 1}
+
+    return data
+#
+# _get_components_dashboard ***********************************************************************************************
+
+# _get_spouts_dashboard ********************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-05 Jose Juan
+#
+# Control Panel View  of Spouts (Dashboard).
+#
+# @author Jose Juan
+# @date 2015-03-2015
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @return -
+# @remarks -
+#
+def _get_spouts_dashboard(request, topology_id):
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+        topology = st_ui._get_topology(topology_id, 0, False, "")
+        data['topology'] = _get_topology_info(topology_id)
+        data['spouts'] = topology['spouts']
+        data['bolts'] = topology['bolts']
+        data['jSpouts'] = utils._get_dumps(topology['spouts'])
+        data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+        data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+        data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'topology': _get_topology_info(topology_id), 
+              'spouts': [],
+              'bolts': [],  
+              'jSpouts': [], 
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'error': 1}
+     
+    return data
+#
+# _get_spouts_dashboard ***************************************************************************************************
+
+# _get_bolts_dashboard *********************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-05 Jose Juan
+#
+# Control Panel View of Bolts (Dashboard).
+#
+# @author Jose Juan
+# @date 2015-03-05
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @return -
+# @remarks -
+#
+def _get_bolts_dashboard(request, topology_id):
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+        topology = st_ui._get_topology(topology_id, 0, False, "")
+        data['topology'] = _get_topology_info(topology_id)
+        data['spouts'] = topology['spouts']
+        data['bolts'] = topology['bolts']
+        data['jBolts'] = utils._get_dumps(topology['bolts'])
+        data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+        data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+        data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'topology': _get_topology_info(topology_id), 
+              'spouts': [], 
+              'bolts': [], 
+              'jBolts': [], 
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'error': 1}
+     
+    return data
+#
+# _get_bolts_dashboard ****************************************************************************************************
+
+# _get_cluster_summary ****************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-04 Jose Juan
+#
+# Get summary data from the Storm Cluster.
+#
+# @author Jose Juan
+# @date 2015-03-04
+# @param request, HTTPRequest.
+# @return -
+# @remarks -
+#
+def _get_cluster_summary(request):
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_cluster()) or utils._get_error(st_ui._get_supervisor()):
+        raise StormREST.NotFound
+      else:
+        data['cluster'] = st_ui._get_cluster()
+        data['supervisor'] = st_ui._get_supervisor()
+        data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+        data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+        data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 'cluster':[],'supervisor':{'supervisors':[]},'frmNewTopology':utils._get_newform(request, UploadFileForm),'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 'error':1}
+
+    return data
+#
+# _get_cluster_summary ****************************************************************************************************
+
+# _get_nimbus_configuration ***********************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-04 Jose Juan
+#
+# Get Nimbus Configuration from th Storm Cluster.
+#
+# @author Jose Juan
+# @date 2015-03-04
+# @param request, HTTPRequest.
+# @return -
+# @remarks -
+#
+def _get_nimbus_configuration(request):
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_configuration()):
+        raise StormREST.NotFound
+      else:
+        data['configuration'] = st_ui._get_configuration()
+        data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+        data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+        data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 'configuration':[],'frmNewTopology':utils._get_newform(request, UploadFileForm),'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 'error': 1}
+
+    return data
+#
+# _get_nimbus_configuration ***********************************************************************************************
+
+# _get_topology ***********************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-05 Jose Juan
+#
+# Get data of Topology Stats Windows (bolts & spouts).
+#
+# @author Jose Juan
+# @date 2015-03-05
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @param window_id, window stats (bolts & spouts).
+# @return -
+# @remarks -
+#
+def _get_topology(request, topology_id, window_id):
+    try:
+      st_ui, data = _get_init()
+      topology = st_ui._get_topology(topology_id, 0, False, window_id)  
+      topologyStats = topology['topologyStats']
+
+      for element in topologyStats:
+        if element["window"] == window_id:
+            data['stats'] = element   
+
+      data['topology'] = _get_topology_info(topology_id)
+      data['spouts'] = topology['spouts']
+      data['bolts'] = topology['bolts']
+      data['system'] = 0
+      data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+      data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+      data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'topology':_get_topology_info(topology_id),
+              'stats':[],
+              'spouts':[],
+              'bolts':[],
+              'system':-1,
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'error': 1}
+
+    return data
+#
+# _get_topology ***********************************************************************************************************
+
+# _get_components *********************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-06 Jose Juan
+#
+# Get data of Storm Topology's Components (bolts & spouts stats).
+#
+# @author Jose Juan
+# @date 2015-03-06
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @param component_id, component (bolts & spouts).
+# @return -
+# @remarks -
+#
+def _get_components(request, topology_id, component_id, system_id): 
+    iSystem = int(system_id) if system_id is not None else 0
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+          topology = st_ui._get_topology(topology_id, iSystem, False, "")
+          data['components'] = st_ui._get_components(topology_id, component_id, system_id)
+          data['system'] = 1 if (iSystem == 0) else 0
+          data['topology'] = _get_topology_info(topology_id)
+          data['component_id'] = component_id
+          try:
+            data['input'] = data['components']['inputStat']
+          except:
+            data['input'] = []
+          try:
+            data['output'] = data['components']['outputStats']
+          except:  
+            data['output'] = []
+          try:
+            data['executor'] = data['components']['executorStats']
+          except:  
+            data['executor'] = []
+          try:
+            data['errors'] = data['components']['componentErrors']
+          except:  
+            data['errors'] = []    
+
+          data['log_url'] = utils.LOG_URL
+          data['frmNewTopology'] = utils._get_newform(request, UploadFileForm)
+          data['frmHDFS'] = utils._get_newform(request, UploadFileFormHDFS)
+          data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI, 
+              'components': [], 
+              'system': -1, 
+              'topology': _get_topology_info(topology_id),
+              'component_id': -1,  
+              'input': [],
+              'output': [],
+              'error': [],    
+              'log_url': "",
+              'frmNewTopology':utils._get_newform(request, UploadFileForm),
+              'frmHDFS':utils._get_newform(request, UploadFileFormHDFS), 
+              'error': 1}
+     
+    return data
+#
+# _get_components *********************************************************************************************************
+
+# _get_failed *************************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-03-05 Jose Juan
+#
+# Get data of failed components.
+#
+# @author Jose Juan
+# @date 2015-03-05
+# @param request, HTTPRequest.
+# @param topology_id, topology id.
+# @param component_id, component id (spout&bolt).
+# @param system_id, show/hide system stats.
+# @return -
+# @remarks -
+#
+def _get_failed(request, topology_id, component_id, system_id): 
+    try:
+      st_ui, data = _get_init()
+
+      if utils._get_error(st_ui._get_topology(topology_id)):
+        raise StormREST.NotFound
+      else:
+        iSystem = int(system_id) if system_id is not None else 0
+        topology = st_ui._get_topology(topology_id, iSystem, False, "")
+        data['topology'] = _get_topology_info(topology_id)
+        data['spouts'] = topology['spouts']
+        data['bolts'] = topology['bolts']
+        data['stats'] = topology['topologyStats']
+        data['component_id'] = component_id
+        data['error'] = 0
+    except StormREST.NotFound:
+      data = {'storm_ui': utils.STORM_UI,
+              'topology':_get_topology_info(topology_id),
+              'spouts':[], 
+              'bolts':[],
+              'stats':[],
+              'error': 1}
+
+    return data
+#
+# failed ******************************************************************************************************************
+
+# post_topology_status ****************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
 # 001 2014-11-25 Jose Juan
@@ -787,30 +953,39 @@ def get_newform(request, pfForm):
 # @return -
 # @remarks -
 #
-@csrf_exempt
-def changeTopologyStatus(request):
+def post_topology_status(request):
     iResult = -1
     sId = ""
     sAction = ""
     bWait = False
     iWait = -1    
   
-    if request.method == 'POST':
-        sId = request.POST['sId']      
-        sAction = request.POST['sAction']
-        bWait = request.POST['bWait']
-        iWait = request.POST['iWait']
-     
-        if (bWait == "true"):
-            post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)
-        else:
-            post_response = requests.post(TOPOLOGY_URL + sId + '/' + sAction)            
+    try:
+        if request.method == 'POST':
+            sId = request.POST['sId']
+            sAction = request.POST['sAction']
+            bWait = request.POST['bWait']
+            iWait = request.POST['iWait']
+
+            if bWait == "true":
+                post_response = requests.post(utils.STORM_UI + utils.TOPOLOGY_URL + sId + '/' + sAction + '/' + iWait)            
+            else:
+                post_response = requests.post(utils.STORM_UI + utils.TOPOLOGY_URL + sId + '/' + sAction)                                    
       
-        iResult =  post_response.status_code            
-      
+            iResult =  post_response.status_code               
+
+    except requests.exceptions.URLRequired as e:
+        iResult = e
+    except requests.exceptions.HTTPError as e:
+        iResult = e
+    except requests.exceptions.RequestException as e:
+        iResult = e
+    except:
+        iResult = 1
+    
     return HttpResponse(iResult, mimetype = "application/javascript") 
 #
-# changeTopologyStatus ****************************************************************************************************
+# post_topology_status ****************************************************************************************************
     
 # set_topology_status *****************************************************************************************************
 # Rev Date       Author
@@ -826,7 +1001,6 @@ def changeTopologyStatus(request):
 # @return -
 # @remarks -
 #
-@csrf_exempt
 def set_topology_status(request):  
     sAction = ""   
     sExecute = ""
@@ -837,64 +1011,56 @@ def set_topology_status(request):
     sNumExecutors = ""
     msg = ""
     sTopologyName = ""
-    response = {'status': -1, 'output': -1, 'data': ''}  
-    sScript = "storm"                           
+    response = {'status': -1, 'output': -1}                             
 
     if request.method == 'POST':
         sAction = request.POST['psAction']             
           
-        if (sAction == "rebalance"):                   
+        if sAction == "rebalance":                   
             sNameTopology = request.POST['psNameTopology'] 
-            iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] <> "") else 0                        
-            iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] <> "") else 0                        
+            iNumWorkers = request.POST['piNumWorkers'] if (request.POST['piNumWorkers'] != "") else 0                        
+            iWaitSecs = request.POST['piWaitSecs'] if (request.POST['piWaitSecs'] != "") else 0                        
             aComponent = request.POST.getlist('paComponents[]')
+
+            sOptions += " -w " + iWaitSecs if iWaitSecs > 0 else ""
+            sOptions += " -n " + iNumWorkers if iNumWorkers > 0 else ""
+            iMod = 0            
             
-            if (iWaitSecs > 0):
-                sOptions += " -w " + iWaitSecs        
-	  
-            if (iNumWorkers > 0):
-                sOptions += " -n " + iNumWorkers
+            while iMod < len(aComponent):
+              if iMod%2 == 0:
+                sOptions += " -e " + aComponent[iMod] + "="
+              else:
+                sOptions+=aComponent[iMod] if aComponent[iMod] != "" else "0"
+                          
+              iMod+=1
             
-            iMod = 0
-            
-            if (aComponent <> []):    
-                while (iMod < len(aComponent)):
-                    if(iMod%2 == 0):     
-                        sOptions += " -e " + aComponent[iMod] + "="
-                    else:                           
-                        sOptions+=aComponent[iMod]
-                        
-                    iMod+=1
-                
-            sExecute = sScript + " " + sAction + " " + sNameTopology + " " + sOptions                                
+            sExecute = utils.COMMAND + " " + sAction + " " + sNameTopology + " " + sOptions
                     
-        if (sAction == "submitTopology"):            
+        if sAction == "submitTopology":            
             sURL = request.POST['psURL']
             form = UploadFileForm(request.POST, request.FILES)
 
             if form.is_valid():                                            
-                sServer = conf.STORM_UI_SERVER.get()                       
-                sClass = request.POST['class_name'] if (request.POST['class_name'] <> "") else ""
-                sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] <> "") else ""
+                sClass = request.POST['class_name'] if (request.POST['class_name'] != "") else ""
+                sTopologyName = request.POST['topology_name'] if (request.POST['topology_name'] != "") else ""
                 sFile = request.FILES['file']
                 sFileName = sFile.name                                                        
                 sClass = request.POST['class_name']  
                 sPath = settings.UPLOAD_ROOT + '/' + sFileName
-                    
-                if not (os.path.isfile(sPath)):
+                
+                try:
+                  if not os.path.isfile(sPath):
                     path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
                     sPath = os.path.join(settings.UPLOAD_ROOT, path)
-                    
-                sExecute = sScript + " " + "jar -c nimbus.host=" + sServer + " " + sPath + " " + sClass + " " + sTopologyName
-                response['status'] = 0
+                    sExecute = utils.COMMAND_JAR + sPath + " " + sClass + " " + sTopologyName
+                except:
+                  msg = _('Error saving JAR File.\n')
+                  raise PopupException(msg)                
                         
-            else:
-                #raise PopupException(_("Error in upload form: %s") % (form.errors,))
-                msg = _("Error in upload form: %s.\n") % form.errors
-                response['error'] = form.errors
-                response['status'] = -1
+            else:                
+                msg = _("Error in upload form.")
               
-        if (sAction == "saveTopology"):
+        if sAction == "saveTopology":
             sURL = request.POST['psURL']
             form = UploadFileFormHDFS(request.POST, request.FILES)
             
@@ -907,7 +1073,7 @@ def set_topology_status(request):
                 sFileHDFS = ""
             
             try:    
-                if (sFileHDFS <> ""):
+                if sFileHDFS != "":
                     username = request.user.username
                     sFileNameHDFS = sFileHDFS.name
                     sPathHDFS = "/user/" + username                 
@@ -936,80 +1102,72 @@ def set_topology_status(request):
                 
                 raise PopupException(msg)
                           
-    status, output = commands.getstatusoutput(sExecute)      
-  
+    status, output = commands.getstatusoutput(sExecute)
+
     response['output'] = output
-            
-    if (sAction == "submitTopology"):
+    response['status'] = status
+
+    if sAction == "submitTopology":
         try:
             os.remove(sPath)
         except:
             msg += "Exception raised while deleting temp file.\n"
         pass
 
-        if (("Finished submitting topology: " + sTopologyName) in response['output']):
-            output = None
+        if "Finished submitting topology: " + sTopologyName in response['output']:
+            response['output'] = None
             
-        if ((output is None) and (response['status'] == 0)):
+        if response['output'] is None and response['status'] == 0:
             return HttpResponseRedirect(sURL)
         else:
-            if (output is None):
+            if response['output'] is None:
                 msg += "Topology submitted OK.\n"
             else:
                 msg += "Error submitting topology.\n"
                     
             raise PopupException(msg)
-            
-    return HttpResponse(json.dumps(response), content_type="text/plain")            
+
+    return HttpResponse(utils._get_dumps_without(response), content_type="text/plain")            
 #
 # set_topology_status ***************************************************************************************************** 
-      
-# get_seconds_from_strdate ************************************************************************************************
+
+# _get_topology_info ******************************************************************************************************
 # Rev Date       Author
 # --- ---------- ----------------------------------------------------------------------------------------------------------
-# 001 2014-12-11 Jose Juan
+# 001 2014-12-03 Jose Juan
 #
-# Get seconds from a date in string type.
+# Storm Topology's.
 #
 # @author Jose Juan
-# @date 2014-12-11
-# @param psDate, Topology Id.
+# @date 2014-12-03
+# @param topology_id, Topology Id.
 # @return Array with topology status.
 # @remarks -
 #
-def get_seconds_from_strdate(psDate):
-    iSeconds = 0
-    
+def _get_topology_info(topology_id):   
     try:
-        aDate = psDate.split(" ")   
-        iLen = len(aDate) if len(psDate) is not None else 0
+      st_ui, data = _get_init()
+      topology = st_ui._get_topology(topology_id, 0, False)
+      data['name'] = topology["name"]
+      data['id'] = topology["id"]
+      data['status'] = topology["status"]
+      data['uptime'] = topology["uptime"]
+      data['workers'] = topology["workersTotal"]
+      data['executors'] = topology["executorsTotal"]
+      data['tasks'] = topology["tasksTotal"]
+      data['error'] = 0
     except:
-        iLen = 0
-        
-    if (iLen == 1):
-        try:
-            iSeconds = int(aDate[0][:-1])
-        except:
-            iSeconds = 0    
-   
-    if (iLen == 2):
-        try:
-            iSeconds = (int(aDate[0][:-1]) * 60) + int(aDate[1][:-1])
-        except:
-            iSeconds = 0    
-   
-    if (iLen == 3):
-        try:
-            iSeconds = (int(aDate[0][:-1]) * 3600) + (int(aDate[1][:-1]) * 60) + int(aDate[2][:-1])
-        except:
-            iSeconds = 0   
-   
-    if (iLen == 4):     
-        try:
-            iSeconds = (int(aDate[0][:-1]) * 86400) + (int(aDate[1][:-1]) * 3600) + (int(aDate[2][:-1]) * 60) + int(aDate[3][:-1])
-        except:
-            iSeconds = 0       
-   
-    return iSeconds
-#  
-# get_seconds_from_strdate *************************************************************************************************
+      data = {'storm_ui': utils.STORM_UI,
+              'name': "",
+              'id': "",
+              'status': "",
+              'uptime': "",
+              'workers': -1,
+              'executors': -1,
+              'tasks': -1, 
+              'error': "",
+              'error': 1 }
+
+    return data
+#
+# _get_topology_info ******************************************************************************************************
