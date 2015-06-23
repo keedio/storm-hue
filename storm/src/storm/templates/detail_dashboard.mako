@@ -297,7 +297,16 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> ${ _('Topology Stats') }
+                                <table width="100%">             
+                                  <tr>
+                                    <td>                            
+                                      <i class="fa fa-table fa-fw"></i> ${ _('Topology Stats') }
+                                    </td>
+                                    <td>                                      
+                                      ${Templates.frmExport(Data['stats'])}
+                                    </td>
+                                  </tr>
+                                </table>                                  
                                </div>
                                <div class="panel-body">
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
@@ -345,7 +354,16 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> ${ _('Spouts (All Time)') }
+                                <table width="100%">             
+                                  <tr>
+                                    <td>                            
+                                      <i class="fa fa-table fa-fw"></i> ${ _('Spouts (All Time)') }
+                                    </td>
+                                    <td>
+                                      ${Templates.frmExport(Data['spouts'])}
+                                    </td>
+                                  </tr>
+                                </table>                                                                    
                                </div>
                                <div class="panel-body">                         
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
@@ -409,7 +427,16 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> ${ _('Bolts (All Time)') }
+                                <table width="100%">             
+                                  <tr>
+                                    <td>                            
+                                      <i class="fa fa-table fa-fw"></i> ${ _('Bolts (All Time)') }
+                                    </td>
+                                    <td>
+                                      ${Templates.frmExport(Data['bolts'])} 
+                                    </td>
+                                  </tr>
+                                </table>                                  
                                </div>
                                <div class="panel-body">                  
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyBolts" data-tablescroller-disable="true">
@@ -583,10 +610,19 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <a href="${url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)}" title="${ _('Topology Stats Detail') }">
-                                        <i class="fa fa-trello fa-fw"></i>
-                                        ${ _('Stats') }
-                                     </a>
+                                    <table width="100%">             
+                                      <tr>
+                                        <td>                            
+                                          <a href="${url('storm:detail_dashboard', topology_id = Data['topology']['id'], system_id = 0)}" title="${ _(    'Topology Stats Detail') }">
+                                              <i class="fa fa-trello fa-fw"></i>
+                                              ${ _('Stats') }
+                                          </a>
+                                        </td>
+                                        <td>
+                                          
+                                        </td>
+                                      </tr>
+                                    </table>                                     
                                   </div>
                                   <div class="panel-body">
                                      <div id="barStats"><svg style="max-width: 512px; min-height: 400px; margin: 10px auto"></svg></div>
@@ -598,10 +634,19 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <a href="${url('storm:spouts_dashboard', topology_id = Data['topology']['id'])}" title="${ _('Spouts Detail') }"> 
-                                        <i class="fa fa-trello fa-fw"></i>
-                                        ${ _('Spouts') }
-                                     </a>                                     
+                                    <table width="100%">             
+                                      <tr>
+                                        <td>                            
+                                          <a href="${url('storm:spouts_dashboard', topology_id = Data['topology']['id'])}" title="${ _('Spouts Detail') }">
+                                              <i class="fa fa-trello fa-fw"></i>
+                                              ${ _('Spouts') }
+                                          </a>
+                                        </td>
+                                        <td>
+                                          
+                                        </td>
+                                      </tr>
+                                    </table>
                                   </div>
                                   <div class="panel-body">
                                      <div id="barSpouts"><svg style="max-width: 512px; min-height: 400px; margin: 10px auto"></svg></div>
@@ -613,10 +658,19 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <a href="${url('storm:bolts_dashboard', topology_id = Data['topology']['id'])}" title="${ _('Bolts Detail') }"> 
-                                        <i class="fa fa-trello fa-fw"></i>
-                                        ${ _('Bolts') }
-                                     </a>                                     
+                                    <table width="100%">             
+                                      <tr>
+                                        <td>                            
+                                          <a href="${url('storm:bolts_dashboard', topology_id = Data['topology']['id'])}" title="${ _('Bolts Detail') }"> 
+                                              <i class="fa fa-trello fa-fw"></i>
+                                              ${ _('Bolts') }
+                                          </a>
+                                        </td>
+                                        <td>
+                                          
+                                        </td>
+                                      </tr>
+                                    </table>
                                   </div>
                                   <div class="panel-body">
                                      <div id="barBolts"><svg style="max-width: 512px; min-height: 400px; margin: 10px auto"></svg></div>
@@ -630,7 +684,16 @@ ${ storm.menubar(section = 'Detail Dashboard')}
                             <div class="col-lg-4">
                                <div class="panel panel-default">
                                   <div class="panel-heading">
-                                     <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }                                     
+                                    <table width="100%">             
+                                      <tr>
+                                        <td>                            
+                                          <i class="fa fa-sitemap fa-fw"></i> ${ _('Topology Visualization') }
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                      </tr>
+                                    </table>                                                                        
                                   </div>
                                   <div class="panel-body">
                                      <!-- <input type="button" id="show-hide-visualization" value="Show Visualization"/> -->

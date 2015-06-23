@@ -25,6 +25,7 @@ To get the Storm-HUE app integrated and running in your HUE deployment:
     $ mv storm-hue/storm $HUE_HOME/apps
     $ cd $HUE_HOME/apps
     $ sudo ../tools/app_reg/app_reg.py --install storm --relative-paths
+    $ chown -R hue: storm/
 
 Modify the hue.ini config file as follows and restart HUE. 
 

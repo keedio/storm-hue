@@ -24,6 +24,8 @@ except ImportError:
 
 from storm import conf
 
+DL_FORMATS = [ 'json', 'csv', 'xls', 'pdf' ]
+
 COMMAND = "storm"
 COMMAND_JAR = "storm jar "
 COMMAND_SUBMIT = "storm"
