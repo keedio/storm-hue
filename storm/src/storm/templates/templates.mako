@@ -103,7 +103,16 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> ${ _('Supervisor Summary') }
+            <table width="100%">
+               <tr>
+                  <td>
+                     <i class="fa fa-table fa-fw"></i> ${ _('Supervisor Summary') }
+                  </td>
+                  <td>
+                     ${frmExport(Data["supervisor"]["supervisors"])}
+                  </td>
+               </tr>
+            </table>            
          </div>
          <div class="panel-body">                      
             <table class="table datatables table-striped table-hover table-condensed" id="tblSupervisor" data-tablescroller-disable="true">
@@ -139,7 +148,16 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> ${ _('Cluster Summary') }
+            <table width="100%">
+               <tr>
+                  <td>
+                     <i class="fa fa-table fa-fw"></i> ${ _('Cluster Summary') }
+                  </td>
+                  <td>
+                     ${frmExport(Data["cluster"])}
+                  </td>
+               </tr>
+            </table>            
          </div>
          <div class="panel-body">
             <table class="table datatables table-striped table-hover table-condensed" id="tblCluster" data-tablescroller-disable="true">
@@ -179,9 +197,18 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> ${ _('Nimbus Configuration') }
+            <table width="100%">
+               <tr>
+                  <td>
+                     <i class="fa fa-table fa-fw"></i> ${ _('Nimbus Configuration') }
+                  </td>
+                  <td>
+                     ${frmExport(Data['configuration'])}
+                  </td>
+               </tr>
+            </table>                         
          </div>
-         <div class="panel-body">                 
+         <div class="panel-body">              
             <table class="table datatables table-striped table-hover table-condensed" id="tblConfiguration" data-tablescroller-disable="true">
                <thead>
                   <tr>
@@ -209,7 +236,16 @@
    <div class="col-lg-4">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
+            <table width="100%">
+               <tr>
+                  <td>                            
+                     <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
+                  </td>
+                  <td> 
+                     ${frmExport(paTopology)}                 
+                  </td>
+               </tr>
+            </table>            
          </div>
          <div class="panel-body">
             <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySummary" data-tablescroller-disable="true">
@@ -494,4 +530,32 @@
       </div>   
    </div>
 </%def>
+<!-- ************************************************************************************************************************************* -->
+
+<!-- Export data. -->
+<%def name="frmExport(pData)">
+    <form id="frmDownload" method="post" enctype="application/json" action="/storm/download/">
+       <div class="btn-group pull-right">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+             <i class="fa fa-chevron-down"></i>
+          </button>
+          <ul class="dropdown-menu slidedown">
+             <li>
+                <button class="btnWithout" type="submit" name="json" title="${ _('Download as JSON') }"><i class="fa fa-file-code-o fa-1x"> ${ _('Export to JSON') }</i></button>
+             </li>
+             <li>
+                <button class="btnWithout" type="submit" name="csv" title="${ _('Download as CSV') }"><i class="fa fa-file-text-o"> ${ _('Export to CSV') }</i></button>
+             </li>
+             <li>                                        
+                <button class="btnWithout" type="submit" name="xls" title="${ _('Download as XLS') }"><i class="fa fa-file-excel-o fa-1x"> ${ _('Export to XLS') }</i></button>
+             </li>
+             <li>
+                <button class="btnWithout" type="submit" name="pdf" title="${ _('Download as PDF') }"><i class="fa fa-file-pdf-o fa-1x"> ${ _('Export to PDF') }</i></button>
+             </li>                                    
+          </ul>
+          <input type="hidden" name="pData" id="pData" value="${pData}">                                    
+       </div>
+    </form>
+</%def>
+
 <!-- ************************************************************************************************************************************* -->

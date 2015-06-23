@@ -136,7 +136,16 @@ ${ storm.menubar(section = 'Failed')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> ${ _('Topology Stats') }
+                                <table width="100%">
+                                 <tr>
+                                    <td>
+                                       <i class="fa fa-table fa-fw"></i> ${ _('Topology Stats') }
+                                    </td>
+                                    <td>
+                                       ${Templates.frmExport(Data['stats'])}
+                                    </td>
+                                 </tr>
+                                </table>                                   
                                </div>
                                <div class="panel-body">
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
@@ -186,7 +195,16 @@ ${ storm.menubar(section = 'Failed')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> ${ _('Spouts (All Time)') }
+                                  <table width="100%">
+                                   <tr>
+                                      <td>
+                                         <i class="fa fa-table fa-fw"></i> ${ _('Spouts (All Time)') }
+                                      </td>
+                                      <td>
+                                         ${Templates.frmExport(Data['spouts'])}
+                                      </td>
+                                   </tr>
+                                  </table>                                   
                                </div>
                                <div class="panel-body">                         
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
@@ -252,7 +270,16 @@ ${ storm.menubar(section = 'Failed')}
                          <div class="col-lg-4">
                             <div class="panel panel-default">
                                <div class="panel-heading">
-                                  <i class="fa fa-table fa-fw"></i> ${ _('Bolts (All Time)') }
+                                <table width="100%">
+                                 <tr>
+                                    <td>
+                                       <i class="fa fa-table fa-fw"></i> ${ _('Bolts (All Time)') }
+                                    </td>
+                                    <td>
+                                       ${Templates.frmExport(Data['bolts'])}
+                                    </td>
+                                 </tr>
+                                </table>                                   
                                </div>
                                <div class="panel-body">                  
                                   <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyBolts" data-tablescroller-disable="true">

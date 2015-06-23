@@ -27,6 +27,7 @@ ${commonheader("Storm Dashboard", app_name, user) | n,unicode}
 <%namespace name="JavaScript" file="js.mako" />
 
 <link href="/storm/static/css/storm.css" rel="stylesheet">
+<link href="/static/ext/css/hue-filetypes.css" rel="stylesheet">
 
 ${ graphsHUE.import_charts() }
 ${ JavaScript.import_js() }
@@ -71,7 +72,7 @@ ${ JavaScript.import_js() }
                                        .x(function(d) { return d.label })
                                        .y(function(d) { return d.value })
                                        .valueFormat(d3.format(".0f"))
-                                       .color(['#468847', '#f89406'])
+                                       .color(['#46A546', '#F89406'])
                                        .showLabels(false);
                   d3.select("#pieTopologyStats svg")
                     .datum(dataTopologyStats)
@@ -144,7 +145,7 @@ ${ storm.menubar(section = 'Storm Dashboard')}
                    <div class="col-lg-4">
                       <div class="panel panel-default">
                          <div class="panel-heading">
-                            <i class="fa fa-database fa-fw"></i> ${ _('Topologies Stats') }
+                          <i class="fa fa-database fa-fw"></i> ${ _('Topologies Stats') }                            
                          </div>
                          <div class="panel-body">
                             <div id="pieTopologyStats"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -155,8 +156,17 @@ ${ storm.menubar(section = 'Storm Dashboard')}
                 <td width="33%" rowspan="3">
                    <div class="col-lg-4">
                       <div class="panel panel-default">
-                         <div class="panel-heading">
-                            <i class="fa fa-database fa-fw"></i> ${ _('Topologies: Executors/Tasks') }
+                         <div class="panel-heading">                            
+                          <table width="100%">             
+                            <tr>
+                              <td>                            
+                                <i class="fa fa-database fa-fw"></i> ${ _('Topologies: Executors/Tasks') }
+                              </td>
+                              <td>
+                                
+                              </td>
+                            </tr>
+                          </table>
                          </div>
                          <div class="panel-body">
                             <div id="pieExecWorkers"><svg style="min-height: 240px; margin: 10px auto"></svg></div>
@@ -257,7 +267,7 @@ ${ storm.menubar(section = 'Storm Dashboard')}
                             </div>
                          </div>
                       </div>
-                      <a href="#">                               
+                      <a href="${url('storm:detail_dashboard', topology_id = sIdMax, system_id = 0)}">
                          <div class="panel-footer">
                             <span class="pull-left">${ _('View Details') }</span>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -271,8 +281,17 @@ ${ storm.menubar(section = 'Storm Dashboard')}
                 <td colspan="3">
                    <div class="col-lg-4">
                       <div class="panel panel-default">
-                         <div class="panel-heading">
-                            <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
+                         <div class="panel-heading">                            
+                          <table width="100%">             
+                            <tr>
+                              <td>                            
+                                <i class="fa fa-table fa-fw"></i> ${ _('Topology Summary') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['topologies']['topologies'])}
+                              </td>
+                            </tr>
+                          </table>
                          </div>
                          <div class="panel-body">
                             <table class="table datatables table-striped table-hover table-condensed" id="tblTopology" data-tablescroller-disable="true">

@@ -3,7 +3,7 @@ function changeDisplay(id1, id2) {
    document.getElementById(id1).style.display = "";
    document.getElementById(id2).style.display = "none";            
 };
-   
+
 function post_topology_status(psId, psAction, pbWait, piWait) {    
    $("#btnNo"+psAction).hide();
    $("#btnYes"+psAction).hide();
