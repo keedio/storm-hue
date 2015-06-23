@@ -17,7 +17,16 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
+import csv
+
+from reportlab.lib.pagesizes import A4, inch, portrait, landscape
+from reportlab.platypus import SimpleDocTemplate, Table
+from reportlab.lib import colors
+
+import json
+import logging
 import os, commands, requests
+import subprocess
 from django.template import RequestContext
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -25,9 +34,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse, HttpResponseRedirect
 from desktop.lib.django_util import render  
 from desktop.lib.exceptions_renderable import PopupException
-from storm import settings, conf, utils
+from storm import settings, conf, utils, data_export
 from storm.storm_ui import StormREST
 from storm.forms import UploadFileForm, UploadFileFormHDFS 
+
+LOG = logging.getLogger(__name__)
 
 # *************************************************************************************************************************
 # **********                                                                                                     **********
@@ -260,6 +271,116 @@ def failed(request, topology_id, component_id, system_id):
     return render('failed.mako', request, {'Data': _get_failed(request, topology_id, component_id, system_id)})  
 #
 # failed ******************************************************************************************************************
+
+# download ****************************************************************************************************************
+# Rev Date       Author
+# --- ---------- ----------------------------------------------------------------------------------------------------------
+# 001 2015-04-30 Jose Juan
+#
+# Export data in request file format.
+#
+# @author Jose Juan
+# @date 2015-04-30
+# @param request, HTTPRequest.
+# @return Doc in request file format.
+# @remarks -
+#
+def download(request):  
+  if request.method == 'POST':
+    aHeaders = []
+    aData = []
+    aLine = []
+    elements = []
+    tmpDict = []
+    response = HttpResponse('')
+
+    data = request.POST['pData'] \
+            .replace("u", "") \
+            .replace("'", '"') \
+            .replace("None", '"None"') \
+            .replace("False", '"False"') \
+            .replace("True", '"True"') \
+            .replace("Tre", '"Tre"')
+
+    file_format = 'csv' if 'csv' in request.POST else 'xls' if 'xls' in request.POST else 'json' if 'json' in request.POST else 'pdf'
+
+    if len(json.loads(data)) == 0:
+      jsonData = [{"Data": "No data available"}]
+    else:
+      jsonData = json.loads(data)
+
+    #Source data can be list or dict.
+    if type(jsonData) == type({}):      
+      for key, value in jsonData.iteritems():        
+        aHeaders.append(key);
+        aLine.append(value);
+    else:
+      for element in jsonData[0]:
+        aHeaders.append(element)
+
+    #Output File Format.
+    if file_format in ('csv','xls'):      
+      if file_format == 'csv':
+        contenttype = 'text/csv'
+      else:
+        contenttype = 'application/ms-excel'
+
+      response = HttpResponse(content_type=contenttype)
+      response['Content-Disposition'] = 'attachment; filename=%s_%s.%s' % ('file', file_format, file_format)        
+      
+      writer = csv.writer(response)
+      writer.writerow(aHeaders)
+      
+      if type(jsonData) != type({}):
+        for element in jsonData:        
+          aLine = []
+        
+          for line in element:
+            aLine.append(element[line])
+          writer.writerow(aLine)
+      else:
+        writer.writerow(aLine)
+
+    if file_format == 'json':
+      contenttype = 'application/json'
+      response = HttpResponse(data, content_type=contenttype)
+      response['Content-Disposition'] = 'attachment; filename=%s_%s.%s' % ('file', file_format, file_format)
+
+    if file_format == 'pdf':        
+      contenttype = 'application/pdf'
+      response = HttpResponse(content_type=contenttype)
+      
+      doc = SimpleDocTemplate(response, pagesize = landscape(A4))
+      elements = []
+      aStyle = [('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+               ]
+
+      if str(jsonData).find("[", 1) == -1: 
+        aData.append(aHeaders)
+
+        if type(jsonData) != type({}):
+          for element in jsonData:        
+            aLine = []
+            for line in element:
+              aLine.append(element[line])
+            
+            aData.append(aLine)
+        else:
+          aData.append(aLine)
+
+        t = Table(aData, style = aStyle)
+      else:
+        t = Table([['ERROR'],['ERROR in table format']], style = aStyle)
+        
+      elements.append(t)
+      doc.build(elements)
+
+    return response 
+#
+# download ****************************************************************************************************************    
 
 # *************************************************************************************************************************
 # **********                                                                                                     **********
@@ -983,7 +1104,7 @@ def post_topology_status(request):
     except:
         iResult = 1
     
-    return HttpResponse(iResult, mimetype = "application/javascript") 
+    return HttpResponse(iResult, contenttype = "application/javascript") 
 #
 # post_topology_status ****************************************************************************************************
     
@@ -1048,7 +1169,7 @@ def set_topology_status(request):
                 sClass = request.POST['class_name']  
                 sPath = settings.UPLOAD_ROOT + '/' + sFileName
                 
-                try:
+                try:        
                   if not os.path.isfile(sPath):
                     path = default_storage.save(settings.UPLOAD_ROOT + '/' + sFileName, ContentFile(sFile.read()))
                     sPath = os.path.join(settings.UPLOAD_ROOT, path)
@@ -1107,11 +1228,14 @@ def set_topology_status(request):
     response['output'] = output
     response['status'] = status
 
+    print "OUTPUT: ",output
+    print "STATUS: ",status
+
     if sAction == "submitTopology":
         try:
             os.remove(sPath)
         except:
-            msg += "Exception raised while deleting temp file.\n"
+            msg += _('Exception raised while deleting temp file.\n')
         pass
 
         if "Finished submitting topology: " + sTopologyName in response['output']:
@@ -1121,9 +1245,9 @@ def set_topology_status(request):
             return HttpResponseRedirect(sURL)
         else:
             if response['output'] is None:
-                msg += "Topology submitted OK.\n"
+                msg += _('Topology submitted OK.\n')
             else:
-                msg += "Error submitting topology.\n"
+                msg += _('Error submitting topology.\n')
                     
             raise PopupException(msg)
 

@@ -195,7 +195,15 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${ _('Component Summary') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${ _('Component Summary') }
+                              </td>
+                              <td>
+                              </td>
+                            </tr>
+                          </table>     
                         </div>
                         <div class="panel-body">
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyComponent" data-tablescroller-disable="true">
@@ -227,7 +235,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${Data['components']['componentType']} ${ _('Stats') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${Data['components']['componentType']} ${ _('Stats') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['components']['boltStats'])}
+                              </td>
+                            </tr>
+                          </table>                           
                         </div>
                         <div class="panel-body">
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
@@ -275,7 +292,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${Data['components']['componentType']} ${ _('Stats') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${Data['components']['componentType']} ${ _('Stats') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['components']['spoutSummary'])}
+                              </td>
+                            </tr>
+                          </table>                            
                         </div>
                         <div class="panel-body">
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyStats" data-tablescroller-disable="true">
@@ -321,7 +347,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${ _('Input Stats') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${ _('Input Stats') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['input'])}
+                              </td>
+                            </tr>
+                          </table>                            
                         </div>
                         <div class="panel-body">               
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyInput" data-tablescroller-disable="true">
@@ -368,7 +403,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${ _('Output Stats') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${ _('Output Stats') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['output'])}
+                              </td>
+                            </tr>
+                          </table>                           
                         </div>
                         <div class="panel-body">                
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyOutput" data-tablescroller-disable="true">
@@ -400,7 +444,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${ _('Executors') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${ _('Executors') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['executor'])}
+                              </td>
+                            </tr>
+                          </table>                           
                         </div>
                         <div class="panel-body">                 
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyExecutors" data-tablescroller-disable="true">
@@ -460,7 +513,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${ _('Executors') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${ _('Executors') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['executor'])}
+                              </td>
+                            </tr>
+                          </table>                                                      
                         </div>
                         <div class="panel-body">                
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyExecutors" data-tablescroller-disable="true">
@@ -516,7 +578,16 @@ ${ storm.menubar(section = 'Components Explain')}
                   <div class="col-lg-4">
                      <div class="panel panel-default">
                         <div class="panel-heading">
-                           <i class="fa fa-table fa-fw"></i> ${ _('Errors') }
+                          <table width="100%">
+                            <tr>
+                              <td>
+                                <i class="fa fa-table fa-fw"></i> ${ _('Errors') }
+                              </td>
+                              <td>
+                                ${Templates.frmExport(Data['errors'])}
+                              </td>
+                            </tr>
+                          </table>                           
                         </div>
                         <div class="panel-body">                 
                            <table class="table datatables table-striped table-hover table-condensed" id="tblTopologyErrors" data-tablescroller-disable="true">

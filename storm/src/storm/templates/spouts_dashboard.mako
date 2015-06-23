@@ -194,7 +194,16 @@ ${ storm.menubar(section = 'Spouts Detail')}
                 <div class="col-lg-4">
                    <div class="panel panel-default">
                       <div class="panel-heading">
-                         <i class="fa fa-table fa-fw"></i> ${ _('Summary') }
+                        <table width="100%">
+                         <tr>
+                            <td>
+                               <i class="fa fa-table fa-fw"></i> ${ _('Summary') }
+                            </td>
+                            <td>
+                               ${Templates.frmExport(Data['spouts'])}
+                            </td>
+                         </tr>
+                        </table>                          
                       </div>
                       <div class="panel-body">
                          <table class="table datatables table-striped table-hover table-condensed" id="tblTopologySpouts" data-tablescroller-disable="true">
