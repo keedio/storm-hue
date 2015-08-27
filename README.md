@@ -56,6 +56,19 @@ Configs needed in hue.ini config file.
         ## storm_ui_topology=/topology/
         ## storm_ui_configuration=/cluster/configuration
 
+Compile locales
+---------------
+To compile the locales:
+
+Set the ROOT variable in the Makefile file pointing to the HUE installation path.
+
+Compile with make.
+
+    $ cd $HUE_HOME/apps/storm
+    $ sudo make compile-locale
+
+Restart HUE.
+
 License
 -------
 Apache License, Version 2.0
