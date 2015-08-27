@@ -357,7 +357,7 @@
                   <input type="hidden" id="sAction" value="rebalance">
                   <input type="hidden" id="sNameTopology" value="${paTopology['name']}">
                   <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>
-                  <button type="button" id="btnSubmit" class="btn btn-primary" data-bind="click: set_topology_status">${ _('Submit') }</button>                  
+                  <button type="button" id="btnSubmit" class="btn btn-primary" onclick="set_topology_status()">${ _('Submit') }</button>                  
                   <div id="imgLoading" class="widget-spinner" style="display:none">
                      <!--[if !IE]> --><i class="fa fa-spinner fa-spin fa-2x"></i><!-- <![endif]-->
                      <!--[if IE]><img src="${ static('storm/art/spinner.gif') }" /><![endif]-->
