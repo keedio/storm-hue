@@ -358,7 +358,10 @@
                   <input type="hidden" id="sNameTopology" value="${paTopology['name']}">
                   <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>
                   <button type="button" id="btnSubmit" class="btn btn-primary" data-bind="click: set_topology_status">${ _('Submit') }</button>                  
-                  <img id="imgLoading" src="${ static('storm/art/spinner.gif') }" class="hide"/>
+                  <div id="imgLoading" class="widget-spinner" style="display:none">
+                     <!--[if !IE]> --><i class="fa fa-spinner fa-spin fa-2x"></i><!-- <![endif]-->
+                     <!--[if IE]><img src="${ static('storm/art/spinner.gif') }" /><![endif]-->
+                  </div>
                </div>
             </div>   
          </form>      
@@ -436,7 +439,10 @@
                   </div>    
                   <button type="button" id="btnNoactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
                   <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>                  
-                  <img id="imgLoadingactivate" src="${ static('storm/art/spinner.gif') }" class="hide"/>
+                  <div id="imgLoadingactivate" class="widget-spinner" style="display:none">
+                     <!--[if !IE]> --><i class="fa fa-spinner fa-spin fa-2x"></i><!-- <![endif]-->
+                     <!--[if IE]><img src="${ static('storm/art/spinner.gif') }" /><![endif]-->
+                  </div>
                </div>
             </div>   
       </div>
@@ -461,7 +467,10 @@
                   </div>     
                   <button type="button" id="btnNodeactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
                   <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>                  
-                  <img id="imgLoadingdeactivate" src="${ static('storm/art/spinner.gif') }" class="hide"/>
+                  <div id="imgLoadingdeactivate" class="widget-spinner" style="display:none">
+                     <!--[if !IE]> --><i class="fa fa-spinner fa-spin fa-2x"></i><!-- <![endif]-->
+                     <!--[if IE]><img src="${ static('storm/art/spinner.gif') }" /><![endif]-->
+                  </div>
                </div>
             </div>   
       </div>
@@ -486,7 +495,10 @@
                   </div>
                   <button type="button" id="btnNorebalance" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
                   <button type="button" id="btnYesrebalance" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>               
-                  <img id="imgLoadingrebalance" src="${ static('storm/art/spinner.gif') }" class="hide"/>
+                  <div id="imgLoadingrebalance" class="widget-spinner" style="display:none">
+                     <!--[if !IE]> --><i class="fa fa-spinner fa-spin fa-2x"></i><!-- <![endif]-->
+                     <!--[if IE]><img src="${ static('storm/art/spinner.gif') }" /><![endif]-->
+                  </div>
                </div>
             </div>   
       </div>
@@ -511,7 +523,10 @@
                   </div>
                   <button type="button" id="btnNokill" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
                   <button type="button" id="btnYeskill" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
-                  <img id="imgLoadingkill" src="${ static('storm/art/spinner.gif') }" class="hide"/>
+                  <div id="imgLoadingkill" class="widget-spinner" style="display:none">
+                     <!--[if !IE]> --><i class="fa fa-spinner fa-spin fa-2x"></i><!-- <![endif]-->
+                     <!--[if IE]><img src="${ static('storm/art/spinner.gif') }" /><![endif]-->
+                  </div>
                </div>
             </div>   
       </div>
