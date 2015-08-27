@@ -5,8 +5,9 @@ Storm-HUE is a [HUE](http://www.gethue.com) application to admin and manage a po
 
 Requirements
 ------------
-- [HUE 3.7.1](http://www.gethue.com).
+- [HUE 3.8](http://www.gethue.com) or higher.
 - Storm Client in the same Hue Server.
+- [ReportLab 2.X](http://www.reportlab.com/) for Python 2.5 or 2.6. ReportLab 3.X requires Python versions 2.7 or higher.
 
 Main Stack
 ----------
@@ -14,13 +15,18 @@ Main Stack
    * Django 
    * Mako
    * jQuery
-   * Knockout.js
    * Bootstrap
 
 Installation
 ------------
 To get the Storm-HUE app integrated and running in your HUE deployment:
 
+    For Python 2.5 or 2.6
+    $ sudo $HUE_HOME/build/env/bin/python $HUE_HOME/build/env/bin/pip install "reportlab<3.0"
+    
+    For Python 2.7 or higher.
+    $ sudo $HUE_HOME/build/env/bin/python $HUE_HOME/build/env/bin/pip install reportlab
+    
     $ git clone https://github.com/keedio/storm-hue.git
     $ mv storm-hue/storm $HUE_HOME/apps
     $ cd $HUE_HOME/apps

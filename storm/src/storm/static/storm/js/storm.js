@@ -1,4 +1,3 @@
-
 function changeDisplay(id1, id2) {
    document.getElementById(id1).style.display = "";
    document.getElementById(id2).style.display = "none";            
@@ -8,7 +7,8 @@ function post_topology_status(psId, psAction, pbWait, piWait) {
    $("#btnNo"+psAction).hide();
    $("#btnYes"+psAction).hide();
    $("#divError"+psAction).hide();
-   $("#imgLoading"+psAction).show();        
+   $("#imgLoading"+psAction).show();    
+
    $.post("/storm/post_topology_status/", { sId: psId,
                                                sAction: psAction,
    	                                           bWait: pbWait,
@@ -26,10 +26,7 @@ function post_topology_status(psId, psAction, pbWait, piWait) {
                                                 }, "text");         
 };
 
-function StormViewModel() {
-   var self = this;         
-   
-   self.set_topology_status = function() {                  
+function set_topology_status() {
       var sName = "";
       var iExecutors = 0;
       var aComponents = [];
@@ -47,29 +44,28 @@ function StormViewModel() {
       var checks = document.getElementsByTagName("input");      
       
       for(var i = 0; i < checks.length; i++) {  
-	     if ((checks[i].type == 'checkbox') && (checks[i].name.substring(0, 3) == 'cp_') && (checks[i].checked)) {
+       if ((checks[i].type == 'checkbox') && (checks[i].name.substring(0, 3) == 'cp_') && (checks[i].checked)) {
             sName = checks[i].name;
-	          iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
+            iExecutors = document.getElementById("numExecutors_" + sName.substring(3)).value;
             aComponents.push(sName.substring(3),iExecutors);            
-	     }
+       }
       }            
       
       $.post("/storm/set_topology_status/", { psAction: sAction,
-        	 									                  psNameTopology: sNameTopology,
-		         		                              piNumWorkers: iNumWorkers,
-		            		                          piWaitSecs: iWaitSecs,
-		                    		                  paComponents: aComponents
+                                              psNameTopology: sNameTopology,
+                                              piNumWorkers: iNumWorkers,
+                                              piWaitSecs: iWaitSecs,
+                                              paComponents: aComponents
                                             }, function(data){
-						      						                      jsonResult = JSON.parse(data)
+                                                    jsonResult = JSON.parse(data)
                                                     if (jsonResult.status == 0) {                                                         
                                                          window.location.reload();
                                                     }
                                                     else {                                               
-						         						                         $("#divErrorRebalance").show();
-						      						                      }
+                                                         $("#divErrorRebalance").show();
+                                                    }
                                                     $("#btnCancel").show();
                                                     $("#btnSubmit").show();
                                                     $("#imgLoading").hide();
                                                }, "text");         
-   };   
-};
+}; 

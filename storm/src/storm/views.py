@@ -32,9 +32,9 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse, HttpResponseRedirect
-from desktop.lib.django_util import render  
+from desktop.lib.django_util import render, JsonResponse
 from desktop.lib.exceptions_renderable import PopupException
-from storm import settings, conf, utils, data_export
+from storm import settings, conf, utils
 from storm.storm_ui import StormREST
 from storm.forms import UploadFileForm, UploadFileFormHDFS 
 
@@ -1103,8 +1103,8 @@ def post_topology_status(request):
         iResult = e
     except:
         iResult = 1
-    
-    return HttpResponse(iResult, contenttype = "application/javascript") 
+
+    return JsonResponse(iResult, safe=False) 
 #
 # post_topology_status ****************************************************************************************************
     
@@ -1251,7 +1251,7 @@ def set_topology_status(request):
                     
             raise PopupException(msg)
 
-    return HttpResponse(utils._get_dumps_without(response), content_type="text/plain")            
+    return JsonResponse(response, safe=False) 
 #
 # set_topology_status ***************************************************************************************************** 
 

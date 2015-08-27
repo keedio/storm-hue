@@ -29,20 +29,18 @@ ${commonheader("Topology Detail", app_name, user) | n,unicode}
 ## Use double hashes for a mako template comment
 ## Main body
 
-<link href="/storm/static/css/storm.css" rel="stylesheet">
+<link href="${ static('storm/css/storm.css') }" rel="stylesheet" >
 
 ${ JavaScript.import_js() }
 ${ graphsHUE.import_charts() } 
 
 <script type="text/javascript"> 
    $(document).ready(function() {
-      var StormModel = new StormViewModel();
-      ko.applyBindings(StormModel);
-
       var sData = "${Data['visualization']}";  
       var swData = sData.replace(/&quot;/ig,'"')   
       var jsonVisualization = JSON.parse(swData);    
-      //Call without button.
+      
+      //Call without button.      
       show_visualization(null, "${Data['topology']['id']}", jsonVisualization);
       //Call with button.
       //$("#show-hide-visualization").click(function () { show_visualization(null, "${Data['topology']['id']}", jsonVisualization) });

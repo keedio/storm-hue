@@ -289,6 +289,7 @@
    <div class="modal hide fade" id="tblRebalanceTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
          <form id="frmRebalanceTopology" method="post">
+            ${ csrf_token(request) | n,unicode }
             <div class="modal-content">
                <div class="modal-header">
                   <h3> ${ _('Custom Rebalance:') } <b>${paTopology['name']}</b></h3>
@@ -356,8 +357,8 @@
                   <input type="hidden" id="sAction" value="rebalance">
                   <input type="hidden" id="sNameTopology" value="${paTopology['name']}">
                   <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">${ _('Cancel') }</button>
-                  <button type="button" id="btnSubmit" class="btn btn-primary" data-bind="click: set_topology_status">${ _('Submit') }</button>
-                  <img id="imgLoading" src="/static/art/spinner.gif" class="hide"/>
+                  <button type="button" id="btnSubmit" class="btn btn-primary" data-bind="click: set_topology_status">${ _('Submit') }</button>                  
+                  <img id="imgLoading" src="${ static('storm/art/spinner.gif') }" class="hide"/>
                </div>
             </div>   
          </form>      
@@ -371,6 +372,7 @@
    <div class="modal hide fade" id="tblSubmitTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
+            ${ csrf_token(request) | n,unicode }
             <div class="modal-content">
                <div class="modal-header">
                   <h3>${ _('Create New Topology') } </b></h3>
@@ -395,6 +397,7 @@
 <%def name="tblSaveTopology(pfForm1)">
    <div class="modal hide fade" id="tblSaveTopology" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
+         ${ csrf_token(request) | n,unicode }
          <form id="frmSubmitTopology" method="post" enctype="multipart/form-data" action="/storm/set_topology_status/">
             <div class="modal-content">
                <div class="modal-header">
@@ -432,8 +435,8 @@
                      <span class="label label-important"> ${ _('ERROR activating this topology') } </span>
                   </div>    
                   <button type="button" id="btnNoactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>
-                  <img id="imgLoadingactivate" src="/static/art/spinner.gif" class="hide"/>
+                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'activate', false, 0)">${ _('Yes') }</button>                  
+                  <img id="imgLoadingactivate" src="${ static('storm/art/spinner.gif') }" class="hide"/>
                </div>
             </div>   
       </div>
@@ -457,8 +460,8 @@
                      <span class="label label-important"> ${ _('ERROR deactivating this topology') } </span>
                   </div>     
                   <button type="button" id="btnNodeactivate" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>
-                  <img id="imgLoadingdeactivate" src="/static/art/spinner.gif" class="hide"/>
+                  <button type="button" id="btnYesdeactivate" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'deactivate', false, 0)">${ _('Yes') }</button>                  
+                  <img id="imgLoadingdeactivate" src="${ static('storm/art/spinner.gif') }" class="hide"/>
                </div>
             </div>   
       </div>
@@ -482,8 +485,8 @@
                      <span class="label label-important"> ${ _('ERROR rebalancing this topology') } </span>
                   </div>
                   <button type="button" id="btnNorebalance" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
-                  <button type="button" id="btnYesrebalance" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>
-                  <img id="imgLoadingrebalance" src="/static/art/spinner.gif" class="hide"/>
+                  <button type="button" id="btnYesrebalance" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'rebalance', true, 5)">${ _('Yes') }</button>               
+                  <img id="imgLoadingrebalance" src="${ static('storm/art/spinner.gif') }" class="hide"/>
                </div>
             </div>   
       </div>
@@ -508,7 +511,7 @@
                   </div>
                   <button type="button" id="btnNokill" class="btn btn-default" data-dismiss="modal">${ _('No') }</button>                  
                   <button type="button" id="btnYeskill" class="btn btn-primary" onclick="post_topology_status('${paTopology['id']}', 'kill', true, 5)">${ _('Yes') }</button>
-                  <img id="imgLoadingkill" src="/static/art/spinner.gif" class="hide"/>
+                  <img id="imgLoadingkill" src="${ static('storm/art/spinner.gif') }" class="hide"/>
                </div>
             </div>   
       </div>
@@ -535,6 +538,7 @@
 <!-- Export data. -->
 <%def name="frmExport(pData)">
     <form id="frmDownload" method="post" enctype="application/json" action="/storm/download/">
+       ${ csrf_token(request) | n,unicode }
        <div class="btn-group pull-right">
           <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
              <i class="fa fa-chevron-down"></i>
