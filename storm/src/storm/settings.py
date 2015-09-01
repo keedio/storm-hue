@@ -18,9 +18,10 @@ import os
 
 DJANGO_APPS = ["storm"]
 REQUIRES_HADOOP = False
-MENU_INDEX = 100
+MENU_INDEX = 110
 ICON = "storm/art/icon_storm_24.png"
 IS_URL_NAMESPACED = True
+NICE_NAME = "Storm"
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')

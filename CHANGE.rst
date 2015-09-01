@@ -1,13 +1,14 @@
 Changelog
 =========
 
-2.0.0 (27-08-2015)
+2.0.0 (01-09-2015)
 ----------------
 
 Features
 ********
 
 - Support for HUE 3.8 or higher.
+- Config validator at HUE start.
 
 1.3.0 (23-06-2015)
 ----------------

@@ -3,6 +3,12 @@ Storm-HUE: Apache Storm HUE Application
 
 Storm-HUE is a [HUE](http://www.gethue.com) application to admin and manage a pool of [Apache Storm](http://storm.apache.org/) topologies. 
 
+Features
+--------
+   * Management operations (Start & Stop topologies, Rebalances).
+   * Custom Dashboards based on retrieving metrics data
+   * Config validator at HUE start
+
 Requirements
 ------------
 - [HUE 3.8](http://www.gethue.com) or higher.

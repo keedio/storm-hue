@@ -15,6 +15,7 @@
 ## limitations under the License.
 
 from desktop.lib.conf import Config
+from django.utils.translation import ugettext_lazy as _t, ugettext as _
 
 STORM_UI_SERVER = Config(
 	key="storm_ui_server",
@@ -64,3 +65,31 @@ STORM_UI_CONFIGURATION = Config(
 	default="/cluster/configuration",
 	type=str)
 
+def config_validator(user):
+	res = []
+	
+	if not STORM_UI_SERVER.get():
+		res.append((STORM_UI_SERVER, _("You must to specify STORM UI Server I.P. or STORM UI Server HostName.")))
+
+	if not STORM_UI_PORT.get():
+		res.append((STORM_UI_PORT, _("You must to specify STORM UI Server port.")))
+
+	if not STORM_UI_LOG_PORT.get():
+		res.append((STORM_UI_LOG_PORT, _("You must to specify LogViewer URL to view the nimbus.log.")))
+
+	if not STORM_UI_CLUSTER.get():
+		res.append((STORM_UI_CLUSTER, _("You must to specify a STORM-UI Cluster Summary path.")))
+
+	if not STORM_UI_SUPERVISOR.get():
+		res.append((STORM_UI_SUPERVISOR, _("You must to specify a STORM-UI Supervisor Summary path.")))
+
+	if not STORM_UI_TOPOLOGIES.get():
+		res.append((STORM_UI_TOPOLOGIES, _("You must to specify a STORM-UI Topologies Summary path.")))
+
+	if not STORM_UI_TOPOLOGY.get():
+		res.append((STORM_UI_TOPOLOGY, _("You must to specify a STORM-UI Topology path.")))
+
+	if not STORM_UI_CONFIGURATION.get():
+		res.append((STORM_UI_CONFIGURATION, _("You must to specify a STORM-UI Configuration path.")))
+
+	return res
