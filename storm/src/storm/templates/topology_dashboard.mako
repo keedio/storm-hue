@@ -29,7 +29,7 @@ ${commonheader("Topology Stats Detail", app_name, user) | n,unicode}
 ## Use double hashes for a mako template comment
 ## Main body
 
-<link href="/storm/static/css/storm.css" rel="stylesheet">
+<link href="${ static('storm/css/storm.css') }" rel="stylesheet" >
 
 ${ graphsHUE.import_charts() }
 
