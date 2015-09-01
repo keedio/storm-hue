@@ -394,8 +394,8 @@ function show_visualization(sys, topology_id, jsonVisualization) {
     var update = function(should_rechoose) {
     
       if(should_update) {
-	    topology_data = jsonVisualization;		
-	
+        topology_data = jsonVisualization;      
+    
         update_data(topology_data, sys);
         sys.renderer.signal_update();
         sys.renderer.redraw();
@@ -406,7 +406,7 @@ function show_visualization(sys, topology_id, jsonVisualization) {
              rechoose(topology_data, sys, this);
            });
 
-	/*
+    /*
         $.ajax({
             url: "/api/v1/topology/"+topology_id+"/visualization",
             success: function (data, status, jqXHR) {
@@ -422,7 +422,7 @@ function show_visualization(sys, topology_id, jsonVisualization) {
                     });
             }
         });
-	*/
+    */
       }
     };
     

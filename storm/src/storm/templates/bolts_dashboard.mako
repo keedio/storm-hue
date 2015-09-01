@@ -29,16 +29,13 @@ ${commonheader("Bolts Detail", app_name, user) | n,unicode}
 ## Use double hashes for a mako template comment
 ## Main body
 
-<link href="/storm/static/css/storm.css" rel="stylesheet">
+<link href="${ static('storm/css/storm.css') }" rel="stylesheet" >
 
 ${ graphsHUE.import_charts() }
 ${ JavaScript.import_js() }
 
 <script type="text/javascript" charset="utf-8"> 
-   $(document).ready(function() {
-      var StormModel = new StormViewModel();
-      ko.applyBindings(StormModel);
-      
+   $(document).ready(function() {      
       $('#tblTopologyBolts').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,

@@ -26,19 +26,17 @@ ${commonheader("Storm Dashboard", app_name, user) | n,unicode}
 <%namespace name="Templates" file="templates.mako" />
 <%namespace name="JavaScript" file="js.mako" />
 
-<link href="/storm/static/css/storm.css" rel="stylesheet">
-<link href="/static/ext/css/hue-filetypes.css" rel="stylesheet">
+
+<link href="${ static('storm/css/storm.css') }" rel="stylesheet" >
+<link href="${ static('desktop/ext/css/hue-filetypes.css') }" rel="stylesheet" >
 
 ${ graphsHUE.import_charts() }
 ${ JavaScript.import_js() }
 
 <script type='text/javascript'>    
    $(document).ready(function() {                           
-      var StormModel = new StormViewModel();
-      ko.applyBindings(StormModel);
-      
       $('#tblTopology').dataTable({
-                "sPaginationType": "bootstrap",
+        "sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
 	    	"autoWidth": true,
 	        "sDom": "<'row-fluid'<l><f>r>t<'row-fluid'<'dt-pages'p><'dt-records'i>>",

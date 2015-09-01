@@ -78,7 +78,7 @@ def is_selected(section, matcher):
         <div class="nav-collapse">
           <ul class="nav">
             <li class="${is_selected(section, 'Storm Dashboard')}">
-               <a href="/${app_name}"><img src="/storm/static/art/icon_storm_24.png" /> ${ _('Dashboard') } </a>
+               <a href="/${app_name}"><img src="${ static('storm/art/icon_storm_24.png') }" /> ${ _('Dashboard') } </a>               
             </li>
             <li class="${is_selected(section, 'Cluster Summary')}">
                <a href="${url('storm:cluster_summary')}"> ${ _('Cluster Summary') } </a>

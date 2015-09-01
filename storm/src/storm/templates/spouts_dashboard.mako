@@ -26,19 +26,13 @@ ${commonheader("Spouts Detail", app_name, user) | n,unicode}
 <%namespace name="JavaScript" file="js.mako" />
 <%namespace name="graphsHUE" file="common_dashboard.mako" />
 
-## Use double hashes for a mako template comment
-## Main body
-
-<link href="/storm/static/css/storm.css" rel="stylesheet">
+<link href="${ static('storm/css/storm.css') }" rel="stylesheet" >
 
 ${ JavaScript.import_js() }
 ${ graphsHUE.import_charts() }
 
 <script type="text/javascript" charset="utf-8"> 
    $(document).ready(function() {
-      var StormModel = new StormViewModel();
-      ko.applyBindings(StormModel);
-      
       $('#tblTopologySpouts').dataTable( {	    
 	    	"sPaginationType": "bootstrap",
 	    	"bLengthChange": true,
